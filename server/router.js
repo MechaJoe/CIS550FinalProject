@@ -37,7 +37,7 @@ router.post('/login', async (req, res, next) => {
 
 // Artist: Match user to artist based on average attribute values
 router.get('/artist/recommended_by_attrs', async (req, res) => {
-  const { username } = req.body.username
+  const { username } = req.session
   connection.query(`
       WITH user_agg_song_attrs AS (
         SELECT 
@@ -48,7 +48,7 @@ router.get('/artist/recommended_by_attrs', async (req, res) => {
           AVG(liveness) AS liveness, 
           AVG(speechiness) AS speechiness
         FROM LikesSong l JOIN Song s ON l.song_id = s.song_id
-        WHERE l.username = ${username}
+        WHERE l.username = '${username}'
         GROUP BY s.song_id
       ), artists_agg_song_attrs AS (
         SELECT 
@@ -83,7 +83,7 @@ router.get('/artist/recommended_by_attrs', async (req, res) => {
 
 // Personal: Average attribute scores
 router.get('/personal/attrs', async (req, res) => {
-  const { username } = req.body.username
+  const { username } = req.session
   connection.query(`
       SELECT 
         AVG(acousticness) AS avg_acousticness, 
@@ -94,7 +94,7 @@ router.get('/personal/attrs', async (req, res) => {
         AVG(speechiness) AS avg_speechiness
       FROM LikesSong l JOIN Song s ON l.song_id = s.song_id
       GROUP BY username
-      HAVING username = ${username};
+      HAVING username = '${username}';
   `, (error, results) => {
     if (error) {
       res.json({ error })
@@ -105,12 +105,12 @@ router.get('/personal/attrs', async (req, res) => {
 })
 
 // Artist: top songs for an artist by popularity attribute
-router.get('/artist/songs_popular', async (req, res) => {
-  const { artistId } = req.body
+router.get('/artist/songs_popular/:artistId', async (req, res) => {
+  const { artistId } = req.params
   connection.query(`
       SELECT DISTINCT title
       FROM ComposedBy c JOIN Song s ON c.song_id = s.song_id
-      WHERE artist_id = ${artistId}
+      WHERE artist_id = '${artistId}'
       ORDER BY popularity DESC;
   `, (error, results) => {
     if (error) {
@@ -122,8 +122,8 @@ router.get('/artist/songs_popular', async (req, res) => {
 })
 
 // Artist: top songs for an artist by likes from users
-router.get('/artist/songs_most_liked', async (req, res) => {
-  const { artistId } = req.body
+router.get('/artist/songs_most_liked/:artistId', async (req, res) => {
+  const { artistId } = req.params
   connection.query(`
       WITH song_likes AS (
         SELECT song_id, COUNT(*) AS num_likes
@@ -133,7 +133,7 @@ router.get('/artist/songs_most_liked', async (req, res) => {
       SELECT DISTINCT title, num_likes
       FROM ComposedBy c JOIN song_likes sl ON c.song_id = sl.song_id
         JOIN Song s ON c.song_id = s.song_id
-      WHERE artist_id = ${artistId}
+      WHERE artist_id = '${artistId}'
       ORDER BY num_likes DESC
   `, (error, results) => {
     if (error) {
@@ -146,7 +146,7 @@ router.get('/artist/songs_most_liked', async (req, res) => {
 
 // Song: Recommend songs that were liked by other users in the same geographic location
 router.get('/song/recommended_by_location', async (req, res) => {
-  const { location } = req.body
+  const { location } = req.session
   connection.query(`
       WITH song_location_likes AS (
         SELECT location, song_id, COUNT(*) AS num_likes
@@ -155,7 +155,7 @@ router.get('/song/recommended_by_location', async (req, res) => {
       )
       SELECT DISTINCT s.song_id, title, num_likes
       FROM song_location_likes l JOIN Song s on l.song_id = s.song_id
-      WHERE l.location = ${location}
+      WHERE l.location = '${location}'
       ORDER BY num_likes DESC
   `, (error, results) => {
     if (error) {
