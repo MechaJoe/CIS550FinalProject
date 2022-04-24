@@ -30,10 +30,6 @@ router.post('/logout', async (req, res) => {
   res.redirect('/login')
 })
 
-router.post('/login', async (req, res, next) => {
-  // TODO: Login the user (using PassportJS)
-})
-
 // Artist: Match user to artist based on average attribute values
 router.get('/artist/recommended_by_attrs', async (req, res) => {
   const { username } = req.session
@@ -476,12 +472,12 @@ router.post('/login', async (req, res) => {
   const { username, password } = body
   const sql = `SELECT password
   FROM User u
-  WHERE u.username = ${username}`
+  WHERE u.username = '${username}'`
   connection.query(sql, (error, results) => {
     if (error) {
       res.json({ error })
     } else if (results) {
-      if (results.password === password) {
+      if (results[0].password === password) {
         req.session.username = username
         res.send('Successful login')
       } else {
