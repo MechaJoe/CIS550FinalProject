@@ -476,7 +476,7 @@ router.post('/login', async (req, res) => {
   const { username, password } = body
   const sql = `SELECT password
   FROM User u
-  WHERE u.username = ${username};`
+  WHERE u.username = ${username}`
   connection.query(sql, (error, results) => {
     if (error) {
       res.json({ error })
