@@ -384,7 +384,8 @@ router.get('/search/artist', async (req, res) => {
   const speechinessHigh = req.query.speechinessHigh ? req.query.speechinessHigh : 1
   connection.query(`
   WITH artistSongs AS (
-    SELECT *
+    SELECT cb.artist_id, cb.song_id, a.name, a.location, a.listeners, a.scrobbles, a.ambiguous_artist, 
+    a.tags, a.genre
     FROM Artist a JOIN ComposedBy cb ON a.artist_id = cb.artist_id
   )
   SELECT s.song_id AS song_id, title, artist, acousticness, danceability, duration_ms, energy, 
