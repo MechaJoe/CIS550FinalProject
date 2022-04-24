@@ -115,7 +115,7 @@ router.get('/heatmap', async (req, res) => {
 })
 
 router.get('/user/likes-list', async (req, res) => {
-  const { username } = req.query
+  const { username } = req.session
   const query = `SELECT DISTINCT title
   FROM LikesSong l JOIN Song s on l.song_id = s.song_id
   WHERE l.username=${username};  
@@ -133,7 +133,7 @@ router.get('/user/likes-list', async (req, res) => {
 })
 
 router.get('/user/likes', async (req, res) => {
-  const { username } = req.query
+  const { username } = req.session
   const query = `SELECT COUNT(*) AS num_songs_liked
   FROM LikesSong l JOIN Song s on l.song_id = s.song_id
   WHERE l.username = ${username}
