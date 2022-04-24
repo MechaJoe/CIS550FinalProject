@@ -116,12 +116,13 @@ router.get('/location-score', async (req, res) => {
   nd displays the percentage of their liked songs for that artist - COMPLEX
 */
 router.get('/user/top-artists', async (req, res) => {
-  const { username } = req.session.username
+  const { session } = req
+  const { username } = session
   connection.query(`
   WITH userSongs AS (
     SELECT *
     FROM LikesSong
-    WHERE username = ${username}
+    WHERE username = '${username}'
     ), total AS (
     SELECT cb.song_id, cb.artist_id, COUNT(*) as total
     FROM ComposedBy cb INNER JOIN userSongs us ON cb.song_id = us.song_id
@@ -277,12 +278,12 @@ router.get('/search/song', async (req, res) => {
   connection.query(`
   SELECT *
   FROM Song JOIN ComposedBy cb ON Song.song_id = cb.song_id
-  WHERE artist LIKE '%${song}%' AND acousticness >= ${acousticnessLow} AND 
+  WHERE title LIKE '%${song}%' AND acousticness >= ${acousticnessLow} AND 
   acousticness <= ${acousticnessHigh} AND danceability >= ${danceabilityLow} AND 
   danceability <= ${danceabilityHigh} AND energy >= ${energyLow} AND 
-  energy <= ${energyHigh} AND valence >= ${valenceLow} AND valence <= ${valenceHigh}AND 
+  energy <= ${energyHigh} AND valence >= ${valenceLow} AND valence <= ${valenceHigh} AND 
   liveness >= ${livenessLow} AND liveness <= ${livenessHigh} AND 
-  speechiness >= ${speechinessLow} ANDspeechiness <= ${speechinessHigh}
+  speechiness >= ${speechinessLow} AND speechiness <= ${speechinessHigh}
   `, (error, results) => {
     if (error) {
       res.json({ error })
@@ -383,7 +384,8 @@ router.get('/search/artist', async (req, res) => {
   const speechinessHigh = req.query.speechinessHigh ? req.query.speechinessHigh : 1
   connection.query(`
   WITH artistSongs AS (
-    SELECT *
+    SELECT cb.artist_id, cb.song_id, a.name, a.location, a.listeners, a.scrobbles, a.ambiguous_artist, 
+    a.tags, a.genre
     FROM Artist a JOIN ComposedBy cb ON a.artist_id = cb.artist_id
   )
   SELECT s.song_id AS song_id, title, artist, acousticness, danceability, duration_ms, energy, 
