@@ -278,12 +278,12 @@ router.get('/search/song', async (req, res) => {
   connection.query(`
   SELECT *
   FROM Song JOIN ComposedBy cb ON Song.song_id = cb.song_id
-  WHERE artist LIKE '%${song}%' AND acousticness >= ${acousticnessLow} AND 
+  WHERE title LIKE '%${song}%' AND acousticness >= ${acousticnessLow} AND 
   acousticness <= ${acousticnessHigh} AND danceability >= ${danceabilityLow} AND 
   danceability <= ${danceabilityHigh} AND energy >= ${energyLow} AND 
-  energy <= ${energyHigh} AND valence >= ${valenceLow} AND valence <= ${valenceHigh}AND 
+  energy <= ${energyHigh} AND valence >= ${valenceLow} AND valence <= ${valenceHigh} AND 
   liveness >= ${livenessLow} AND liveness <= ${livenessHigh} AND 
-  speechiness >= ${speechinessLow} ANDspeechiness <= ${speechinessHigh}
+  speechiness >= ${speechinessLow} AND speechiness <= ${speechinessHigh}
   `, (error, results) => {
     if (error) {
       res.json({ error })
