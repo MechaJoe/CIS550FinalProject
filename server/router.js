@@ -12,16 +12,6 @@ const connection = mysql.createConnection({
 })
 connection.connect()
 
-
-const connection = mysql.createConnection({
-  host: config.rds_host,
-  user: config.rds_user,
-  password: config.rds_password,
-  port: config.rds_port,
-  database: config.rds_db,
-})
-connection.connect()
-
 router.get('/search', async (req, res) => {
   // TODO: Query the DB based on the query params
   res.send('TODO')
@@ -214,7 +204,7 @@ router.get('/heatmap', async (req, res) => {
       res.json({ error })
     } else if (results.length === 0) {
       res.json({ results: [] })
-      }
+    }
   })
 })
 
@@ -325,10 +315,9 @@ router.get('/artist/songs_popular', async (req, res) => {
 
 // get related songs based on each individual attribute
 router.get('/get-related-songs-attributes', async (req, res) => {
-  const { danceability } = req.query.danceability
-  const { energy } = req.query.energy
-  const { liveness } = req.query.liveness
-  const { speechiness } = req.query.speechiness
+  const {
+    danceability, energy, liveness, speechiness, valence,
+  } = req.query
   connection.query(`
     SELECT title
     FROM Song
@@ -418,7 +407,6 @@ router.get('/search/artist', async (req, res) => {
     }
   })
 })
-
 
 // Song: Recommend songs that were liked by other users in the same geographic location
 router.get('/song/recommended_by_location', async (req, res) => {
