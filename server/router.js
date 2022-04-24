@@ -482,6 +482,7 @@ router.post('/login', async (req, res) => {
       res.json({ error })
     } else if (results) {
       if (results.password === password) {
+        req.session.username = username
         res.send('Successful login')
       } else {
         res.send('Unsuccessful login')
