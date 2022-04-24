@@ -311,7 +311,7 @@ router.get('/artist/songs_popular', async (req, res) => {
 })
 
 // get related songs based on each individual attribute
-router.get('/get-related-songs-attributes', async (req, res) => {
+router.get('/get-songs-related-attributes', async (req, res) => {
   const {
     danceability, energy, liveness, speechiness, valence,
   } = req.query
@@ -446,7 +446,7 @@ router.get('/user/likes', async (req, res) => {
 })
 
 // get related songs based on all attributes
-router.get('/get-random-songs-allattributes', async (req, res) => {
+router.get('/get-songs-related-allattributes', async (req, res) => {
   const { danceability } = req.query.danceability
   const { energy } = req.query.energy
   const { valence } = req.query.valence
