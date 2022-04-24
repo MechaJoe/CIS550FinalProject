@@ -46,7 +46,7 @@ router.get('/location-score', async (req, res) => {
       FROM ComposedBy c
       JOIN song_likes sl ON c.song_id = sl.song_id
       JOIN Song s ON c.song_id = s.song_id
-      WHERE artist_id = ${artist_id}
+      WHERE artist_id = '${artist_id}'
       GROUP BY artist_id
   )
   SELECT User.location, COUNT(*)/num_likes AS popularity
@@ -56,7 +56,7 @@ router.get('/location-score', async (req, res) => {
       JOIN ComposedBy ON Song.song_id = ComposedBy.song_id
       JOIN Artist ON ComposedBy.artist_id = Artist.artist_id
       JOIN total_artist_song_likes ON ComposedBy.artist_id = total_artist_song_likes.artist_id
-  WHERE Artist.artist_id = ${artist_id}
+  WHERE Artist.artist_id = '${artist_id}'
   GROUP BY User.location, num_likes
   `
   connection.query(query, (error, results, fields) => {
@@ -82,7 +82,7 @@ router.get('/artist-likes', async (req, res) => {
   FROM ComposedBy c 
   JOIN song_likes sl ON c.song_id = sl.song_id
   JOIN Song s ON c.song_id = s.song_id
-  WHERE artist_id = ${artist_id}
+  WHERE artist_id = '${artist_id}'
   GROUP BY artist_id
   `
   connection.query(query, (error, results, fields) => {
@@ -118,7 +118,7 @@ router.get('/user/likes-list', async (req, res) => {
   const { username } = req.session
   const query = `SELECT DISTINCT title
   FROM LikesSong l JOIN Song s on l.song_id = s.song_id
-  WHERE l.username=${username};  
+  WHERE l.username='${username}';  
   `
   connection.query(query, (error, results, fields) => {
     if (error) {
@@ -136,7 +136,7 @@ router.get('/user/likes', async (req, res) => {
   const { username } = req.session
   const query = `SELECT COUNT(*) AS num_songs_liked
   FROM LikesSong l JOIN Song s on l.song_id = s.song_id
-  WHERE l.username = ${username}
+  WHERE l.username = '${username}'
   GROUP BY l.username;
   `
   connection.query(query, (error, results, fields) => {
