@@ -64,6 +64,22 @@ router.get('/user/top-artists', async (req, res) => {
     )
     SELECT ap.listening_percentage AS listening_percentage, a.name AS name, a.location AS location
     FROM artistPercentages ap JOIN Artist a ON ap.artist_id = a.artist_id
+   `, (error, results) => {
+    if (error) {
+      res.json({ error })
+    } else if (results) {
+      res.json({ results })
+    }
+  })
+})
+
+// get song info
+router.get('/song/song_info', async (req, res) => {
+  const { id } = req.query.id
+  connection.query(`
+    SELECT *
+    FROM Song
+    WHERE song_id = ${id};
   `, (error, results) => {
     if (error) {
       res.json({ error })
@@ -122,6 +138,41 @@ router.get('/search/song', async (req, res) => {
   })
 })
 
+// get related songs based on each individual attribute
+router.get('/get-related-songs-attributes', async (req, res) => {
+  const { danceability } = req.query.danceability
+  const { energy } = req.query.energy
+  const { liveness } = req.query.liveness
+  const { speechiness } = req.query.speechiness
+  connection.query(`
+    SELECT title
+    FROM Song
+    WHERE ABS(danceability - ${danceability}) < 0.1
+    UNION
+    SELECT title
+    FROM Song
+    WHERE ABS(energy - ${energy}) < 0.1
+    UNION
+    SELECT title
+    FROM Song
+    WHERE ABS(valence - ${valence}) < 0.1
+    UNION
+    SELECT title
+    FROM Song
+    WHERE ABS(liveness - ${liveness}) < 0.1
+    UNION
+    SELECT title
+    FROM Song
+    WHERE ABS(speechiness - ${speechiness}) < 0.1;
+  `, (error, results) => {
+    if (error) {
+      res.json({ error })
+    } else if (results) {
+      res.json({ results })
+    }
+  })
+})
+
 // Queries the database based off of the artist and several attributes using sliders
 router.get('/search/artist', async (req, res) => {
   const artist = req.query.artist ? req.query.artist : ''
@@ -151,6 +202,30 @@ router.get('/search/artist', async (req, res) => {
   valence >= ${valenceLow} AND valence <= ${valenceHigh} AND liveness >= ${livenessLow} AND 
   liveness <= ${livenessHigh} AND speechiness >= ${speechinessLow} AND 
   speechiness <= ${speechinessHigh}
+  `, (error, results) => {
+    if (error) {
+      res.json({ error })
+    } else if (results) {
+      res.json({ results })
+    }
+  })
+})
+
+// get related songs based on all attributes
+router.get('/get-random-songs-allattributes', async (req, res) => {
+  const { danceability } = req.query.danceability
+  const { energy } = req.query.energy
+  const { valence } = req.query.valence
+  const { liveness } = req.query.liveness
+  const { speechiness } = req.query.speechiness
+  connection.query(`
+    SELECT title
+    FROM Song
+    WHERE ABS(danceability - ${danceability}) < 0.3
+    AND ABS(energy - ${energy}) < 0.3
+    AND ABS(valence - ${valence}) < 0.3
+    AND ABS(liveness - ${liveness}) < 0.3
+    AND ABS(speechiness - ${speechiness}) < 0.3;
   `, (error, results) => {
     if (error) {
       res.json({ error })
