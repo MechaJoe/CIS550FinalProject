@@ -468,8 +468,8 @@ router.get('/get-random-songs-allattributes', async (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
-  // const { body } = req
-  const { username, password } = req.body
+  const { body } = req
+  const { username, password } = body
   const sql = `SELECT password
   FROM User u
   WHERE u.username = '${username}'`
@@ -477,9 +477,6 @@ router.post('/login', async (req, res) => {
     if (error) {
       res.json({ error })
     } else if (results) {
-      console.log(username)
-      console.log(password)
-      console.log(results[0].password)
       if (results[0].password === password) {
         req.session.username = username
         res.send('Successful login')
