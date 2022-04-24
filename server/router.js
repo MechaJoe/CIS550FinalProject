@@ -105,8 +105,8 @@ router.get('/personal/attrs', async (req, res) => {
 })
 
 // Artist: top songs for an artist by popularity attribute
-router.get('/artist/songs_popular/:artistId', async (req, res) => {
-  const { artistId } = req.params
+router.get('/artist/songs_popular', async (req, res) => {
+  const { artistId } = req.query
   connection.query(`
       SELECT DISTINCT title
       FROM ComposedBy c JOIN Song s ON c.song_id = s.song_id
@@ -122,8 +122,8 @@ router.get('/artist/songs_popular/:artistId', async (req, res) => {
 })
 
 // Artist: top songs for an artist by likes from users
-router.get('/artist/songs_most_liked/:artistId', async (req, res) => {
-  const { artistId } = req.params
+router.get('/artist/songs_most_liked', async (req, res) => {
+  const { artistId } = req.query
   connection.query(`
       WITH song_likes AS (
         SELECT song_id, COUNT(*) AS num_likes
