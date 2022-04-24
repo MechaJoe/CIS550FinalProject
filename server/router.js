@@ -489,4 +489,30 @@ router.post('/login', async (req, res) => {
   })
 })
 
+// Artist: Recommend artists that were liked by other users in the same geographic location - COMPLEX
+router.get('/artist/recommended_by_location', async (req, res) => {
+  const { location } = req.session
+  connection.query(`
+    WITH song_location_likes AS (
+      SELECT location, song_id, COUNT(*) AS num_likes
+      FROM LikesSong l JOIN User u ON l.username = u.username
+      GROUP BY location, song_id
+    ), artist_location_likes AS (
+      SELECT artist_id, location, SUM(num_likes) AS num_likes
+    FROM song_location_likes l JOIN ComposedBy c ON l.song_id = c.song_id
+    GROUP BY artist_id, location
+    )
+    SELECT artist_id
+    FROM artist_location_likes
+    WHERE p.location = ${location}
+    ORDER BY num_likes DESC
+  `, (error, results) => {
+    if (error) {
+      res.json({ error })
+    } else if (results) {
+      res.json({ results })
+    }
+  })
+})
+
 module.exports = router
