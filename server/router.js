@@ -116,12 +116,13 @@ router.get('/location-score', async (req, res) => {
   nd displays the percentage of their liked songs for that artist - COMPLEX
 */
 router.get('/user/top-artists', async (req, res) => {
-  const { username } = req.session.username
+  const { session } = req
+  const { username } = session
   connection.query(`
   WITH userSongs AS (
     SELECT *
     FROM LikesSong
-    WHERE username = ${username}
+    WHERE username = '${username}'
     ), total AS (
     SELECT cb.song_id, cb.artist_id, COUNT(*) as total
     FROM ComposedBy cb INNER JOIN userSongs us ON cb.song_id = us.song_id
