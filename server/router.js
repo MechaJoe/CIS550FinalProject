@@ -89,6 +89,7 @@ router.get('/get-random-songs', async (req, res) => {
   })
 })
 
+// Queries the database based off the song name and several attributes using sliders
 router.get('/search/song', async (req, res) => {
   const song = req.query.song ? req.query.song : ''
   const acousticnessLow = req.query.acousticnessLow ? req.query.acousticnessLow : 0
@@ -121,6 +122,7 @@ router.get('/search/song', async (req, res) => {
   })
 })
 
+// Queries the database based off of the artist and several attributes using sliders
 router.get('/search/artist', async (req, res) => {
   const artist = req.query.artist ? req.query.artist : ''
   const acousticnessLow = req.query.acousticnessLow ? req.query.acousticnessLow : 0
@@ -140,7 +142,8 @@ router.get('/search/artist', async (req, res) => {
     SELECT *
     FROM Artist a JOIN ComposedBy cb ON a.artist_id = cb.artist_id
   )
-  SELECT *
+  SELECT s.song_id AS song_id, title, artist, acousticness, danceability, duration_ms, energy, 
+  explicit, instrumentalness, liveness, loudness, mode, popularity, speechiness, tempo, valence, year
   FROM Song s JOIN artistSongs artSongs ON s.song_id = artSongs.song_id
   WHERE artSongs.name LIKE '%${artist}%' AND acousticness >= ${acousticnessLow} AND 
   acousticness <= ${acousticnessHigh} AND danceability >= ${danceabilityLow} AND 
