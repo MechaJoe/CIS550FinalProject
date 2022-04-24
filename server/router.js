@@ -27,7 +27,7 @@ router.post('/login', async (req, res, next) => {
 
 // get song info
 router.get('/song/song_info', async (req, res) => {
-  const { username } = req.session
+  const { id } = req.query.id
   connection.query(`
     SELECT *
     FROM Song
@@ -43,6 +43,10 @@ router.get('/song/song_info', async (req, res) => {
 
 // get related songs based on each individual attribute
 router.get('/get-related-songs-attributes', async (req, res) => {
+  const { danceability } = req.query.danceability
+  const { energy } = req.query.energy
+  const { liveness } = req.query.liveness
+  const { speechiness } = req.query.speechiness
   connection.query(`
     SELECT title
     FROM Song
@@ -75,6 +79,11 @@ router.get('/get-related-songs-attributes', async (req, res) => {
 
 // get related songs based on all attributes
 router.get('/get-random-songs-allattributes', async (req, res) => {
+  const { danceability } = req.query.danceability
+  const { energy } = req.query.energy
+  const { valence } = req.query.valence
+  const { liveness } = req.query.liveness
+  const { speechiness } = req.query.speechiness
   connection.query(`
     SELECT title
     FROM Song
