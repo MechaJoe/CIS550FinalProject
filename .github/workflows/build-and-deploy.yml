@@ -37,25 +37,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # TODO: build and publish docker images
+      # Build and publish docker images
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and publish web image
+      - name: Build and publish frontend image
         uses: docker/build-push-action@v2
         with:
-          context: web
+          context: frontend
           push: true
-          tags: ghcr.io/cis188/hw4-jkonno/unit4-fastapi:${{ github.sha }}
-      - name: Build and publish cronjob image
+          tags: ghcr.io/cis188/songbar/frontend:v2
+      - name: Build and publish backend image
         uses: docker/build-push-action@v2
         with:
-          context: cronjob
+          context: backend
           push: true
-          tags: ghcr.io/cis188/hw4-jkonno/unit4-cronjob:${{ github.sha }}
+          tags: ghcr.io/cis188/songbar/backend:v2
 
   deploy:
     name: Deploy latest version of code
