@@ -1,11 +1,6 @@
 const { expect } = require('@jest/globals')
 const supertest = require('supertest')
-// const results = require("./results.json")
 const app = require('../server')
-
-// **********************************
-//         BASIC ROUTES TESTS
-// **********************************
 
 test('GET /heatmap', async () => {
   await supertest(app).get('/heatmap')
