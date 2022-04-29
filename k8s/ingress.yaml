@@ -11,7 +11,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: web
+                name: frontend
                 port:
                   number: 3000
   tls:

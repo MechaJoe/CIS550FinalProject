@@ -82,8 +82,7 @@ jobs:
 
       - name: Generate kubeconfig, set namespace, deploy frontend and backend servers
         run: aws eks --region us-east-1 update-kubeconfig --name cis188 --role-arn arn:aws:iam::474844133309:role/jkonno --alias cis188
-      - run: kubectl config set-context --current --namespace=jkonno
-      - run: kubectl apply -f k8s/
+      - run: kubectl config set-context --current --namespace=jkonno && kubectl apply -f k8s/
 
       # Integration 1: Discord
       - name: Discord notification
