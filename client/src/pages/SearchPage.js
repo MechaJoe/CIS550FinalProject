@@ -13,7 +13,7 @@ export default function SearchPage() {
       }}
     >
       <Typography variant="h1" component="h2">
-        Music Bar
+        Music Bar!
       </Typography>
       <TextField fullWidth label="song or artist name..." id="search" />
     </Box>
