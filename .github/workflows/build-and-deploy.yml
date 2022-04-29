@@ -84,3 +84,11 @@ jobs:
         run: aws eks --region us-east-1 update-kubeconfig --name cis188 --role-arn arn:aws:iam::474844133309:role/jkonno --alias cis188
       - run: kubectl config set-context --current --namespace=jkonno
       - run: kubectl apply -f k8s/
+
+      # Integration 1: Discord
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed.'
