@@ -177,11 +177,11 @@ router.get('/artist-likes', async (req, res) => {
 
 // get song info
 router.get('/song/song_info', async (req, res) => {
-  const { id } = req.query.id
+  const { id } = req.query
   connection.query(`
     SELECT *
     FROM Song
-    WHERE song_id = ${id};
+    WHERE song_id = '${id}';
   `, (error, results) => {
     if (error) {
       res.json({ error })
