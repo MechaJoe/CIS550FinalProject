@@ -1,4 +1,4 @@
-# Integration 2: Github Projects (Kanban board like JIRA)
+
 
 name: Move new Issues into Itemize column
 
@@ -10,8 +10,16 @@ jobs:
   automate-project-columns:
     runs-on: ubuntu-latest
     steps:
+
+      # Integration 2: Github Projects (Kanban board like JIRA)
       - uses: alex-page/github-project-automation-plus@v0.8.1
         with:
           project: Music Bar
           column: Itemize
           repo-token: ${{ secrets.ACCESS_TOKEN }}
+      
+      # Integration 3: Rickroll whoever opens an Issue
+      - name: Rick Roll
+        uses: TejasvOnly/random-rickroll@v1.0
+        with:
+          percentage: 100
