@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: ghcr.io/mechajoe/songbar/backend:v2
+          image: ghcr.io/cis188/songbar/backend:v2
           env:
             - name: RDS_HOST
               valueFrom:
