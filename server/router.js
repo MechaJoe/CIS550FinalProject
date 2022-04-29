@@ -3,12 +3,13 @@ const mysql = require('mysql')
 const config = require('./config.json')
 
 const router = express.Router()
+
 const connection = mysql.createConnection({
   host: process.env.RDS_HOST ? process.env.RDS_HOST : config.rds_host,
   user: process.env.RDS_USER ? process.env.RDS_USER : config.rds_user,
-  password: process.env.PASSWORD ? process.env.PASSWORD : config.rds_password,
+  password: process.env.RDS_PASSWORD ? process.env.RDS_PASSWORD : config.rds_password,
   port: process.env.RDS_PORT ? process.env.RDS_PORT : config.rds_port,
-  database: process.env.DATABASE ? process.env.DATABASE : config.rds_db,
+  database: process.env.RDS_DATABASE ? process.env.RDS_DATABASE : config.rds_db,
 })
 
 connection.connect()
