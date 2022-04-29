@@ -9,22 +9,21 @@ on:
 jobs:
   # Set the job key. The key is displayed as the job name
   # when a job name is not provided
-  # test:
-  #   # Name the Job
-  #   name: Test application
-  #   # Set the type of machine to run on
-  #   runs-on: ubuntu-latest
+  test:
+    # Name the Job
+    name: Test application
+    # Set the type of machine to run on
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     # Checks out a copy of your repository on the ubuntu-latest machine
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
+    steps:
+      # Checks out a copy of your repository on the ubuntu-latest machine
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  #     # TODO: install poetry and test code
-  #     - name: Install poetry
-  #       run: pip3 install poetry
-  #     - run: cd web && poetry install
-  #     - run: cd web && poetry run pytest
+      # TODO: install poetry and test code
+      - name: Install jest
+        run: cd server && npm install
+      - run: cd server && npm run test
 
   build:
     # Name the Job
