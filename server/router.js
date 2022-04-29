@@ -9,7 +9,7 @@ const connection = mysql.createConnection({
   user: process.env.RDS_USER ? process.env.RDS_USER : config.rds_user,
   password: process.env.RDS_PASSWORD ? process.env.RDS_PASSWORD : config.rds_password,
   port: process.env.RDS_PORT ? process.env.RDS_PORT : config.rds_port,
-  database: process.env.RDS_DATABASE ? process.env.RDS_DATABASE : config.rds_db,
+  database: process.env.RDS_DB ? process.env.RDS_DB : config.rds_db,
 })
 
 connection.connect()
