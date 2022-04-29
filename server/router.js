@@ -193,7 +193,7 @@ router.get('/song/song_info', async (req, res) => {
 })
 
 router.get('/heatmap', async (req, res) => {
-  const query = `SELECT location, artist_id
+  const query = `SELECT location, COUNT(artist_id) AS num_artists
   FROM Artist
   GROUP BY location;
   `
