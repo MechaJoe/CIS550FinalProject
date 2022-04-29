@@ -33,7 +33,7 @@ router.post('/logout', async (req, res) => {
 })
 
 // Artist: Match user to artist based on average attribute values
-router.get('/artist/recommended_by_attrs', async (req, res) => {
+router.get('/artist/recommended-by-attrs', async (req, res) => {
   const { username } = req.session
   connection.query(`
       WITH user_agg_song_attrs AS (
@@ -228,6 +228,7 @@ router.get('/get-random-songs', async (req, res) => {
 // Personal: Average attribute scores
 router.get('/personal/attrs', async (req, res) => {
   const { username } = req.session
+  console.log(req.session)
   connection.query(`
       SELECT 
         AVG(acousticness) AS avg_acousticness, 
@@ -474,6 +475,7 @@ router.get('/get-songs-related-allattributes', async (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
+  // res.setHeader('Access-Control-Allow-Credentials', 'true')
   const { body } = req
   const { username, password } = body
   const sql = `SELECT password
