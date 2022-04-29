@@ -19,7 +19,7 @@ jobs:
       RDS_USER: ${{ secrets.RDS_USER }}
       RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
       RDS_PORT: ${{ secrets.RDS_PORT }}
-      RDS_DB: ${{ secrets.RDS_DATABASE }}
+      RDS_DB: ${{ secrets.RDS_DB }}
 
     steps:
       # Checks out a copy of your repository on the ubuntu-latest machine
