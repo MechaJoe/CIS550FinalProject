@@ -4,12 +4,13 @@ const config = require('./config.json')
 
 const router = express.Router()
 const connection = mysql.createConnection({
-  host: config.rds_host,
-  user: config.rds_user,
-  password: config.rds_password,
-  port: config.rds_port,
-  database: config.rds_db,
+  host: process.env.RDS_HOST ? process.env.RDS_HOST : config.rds_host,
+  user: process.env.RDS_USER ? process.env.RDS_USER : config.rds_user,
+  password: process.env.PASSWORD ? process.env.PASSWORD : config.rds_password,
+  port: process.env.RDS_PORT ? process.env.RDS_PORT : config.rds_port,
+  database: process.env.DATABASE ? process.env.DATABASE : config.rds_db,
 })
+
 connection.connect()
 
 router.get('/search', async (req, res) => {

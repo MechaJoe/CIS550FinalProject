@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend
+  ports:
+  - port: 8080
+    protocol: TCP
+    name: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: backend:v2
+          env:
+            - name: RDS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: web-secret
+                  key: rds_host
+            - name: RDS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: web-secret
+                  key: rds_port
+            - name: RDS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: web-secret
+                  key: rds_user
+            - name: RDS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: web-secret
+                  key: rds_password
+            - name: RDS_DB
+              valueFrom:
+                secretKeyRef:
+                  name: web-secret
+                  key: rds_db
+          ports:
+          - containerPort: 8080
