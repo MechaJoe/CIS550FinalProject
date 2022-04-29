@@ -26,6 +26,6 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ghcr.io/MechaJoe/songbar/frontend:v2
+          image: ghcr.io/mechajoe/songbar/frontend:v2
           ports:
           - containerPort: 3000
