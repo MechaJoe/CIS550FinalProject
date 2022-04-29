@@ -29,3 +29,5 @@ spec:
           image: ghcr.io/cis188/songbar/frontend:v2
           ports:
           - containerPort: 3000
+      imagePullSecrets:
+        - name: docker-pull-secret
