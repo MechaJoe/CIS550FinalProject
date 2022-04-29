@@ -1,8 +1,10 @@
-name: Move new issues into Itemize
+# Integration 2: Github Projects (Kanban board like JIRA)
+
+name: Move new Issues into Itemize column
 
 on:
   issues:
-    types: [opened]
+    types: [opened, reopened]
 
 jobs:
   automate-project-columns:
