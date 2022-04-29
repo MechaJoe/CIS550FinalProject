@@ -3,13 +3,15 @@ const mysql = require('mysql')
 const config = require('./config.json')
 
 const router = express.Router()
+
 const connection = mysql.createConnection({
-  host: config.rds_host,
-  user: config.rds_user,
-  password: config.rds_password,
-  port: config.rds_port,
-  database: config.rds_db,
+  host: process.env.RDS_HOST ? process.env.RDS_HOST : config.rds_host,
+  user: process.env.RDS_USER ? process.env.RDS_USER : config.rds_user,
+  password: process.env.RDS_PASSWORD ? process.env.RDS_PASSWORD : config.rds_password,
+  port: process.env.RDS_PORT ? process.env.RDS_PORT : config.rds_port,
+  database: process.env.RDS_DB ? process.env.RDS_DB : config.rds_db,
 })
+
 connection.connect()
 
 router.get('/search', async (req, res) => {
@@ -176,11 +178,11 @@ router.get('/artist-likes', async (req, res) => {
 
 // get song info
 router.get('/song/song_info', async (req, res) => {
-  const { id } = req.query.id
+  const { id } = req.query
   connection.query(`
     SELECT *
     FROM Song
-    WHERE song_id = ${id};
+    WHERE song_id = '${id}';
   `, (error, results) => {
     if (error) {
       res.json({ error })
@@ -201,6 +203,8 @@ router.get('/heatmap', async (req, res) => {
       res.json({ error })
     } else if (results.length === 0) {
       res.json({ results: [] })
+    } else {
+      res.json({ results })
     }
   })
 })
