@@ -14,7 +14,7 @@ ReactDOM.render(
       <Switch>
         <Route
           exact
-          path="/search"
+          path="/"
           render={() => (
             <SearchPage />
           )}

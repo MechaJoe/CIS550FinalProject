@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-ingress
+spec:
+  rules:
+    - host: "jkonno.cis188.org"
+      http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  number: 3000
+  tls:
+    - hosts:
+        - "jkonno.cis188.org"
+      secretName: jkonno-cis188-org-tls
+      
