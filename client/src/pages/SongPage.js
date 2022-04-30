@@ -21,11 +21,13 @@ import {
 import { RadarChart } from 'react-vis';
 import { format } from 'd3-format'
 import MenuBar from '../components/MenuBar'
-import { getSongSearch, getPlayer } from '../fetcher'
+import { getSongSearch, getSong } from '../fetcher'
 
 const wideFormat = format('.3r')
-// name --> title; nationality --> artist; rating --> acousticness; potential --> danceability; (NEED TO implement duration_ms, energy, explicit, instrumentalness, liveness, loudness, mode, popularity, speechiness, tempo, valence, year)
-// selectedPlayerDetails --> selectedSongDetails; getPlayerSearch --> getSongSearch
+// name --> title; nationality --> artist; rating --> acousticness; potential --> danceability; value --> explicit(NEED TO implement duration_ms, energy, explicit, instrumentalness, liveness, loudness, mode, popularity, speechiness, tempo, valence, year)
+// selectedPlayerDetails --> selectedSongDetails; getPlayerSearch --> getSongSearch; getPlayer --> getSong
+// contractValidUntil --> year; value --> explicit
+// should we turn club query to get country of the song with a query on the artist?
 
 const playerColumns = [
     {
@@ -33,7 +35,7 @@ const playerColumns = [
         dataIndex: 'title',
         key: 'title',
         sorter: (a, b) => a.title.localeCompare(b.title),
-        render: (text, row) => <a href={`/songs?id=${row.title}`}>{text}</a>
+        render: (text, row) => <a href={`/song/song_info?id=${row.title}`}>{text}</a>
     },
     {
         title: 'artist',
@@ -46,9 +48,7 @@ const playerColumns = [
         dataIndex: 'acousticness',
         key: 'acousticness',
         sorter: (a, b) => a.acousticness - b.acousticness
-
     },
-    // TASK 19: copy over your answers for tasks 7 - 9 to add columns for danceability, club, and value
     {
         title: 'danceability',
         dataIndex: 'danceability',
@@ -62,9 +62,9 @@ const playerColumns = [
         sorter: (a, b) => a.Club.localeCompare(b.Club)
     },
     {
-        title: 'Value',
-        dataIndex: 'Value',
-        key: 'Value',
+        title: 'explicit',
+        dataIndex: 'explicit',
+        key: 'explicit',
     }
 ];
 
@@ -136,9 +136,9 @@ class SongPage extends React.Component {
             this.setState({ playersResults: res.results })
         })
 
-        // TASK 25: call getPlayer with the appropriate parameter and set update the correct state variable. 
+        // TASK 25: call getSong with the appropriate parameter and set update the correct state variable. 
         // See the usage of getMatch in the componentDidMount method of MatchesPage for a hint! 
-        getPlayer(this.state.selectedPlayerId).then(res => {
+        getSong(this.state.selectedPlayerId).then(res => {
             this.setState({ selectedSongDetails: res.results[0] })
         })
 
@@ -243,17 +243,17 @@ class SongPage extends React.Component {
                             </Row>
                             <Row gutter='30' align='middle' justify='left'>
                                 <Col>
-                                Value: {this.state.selectedSongDetails.Value}
+                                explicit: {this.state.selectedSongDetails.explicit}
                                 </Col>
                                 <Col>
                                 Release Clause: {this.state.selectedSongDetails.ReleaseClause}
                                 </Col>
-                                {/* TASK 29: Create 2 additional columns for the attributes 'Wage' and 'Contract Valid Until' (use spaces between the words when labelling!) */}
+                                {/* TASK 29: Create 2 additional columns for the attributes 'Wage' and 'year' (use spaces between the words when labelling!) */}
                                 <Col>
                                 Wage: {this.state.selectedSongDetails.Wage}
                                 </Col>
                                 <Col>
-                                Contract Valid Until: {this.state.selectedSongDetails.ContractValidUntil}
+                                year: {this.state.selectedSongDetails.year}
                                 </Col>
                             </Row>
                         </CardBody>
