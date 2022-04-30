@@ -2,23 +2,21 @@ import React, { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Slider from '@mui/material/Slider'
-import config from '../config.json'
+import Grid from '@mui/material/Grid'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import { getStats, getLikedSongs } from '../fetcher'
 
 export default function UserProfile() {
   const [stats, setStats] = useState({})
-
-  const getStats = async () => {
-    // query stats
-    const res = await fetch(`http://${config.server_host}:${config.server_port}/personal/attrs`, {
-      credentials: 'same-origin',
-      method: 'GET',
-    })
-    const json = await res.json()
-    return json.results[0]
-  }
+  const [likedSongs, setLikedSongs] = useState([])
 
   useEffect(() => {
     getStats().then(setStats)
+  }, [])
+
+  useEffect(() => {
+    getLikedSongs().then(setLikedSongs)
   }, [])
 
   return (
@@ -48,6 +46,27 @@ export default function UserProfile() {
       <Slider value={stats.avg_liveness ?? 0.5} min={0} max={1} disabled />
       <Typography variant="overline">Average Speechiness</Typography>
       <Slider value={stats.avg_speechiness ?? 0.5} min={0} max={1} disabled />
+
+      <Typography variant="h3">
+        My Liked Songs
+      </Typography>
+      <Grid
+        container
+        spacing={2}
+        direction="row"
+        justify="flex-start"
+        alignItems="flex-start"
+      >
+        {likedSongs.map((elem) => (
+          <Grid item xs={12} sm={6} md={3} key={likedSongs.indexOf(elem)}>
+            <Card>
+              <CardHeader
+                title={elem.title}
+              />
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
     </Box>
   )
 }

@@ -9,8 +9,8 @@ import config from '../config.json'
 export default function SearchPage() {
   const history = useHistory()
   const user = {
-    username: 'test1',
-    password: 'test1pass',
+    username: 'test2',
+    password: 'test2pass',
   }
 
   const login = async () => {
