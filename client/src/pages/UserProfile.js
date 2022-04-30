@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Slider from '@mui/material/Slider'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
-import { getStats, getLikedSongs } from '../fetcher'
+import { getStats, getLikedSongs, getTopArtists } from '../fetcher'
 
 export default function UserProfile() {
   const [stats, setStats] = useState({})
   const [likedSongs, setLikedSongs] = useState([])
+  const [topArtists, setTopArtists] = useState([])
 
   useEffect(() => {
     getStats().then(setStats)
@@ -17,6 +19,10 @@ export default function UserProfile() {
 
   useEffect(() => {
     getLikedSongs().then(setLikedSongs)
+  }, [])
+
+  useEffect(() => {
+    getTopArtists().then(setTopArtists)
   }, [])
 
   return (
@@ -67,6 +73,18 @@ export default function UserProfile() {
           </Grid>
         ))}
       </Grid>
+
+      <Typography variant="h3">
+        My Top Artists
+      </Typography>
+      {topArtists.map((elem) => (
+        <Container key={elem.name}>
+          <Typography variant="h5">{elem.name}</Typography>
+          <Typography variant="subtitle1">
+            {`Listening percentage: ${elem.listening_percentage}%`}
+          </Typography>
+        </Container>
+      ))}
     </Box>
   )
 }
