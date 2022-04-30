@@ -14,6 +14,8 @@ const connection = mysql.createConnection({
 
 connection.connect()
 
+let session
+
 router.get('/search', async (req, res) => {
   // TODO: Query the DB based on the query params
   res.send('TODO')
@@ -227,8 +229,7 @@ router.get('/get-random-songs', async (req, res) => {
 
 // Personal: Average attribute scores
 router.get('/personal/attrs', async (req, res) => {
-  const { username } = req.session
-  console.log(req.session)
+  const { username } = session
   connection.query(`
       SELECT 
         AVG(acousticness) AS avg_acousticness, 
@@ -478,6 +479,7 @@ router.post('/login', async (req, res) => {
   // res.setHeader('Access-Control-Allow-Credentials', 'true')
   const { body } = req
   const { username, password } = body
+  session = req.session
   const sql = `SELECT password
   FROM User u
   WHERE u.username = '${username}'`

@@ -6,18 +6,6 @@ import config from '../config.json'
 
 export default function UserProfile() {
   const [stats, setStats] = useState({})
-  const user = {
-    username: 'test1',
-    password: 'test1pass',
-  }
-
-  const login = async () => {
-    await fetch(`http://${config.server_host}:${config.server_port}/personal/attrs`, {
-      credentials: 'same-origin',
-      method: 'POST',
-      body: JSON.stringify(user),
-    })
-  }
 
   const getStats = async () => {
     // query stats
@@ -26,11 +14,11 @@ export default function UserProfile() {
       method: 'GET',
     })
     const json = await res.json()
-    return json.results
+    return json.results[0]
   }
 
   useEffect(() => {
-    login().then(getStats().then(setStats))
+    getStats().then(setStats)
   }, [])
 
   return (
@@ -42,25 +30,24 @@ export default function UserProfile() {
       }}
     >
       <Typography variant="h1">
-        {user.username}
+        Me
       </Typography>
 
       <Typography variant="h3">
         My Stats
       </Typography>
-      <Typography variant="body1">My Stats</Typography>
       <Typography variant="overline">Average Acousticness</Typography>
-      <Slider defaultValue={stats.avg_acousticness} min={0} max={100} disabled />
+      <Slider value={stats.avg_acousticness ?? 0.5} min={0} max={1} disabled />
       <Typography variant="overline">Average Danceability</Typography>
-      <Slider defaultValue={stats.avg_danceability} min={0} max={100} disabled />
+      <Slider value={stats.avg_danceability ?? 0.5} min={0} max={1} disabled />
       <Typography variant="overline">Average Energy</Typography>
-      <Slider defaultValue={stats.avg_energy} min={0} max={100} disabled />
+      <Slider value={stats.avg_energy ?? 0.5} min={0} max={1} disabled />
       <Typography variant="overline">Average Valence</Typography>
-      <Slider defaultValue={stats.avg_valence} min={0} max={100} disabled />
+      <Slider value={stats.avg_valence ?? 0.5} min={0} max={1} disabled />
       <Typography variant="overline">Average Liveness</Typography>
-      <Slider defaultValue={stats.avg_liveness} min={0} max={100} disabled />
+      <Slider value={stats.avg_liveness ?? 0.5} min={0} max={1} disabled />
       <Typography variant="overline">Average Speechiness</Typography>
-      <Slider defaultValue={stats.avg_speechiness} min={0} max={100} disabled />
+      <Slider value={stats.avg_speechiness ?? 0.5} min={0} max={1} disabled />
     </Box>
   )
 }
