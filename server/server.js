@@ -1,6 +1,5 @@
 const express = require('express')
 const session = require('express-session')
-const cookieSession = require('cookie-session')
 const passport = require('passport')
 const cors = require('cors')
 const Router = require('./router')
@@ -17,6 +16,7 @@ app.use(express.json())
 //   name: 'session',
 //   keys: ['pineapple'],
 // }))
+
 app.use(session({
   name: 'session',
   keys: ['username', 'userID'],
@@ -26,6 +26,9 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
+app.use((req, _res, next) => {
+  next()
+})
 
 app.use('/', Router)
 
