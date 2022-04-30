@@ -120,7 +120,7 @@ router.get('/location-score', async (req, res) => {
   nd displays the percentage of their liked songs for that artist - COMPLEX
 */
 router.get('/user/top-artists', async (req, res) => {
-  const { session } = req
+  // const { session } = req
   const { username } = session
   connection.query(`
   WITH userSongs AS (
@@ -250,18 +250,20 @@ router.get('/personal/attrs', async (req, res) => {
   })
 })
 
-router.get('/user/likes-list', async (req, res) => {
-  const { username } = req.session
-  const query = `SELECT DISTINCT title
+router.get('/user/likes-list', async (_req, res) => {
+  const { username } = session
+  const query = `SELECT DISTINCT s.song_id, title
   FROM LikesSong l JOIN Song s on l.song_id = s.song_id
   WHERE l.username='${username}';  
   `
-  connection.query(query, (error, results, fields) => {
+  connection.query(query, (error, results, _fields) => {
     if (error) {
       console.log(error)
       res.json({ error })
     } else if (results.length === 0) {
       res.json({ results: [] })
+    } else {
+      res.json({ results })
     }
   })
 })
