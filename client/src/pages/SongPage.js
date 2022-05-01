@@ -9,7 +9,7 @@ import { format } from 'd3-format';
 
 import MenuBar from '../components/MenuBar';
 import { getSongSearch, getSong } from '../fetcher'
-import { fontSize } from '@mui/system';
+import { color, fontSize } from '@mui/system';
 const wideFormat = format('.3r');
 
 const songColumns = [
@@ -128,25 +128,24 @@ class SongPage extends React.Component {
                             <Col flex={1} style={{ textAlign: 'left' }}>
 
                             <h6>Acousticness</h6>
-                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.acousticness * 100} animated="true">{this.state.selectedSongDetails.acousticness * 100.0}</Progress>
+                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.acousticness * 100} animated="true">{this.state.selectedSongDetails.acousticness}</Progress>
                             <h6>Danceability</h6>
-                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.danceability * 100 } animated="true">{this.state.selectedSongDetails.danceability * 100.0}</Progress>
+                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.danceability * 100 } animated="true">{this.state.selectedSongDetails.danceability}</Progress>
                             <h6>Energy</h6>
-                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.energy * 100} animated="true">{this.state.selectedSongDetails.energy * 100.0}</Progress>
+                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.energy * 100} animated="true">{this.state.selectedSongDetails.energy}</Progress>
                             <h6>Instrumentalness</h6>
-                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.instrumentalness * 100} animated="true">{this.state.selectedSongDetails.instrumentalness * 100.0}</Progress>
+                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.instrumentalness * 100} animated="true">{this.state.selectedSongDetails.instrumentalness}</Progress>
                             <h6>Liveness</h6>
-                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.liveness * 100} animated="true">{this.state.selectedSongDetails.liveness * 100.0}</Progress>
+                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.liveness * 100} animated="true">{this.state.selectedSongDetails.liveness}</Progress>
                             <h6>Speechiness</h6>
-                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.speechiness * 100} animated="true">{this.state.selectedSongDetails.speechiness * 100.0}</Progress>
+                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.speechiness * 100} animated="true">{this.state.selectedSongDetails.speechiness}</Progress>
                             <h6>Valence</h6>
-                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.valence * 100} animated="true">{this.state.selectedSongDetails.valence * 100.0}</Progress>
+                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.valence * 100} animated="true">{this.state.selectedSongDetails.valence}</Progress>
                             <h6>Loudness</h6>
                                 <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.loudness * 100} animated="true">{this.state.selectedSongDetails.loudness}</Progress>
                                 
                                 </Col >
                                 <Col  push={1} flex={1}>
-                                {/*TASK 32: In case the player is a GK, show a radar chart (replacing 'null' below) with the labels: Agility, Ball Control, Passing, Positioning, Stamina, Strength */}
 
                             <div className="centered-and-flexed">
                                 <RadarChart
@@ -162,8 +161,8 @@ class SongPage extends React.Component {
                                         ]}
                                         style={{
                                             polygons: {
-                                            fillOpacity: 1,
-                                            strokeWidth: 3
+                                            fillOpacity: 0,
+                                            strokeWidth: 3,
                                             },
                                             axes: {
                                             text: {
@@ -185,7 +184,13 @@ class SongPage extends React.Component {
                                         height={300}
                                         >
                                         <CircularGridLines
-                                            tickValues={[...new Array(10)].map((v, i) => i / 20- 1)}
+                                            tickValues={[...new Array(5)].map((v, i) => i / 5- 1)}
+                                            style={{
+                                                
+                                                fill: 'rgba(114,172,240,0.5)',
+                                                fillOpacity: 0.5,
+                                                
+                                                }}
                                         />
                                         </RadarChart>
                                 </div>
