@@ -34,6 +34,7 @@ export default function SearchPage() {
         alignItems: 'center',
       }}
     >
+      <Button variant="text" onClick={() => { history.push('/me') }}>Personal</Button>
       <Typography variant="h1" component="h2">
         Music Bar!
       </Typography>
