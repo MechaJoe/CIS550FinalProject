@@ -6,9 +6,12 @@ import Slider from '@mui/material/Slider'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
-import { getStats, getLikedSongs, getTopArtists } from '../fetcher'
+import {
+  getStats, getLikedSongs, getTopArtists, getCurrUser,
+} from '../fetcher'
 
 export default function UserProfile() {
+  const [user, setUser] = useState('')
   const [stats, setStats] = useState({})
   const [likedSongs, setLikedSongs] = useState([])
   const [topArtists, setTopArtists] = useState([])
@@ -25,6 +28,10 @@ export default function UserProfile() {
     getTopArtists().then(setTopArtists)
   }, [])
 
+  useEffect(() => {
+    getCurrUser().then(setUser)
+  })
+
   return (
     <Box
       sx={{
@@ -34,7 +41,7 @@ export default function UserProfile() {
       }}
     >
       <Typography variant="h1">
-        Me
+        {user}
       </Typography>
 
       <Typography variant="h3">

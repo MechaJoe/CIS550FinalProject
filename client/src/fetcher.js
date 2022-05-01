@@ -1,6 +1,15 @@
 import axios from 'axios'
 import config from './config.json'
 
+export const getCurrUser = async () => {
+  const { data } = await axios.get(
+    `http://${config.server_host}:${config.server_port}/username`,
+    { withCredentials: true },
+  )
+  console.log(data)
+  return data.username
+}
+
 export const getStats = async () => {
   const { data } = await axios.get(
     `http://${config.server_host}:${config.server_port}/user/stats`,
