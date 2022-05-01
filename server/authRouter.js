@@ -1,7 +1,7 @@
 const express = require('express')
 const mysql = require('mysql')
-const config = require('./config.json')
 const GoogleStrategy = require('passport-google-oidc')
+const config = require('./config.json')
 
 const router = express.Router()
 const connection = mysql.createConnection({
@@ -13,11 +13,11 @@ const connection = mysql.createConnection({
 })
 connection.connect()
 
-
-
 router.post('/login', async (req, res) => {
   const { body } = req
   const { username, password } = body
+  console.log(username)
+  console.log(password)
   const sql = `SELECT password
   FROM User u
   WHERE u.username = '${username}'`
@@ -25,9 +25,10 @@ router.post('/login', async (req, res) => {
     if (error) {
       res.json({ error })
     } else if (results) {
-      if (results[0].password === password) {
+      if (results.length !== 0 && results[0].password === password) {
         req.session.username = username
         req.session.save()
+        console.log(req.session)
         res.send('Successful login')
       } else {
         res.send('Unsuccessful login')
@@ -36,14 +37,15 @@ router.post('/login', async (req, res) => {
   })
 })
 
-router.get('/session', async (req, res) => {
-  console.log(req.headers.cookie)
-  console.log(req.session.username)
-  res.json(req.session)
+router.get('/username', (req, res) => {
+  console.log(req.session)
+  res.json(req.session.username)
 })
 
-router.post('/logout', async (req, res) => {
+router.post('/logout', (req, res) => {
   req.session.username = null
+  console.log(req.session.username)
+  res.send('Logged out')
 })
 
 module.exports = router

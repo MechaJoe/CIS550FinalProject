@@ -10,16 +10,18 @@ const config = require('./config.json')
 const app = express()
 
 // whitelist localhost 3000
-app.use(cors({ credentials: true, origin: ['http://localhost:3000'] }))
+app.use(cors({ credentials: true, origin: ['http://localhost:3000'], exposedHeaders: ['set-cookie'] }))
 
 app.use(express.json())
 app.use(session({
   name: 'session',
-  keys: ['username', 'password'],
+  keys: ['username'],
   secret: 'mySecret123',
+  resave: false,
+  unset: 'destroy',
 }))
-app.use(passport.initialize())
-app.use(passport.session())
+// app.use(passport.initialize())
+// app.use(passport.session())
 
 app.use('/', Router)
 app.use('/', AuthRouter)
