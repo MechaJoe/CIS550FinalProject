@@ -3,7 +3,7 @@ const session = require('express-session')
 const passport = require('passport')
 const cors = require('cors')
 const Router = require('./router')
-const AuthRouter = require('./authRouter')
+// const AuthRouter = require('./authRouter')
 
 const config = require('./config.json')
 
@@ -24,7 +24,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use('/', Router)
-app.use('/', AuthRouter)
+// app.use('/', AuthRouter)
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)

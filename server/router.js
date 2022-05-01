@@ -14,6 +14,44 @@ const connection = mysql.createConnection({
 
 connection.connect()
 
+let session
+
+router.post('/login', async (req, res) => {
+  const { body } = req
+  const { username, password } = body
+  console.log(username)
+  console.log(password)
+  const sql = `SELECT password
+  FROM User u
+  WHERE u.username = '${username}'`
+  connection.query(sql, (error, results) => {
+    if (error) {
+      res.json({ error })
+    } else if (results) {
+      if (results.length !== 0 && results[0].password === password) {
+        req.session.username = username
+        req.session.save()
+        session = req.session
+        console.log(req.session)
+        res.send('Successful login')
+      } else {
+        res.send('Unsuccessful login')
+      }
+    }
+  })
+})
+
+router.get('/username', (req, res) => {
+  console.log(req.session)
+  res.json(req.session.username)
+})
+
+router.post('/logout', (req, res) => {
+  req.session.username = null
+  console.log(req.session.username)
+  res.send('Logged out')
+})
+
 router.get('/search', async (req, res) => {
   // TODO: Query the DB based on the query params
   res.send('TODO')
@@ -113,7 +151,7 @@ router.get('/location-score', async (req, res) => {
   nd displays the percentage of their liked songs for that artist - COMPLEX
 */
 router.get('/user/top-artists', async (req, res) => {
-  const { username } = req.session
+  const { username } = session
   connection.query(`
   WITH userSongs AS (
     SELECT *
@@ -222,7 +260,7 @@ router.get('/get-random-songs', async (req, res) => {
 // Personal: Average attribute scores
 router.get('/user/stats', async (req, res) => {
   console.log(req.session)
-  const { username } = req.session
+  const { username } = session
   connection.query(`
       SELECT 
         AVG(acousticness) AS avg_acousticness, 
@@ -244,7 +282,7 @@ router.get('/user/stats', async (req, res) => {
 })
 
 router.get('/user/likes-list', async (req, res) => {
-  const { username } = req.session
+  const { username } = session
   const query = `SELECT DISTINCT s.song_id, title
   FROM LikesSong l JOIN Song s on l.song_id = s.song_id
   WHERE l.username='${username}';  
@@ -430,7 +468,7 @@ router.get('/song/recommended_by_location', async (req, res) => {
 })
 
 router.get('/user/likes', async (req, res) => {
-  const { username } = req.session
+  const { username } = session
   const query = `SELECT COUNT(*) AS num_songs_liked
   FROM LikesSong l JOIN Song s on l.song_id = s.song_id
   WHERE l.username = '${username}'
