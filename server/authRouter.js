@@ -5,7 +5,6 @@ const GoogleStrategy = require('passport-google-oidc')
 
 const config = require('./config.json')
 
-const router = express.Router()
 const connection = mysql.createConnection({
   host: process.env.RDS_HOST ? process.env.RDS_HOST : config.rds_host,
   user: process.env.RDS_USER ? process.env.RDS_USER : config.rds_user,
@@ -13,7 +12,34 @@ const connection = mysql.createConnection({
   port: process.env.RDS_PORT ? process.env.RDS_PORT : config.rds_port,
   database: process.env.RDS_DB ? process.env.RDS_DB : config.rds_db,
 })
+
 connection.connect()
+
+passport.use(new GoogleStrategy(
+  {
+    // clientID: process.env.GOOGLE_CLIENT_ID,
+    clientID: '628416004124-qmo6n9v38ip6sat09gjq92a7ctghfb2i.apps.googleusercontent.com',
+    // clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    clientSecret: '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',
+    callbackURL: '/oauth2/redirect/google',
+    scope: ['profile'],
+  },
+  ((issuer, profile, cb) => {
+    console.log(profile)
+    const username = profile.id
+    connection.query(`SELECT * FROM User WHERE username = '${username}'`, (err, user) => {
+      if (err) {
+        cb(err)
+      }
+      if (!user) {
+        return cb(null, false, { message: 'Create account' })
+      }
+      return cb(null, user, { message: 'Logged in through Google' })
+    })
+  }),
+))
+
+const router = express.Router()
 
 router.post('/login', async (req, res) => {
   const { body } = req
@@ -51,14 +77,21 @@ router.post('/logout', (req, res) => {
   res.send('Logged out')
 })
 
-router.get(
-  '/login/federated/google',
-  passport.authenticate('google', { failureRedirect: '/login' }),
-)
+router.get('/login/federated/google', passport.authenticate('google'))
 
 router.get('/oauth2/redirect/google', passport.authenticate('google', {
-  successRedirect: '/',
-  failureRedirect: '/login',
+  successRedirect: 'http://localhost:3000/',
+  failureRedirect: 'http://localhost:3000/login',
 }))
+
+passport.serializeUser((user, cb) => {
+  process.nextTick(() => {
+    cb(null, { id: user.id, username: user.username, name: user.name })
+  })
+})
+
+passport.deserializeUser((user, cb) => {
+  process.nextTick(() => cb(null, user))
+})
 
 module.exports = router
