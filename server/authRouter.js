@@ -1,6 +1,8 @@
 const express = require('express')
 const mysql = require('mysql')
+const passport = require('passport')
 const GoogleStrategy = require('passport-google-oidc')
+
 const config = require('./config.json')
 
 const router = express.Router()
@@ -43,9 +45,20 @@ router.get('/username', (req, res) => {
 })
 
 router.post('/logout', (req, res) => {
+  req.logout()
   req.session.username = null
   console.log(req.session.username)
   res.send('Logged out')
 })
+
+router.get(
+  '/login/federated/google',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+)
+
+router.get('/oauth2/redirect/google', passport.authenticate('google', {
+  successRedirect: '/',
+  failureRedirect: '/login',
+}))
 
 module.exports = router
