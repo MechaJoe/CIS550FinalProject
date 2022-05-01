@@ -59,8 +59,6 @@ class SongPage extends React.Component {
             this.setState({ songsResults: res.results })
         })
 
-        // TASK 25: call getSong with the appropriate parameter and set update the correct state variable. 
-        // See the usage of getMatch in the componentDidMount method of MatchesPage for a hint! 
         getSong(this.state.selectedSongId).then(res => {
             this.setState({ selectedSongDetails: res.results[0] })
         })
