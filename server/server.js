@@ -2,9 +2,9 @@ const express = require('express')
 const session = require('express-session')
 const passport = require('passport')
 const cors = require('cors')
+const GoogleStrategy = require('passport-google-oidc')
 const Router = require('./router')
 const AuthRouter = require('./authRouter')
-
 const config = require('./config.json')
 
 const app = express()
@@ -22,8 +22,6 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
-app.use()
-
 
 app.use('/', Router)
 app.use('/', AuthRouter)
