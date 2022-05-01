@@ -6,8 +6,7 @@ export const getCurrUser = async () => {
     `http://${config.server_host}:${config.server_port}/username`,
     { withCredentials: true },
   )
-  console.log(data)
-  return data.username
+  return data
 }
 
 export const getStats = async () => {
@@ -32,4 +31,21 @@ export const getTopArtists = async () => {
     { withCredentials: true },
   )
   return data?.results ?? []
+}
+
+export const setUserLocation = async (user, location) => {
+  const { data } = await axios.post(
+    `http://${config.server_host}:${config.server_port}/user/set-location`,
+    { username: user, location },
+    { withCredentials: true },
+  )
+  return data?.changedRows ?? 0
+}
+
+export const getUserLocation = async () => {
+  const { data } = await axios.post(
+    `http://${config.server_host}:${config.server_port}/user/location`,
+    { withCredentials: true },
+  )
+  return data?.results[0]?.location ?? 'N/A'
 }
