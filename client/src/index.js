@@ -27,8 +27,13 @@ ReactDOM.render(
           render={() => (
             <LoginPage />
           )}
+        />
+        <Route
+          exact
           path="/heatmap"
-          render={() => (<Heatmap />)}
+          render={() => (
+            <Heatmap />
+          )}
         />
       </Switch>
     </Router>
