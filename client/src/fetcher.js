@@ -1,4 +1,5 @@
 /* eslint-disable */
+// import { listeners } from 'superagent'
 import config from './config.json'
 
 const getAllMatches = async (page, pagesize, league) => {
@@ -15,8 +16,8 @@ const getAllPlayers = async (page, pagesize) => {
     return res.json()
 }
 
-const getMatch = async (id) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/match?id=${id}`, {
+const getArtist = async (id) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/artist/artist_info?id=${id}`, {
         method: 'GET',
     })
     return res.json()
@@ -29,8 +30,8 @@ const getSong = async (id) => {
     return res.json()
 }
 
-const getMatchSearch = async (home, away, page, pagesize) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/search/matches?Home=${home}&Away=${away}&page=${page}&pagesize=${pagesize}`, {
+const getArtistSearch = async (name, location, scrobbles, listeners, tags, genre, page, pagesize) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/search/artists?name=${name}}&location=${location}&listeners=${listeners}&scrobbles=${scrobbles}&tags=${tags}&genre=${genre}&page=${page}&pagesize=${pagesize}`, {
         method: 'GET',
     })
     return res.json()
@@ -46,8 +47,8 @@ const getSongSearch = async (title, artist, acousticness, danceability, duration
 export {
     getAllMatches,
     getAllPlayers,
-    getMatch,
+    getArtist,
     getSong,
-    getMatchSearch,
+    getArtistSearch,
     getSongSearch
 }

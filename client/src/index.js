@@ -10,6 +10,8 @@ import {
 
 import SearchPage from './pages/SearchPage';
 import SongPage from './pages/SongPage';
+import ArtistPage from './pages/ArtistPage';
+
 import 'antd/dist/antd.css';
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -28,6 +30,11 @@ ReactDOM.render(
 							path="/song"
 							render={() => (
 								<SongPage />
+							)}/>
+        <Route exact
+							path="/artist"
+							render={() => (
+								<ArtistPage />
 							)}/>
       </Switch>
     </Router>
