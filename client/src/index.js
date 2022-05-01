@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom'
 
 import SearchPage from './pages/SearchPage'
+import LoginPage from './pages/LoginPage'
 import Heatmap from './pages/Heatmap'
 import UserProfile from './pages/UserProfile'
 
@@ -19,6 +20,13 @@ ReactDOM.render(
           path="/"
           render={() => (
             <SearchPage />
+          )}
+        />
+        <Route
+          exact
+          path="/login"
+          render={() => (
+            <LoginPage />
           )}
         />
         <Route
