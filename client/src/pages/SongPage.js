@@ -3,12 +3,13 @@ import React from 'react';
 import { Form, FormInput, FormGroup, Button, Card, CardBody, Progress } from 'shards-react';
 
 import { Table, Row, Col, Divider, Slider, Rate } from 'antd'
-import { RadarChart } from 'react-vis';
+import { RadarChart, CircularGridLines } from 'react-vis';
 import { format } from 'd3-format'; 
 
 
 import MenuBar from '../components/MenuBar';
 import { getSongSearch, getSong } from '../fetcher'
+import { fontSize } from '@mui/system';
 const wideFormat = format('.3r');
 
 const songColumns = [
@@ -17,7 +18,7 @@ const songColumns = [
         dataIndex: 'title',
         key: 'title',
         sorter: (a, b) => a.title.localeCompare(b.title),
-        render: (text, row) => <a href={`/song/song_info?id=${row.song_id}`}>{text}</a>
+        render: (text, row) => <a href={`/song/song_id?id=${row.song_id}`}>{text}</a>
     },
     {
         title: 'artist',
@@ -74,12 +75,6 @@ class SongPage extends React.Component {
                 <MenuBar />
 
                 <Divider />
-
-                <Table dataSource={this.state.songsResults} columns={songColumns} style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}/>
-
-
-                <Divider />
-
                 {this.state.selectedSongDetails ? <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
                     <Card>
                     
@@ -107,10 +102,19 @@ class SongPage extends React.Component {
                                 Duration (ms): {this.state.selectedSongDetails.duration_ms}
                                 </Col>
                                 <Col>
+                                Tempo: {this.state.selectedSongDetails.tempo}
+                                </Col>
+                            </Row>
+
+                            <Row gutter='30' align='middle' justify='left'>
+                                 <Col>
+                                Mode (Minor/Major): {this.state.selectedSongDetails.mode}
+                                </Col>
+                                <Col>
                                 Explicit: {this.state.selectedSongDetails.explicit}
                                 </Col>
                                 <Col>
-                                Mode (Minor/Major): {this.state.selectedSongDetails.mode}
+                                Popularity: {this.state.selectedSongDetails.popularity}
                                 </Col>
                             </Row>
 
@@ -120,52 +124,81 @@ class SongPage extends React.Component {
 
                     <Card style={{marginTop: '2vh'}}>
                         <CardBody>
-                            <Row gutter='30' align='middle' justify='center'>
-                            <Col flex={2} style={{ textAlign: 'left' }}>
+                            <Row gutter='10' align='middle' justify='center'>
+                            <Col flex={1} style={{ textAlign: 'left' }}>
 
-                            <Divider/>
                             <h6>Acousticness</h6>
-                                <Progress style={{ width: '20vw'}} value={this.state.selectedSongDetails.acousticness} >{this.state.selectedSongDetails.acousticness}</Progress>
+                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.acousticness * 100} animated="true">{this.state.selectedSongDetails.acousticness * 100.0}</Progress>
                             <h6>Danceability</h6>
-                                <Progress style={{ width: '20vw'}} value={this.state.selectedSongDetails.danceability} >{this.state.selectedSongDetails.danceability}</Progress>
+                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.danceability * 100 } animated="true">{this.state.selectedSongDetails.danceability * 100.0}</Progress>
                             <h6>Energy</h6>
-                                <Progress style={{ width: '20vw'}} value={this.state.selectedSongDetails.energy} >{this.state.selectedSongDetails.energy}</Progress>
+                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.energy * 100} animated="true">{this.state.selectedSongDetails.energy * 100.0}</Progress>
                             <h6>Instrumentalness</h6>
-                                <Progress style={{ width: '20vw'}} value={this.state.selectedSongDetails.instrumentalness} >{this.state.selectedSongDetails.instrumentalness}</Progress>
+                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.instrumentalness * 100} animated="true">{this.state.selectedSongDetails.instrumentalness * 100.0}</Progress>
                             <h6>Liveness</h6>
-                                <Progress style={{ width: '20vw'}} value={this.state.selectedSongDetails.liveness} >{this.state.selectedSongDetails.liveness}</Progress>
-                            <h6>Loudness</h6>
-                                <Progress style={{ width: '20vw'}} value={this.state.selectedSongDetails.loudness} >{this.state.selectedSongDetails.loudness}</Progress>
-                            <h6>Popularity</h6>
-                                <Progress style={{ width: '20vw'}} value={this.state.selectedSongDetails.popularity} >{this.state.selectedSongDetails.popularity}</Progress>
+                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.liveness * 100} animated="true">{this.state.selectedSongDetails.liveness * 100.0}</Progress>
                             <h6>Speechiness</h6>
-                                <Progress style={{ width: '20vw'}} value={this.state.selectedSongDetails.speechiness} >{this.state.selectedSongDetails.speechiness}</Progress>
-                            <h6>Tempo</h6>
-                                <Progress style={{ width: '20vw'}} value={this.state.selectedSongDetails.tempo} >{this.state.selectedSongDetails.tempo}</Progress>
+                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.speechiness * 100} animated="true">{this.state.selectedSongDetails.speechiness * 100.0}</Progress>
                             <h6>Valence</h6>
-                                <Progress style={{ width: '20vw'}} value={this.state.selectedSongDetails.valence} >{this.state.selectedSongDetails.valence}</Progress>
-
+                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.valence * 100} animated="true">{this.state.selectedSongDetails.valence * 100.0}</Progress>
+                            <h6>Loudness</h6>
+                                <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.loudness * 100} animated="true">{this.state.selectedSongDetails.loudness}</Progress>
+                                
                                 </Col >
-                                <Col  push={2} flex={2}>
+                                <Col  push={1} flex={1}>
                                 {/*TASK 32: In case the player is a GK, show a radar chart (replacing 'null' below) with the labels: Agility, Ball Control, Passing, Positioning, Stamina, Strength */}
 
-                                
+                            <div className="centered-and-flexed">
                                 <RadarChart
-                                data={[this.state.selectedSongDetails]}
-                                tickFormat={t => wideFormat(t)}
-                                startingAngle={0}
-                                domains={[
-                                    { name: 'Energy', domain: [0, 100], getValue: d => d.energy },
-                                    { name: 'Danceability', domain: [0, 1], getValue: d => d.danceability },
-                                    { name: 'Acousticness', domain: [0, 1], getValue: d => d.acousticness },
-                                    { name: 'Speechiness', domain: [0, 1], getValue: d => d.speechiness },
-                                    { name: 'Liveness', domain: [0, 100], getValue: d => d.liveness },
-                                    { name: 'Instrumentalness', domain: [0, 100], getValue: d => d.instrumentalness }
-                                ]}
-                                width={450}
-                                height={400}
+                                animation
+                                        data={[this.state.selectedSongDetails]}
+                                        domains={[
+                                            { name: 'Energy', domain: [0, 1], getValue: d => d.energy },
+                                            { name: 'Danceability', domain: [0, 1], getValue: d => d.danceability },
+                                            { name: 'Acousticness', domain: [0, 1], getValue: d => d.acousticness },
+                                            { name: 'Speechiness', domain: [0, 1], getValue: d => d.speechiness },
+                                            { name: 'Liveness', domain: [0, 1], getValue: d => d.liveness },
+                                            { name: 'Instrumentalness', domain: [0, 1], getValue: d => d.instrumentalness }
+                                        ]}
+                                        style={{
+                                            polygons: {
+                                            fillOpacity: 1,
+                                            strokeWidth: 3
+                                            },
+                                            axes: {
+                                            text: {
+                                                opacity: 1,
+                                            }
+                                            },
+                                            labels: {
+                                            textAnchor: 'middle'
+                                            }
+                                        }}
+                                        margin={{
+                                            left: 60,
+                                            top: 30,
+                                            bottom: 30,
+                                            right: 80
+                                        }}
+                                        tickFormat={t => ''}
+                                        width={400}
+                                        height={300}
+                                        >
+                                        <CircularGridLines
+                                            tickValues={[...new Array(10)].map((v, i) => i / 20- 1)}
+                                        />
+                                        </RadarChart>
+                                </div>
+
+
+
                                 
-                                />
+
+
+
+
+
+
                                 
                                 </Col>
                             </Row>
