@@ -32,7 +32,9 @@ ReactDOM.render(
         <Route
           exact
           path="/heatmap"
-          render={() => (<Heatmap />)}
+          render={() => (
+            <Heatmap />
+          )}
         />
         <Route
           exact
