@@ -14,8 +14,6 @@ const connection = mysql.createConnection({
 
 connection.connect()
 
-let session
-
 router.get('/search', async (req, res) => {
   // TODO: Query the DB based on the query params
   res.send('TODO')
@@ -27,11 +25,6 @@ router.get('/user', async (req, res) => {
 
 router.post('/user', async (req, res) => {
   // TODO: Update the DB for the current user
-})
-
-router.post('/logout', async (req, res) => {
-  req.session.username = null
-  res.redirect('/login')
 })
 
 // Artist: Match user to artist based on average attribute values
@@ -120,8 +113,7 @@ router.get('/location-score', async (req, res) => {
   nd displays the percentage of their liked songs for that artist - COMPLEX
 */
 router.get('/user/top-artists', async (req, res) => {
-  // const { session } = req
-  const { username } = session
+  const { username } = req.session
   connection.query(`
   WITH userSongs AS (
     SELECT *
@@ -228,8 +220,9 @@ router.get('/get-random-songs', async (req, res) => {
 })
 
 // Personal: Average attribute scores
-router.get('/personal/attrs', async (req, res) => {
-  const { username } = session
+router.get('/user/stats', async (req, res) => {
+  console.log(req.session)
+  const { username } = req.session
   connection.query(`
       SELECT 
         AVG(acousticness) AS avg_acousticness, 
@@ -250,8 +243,8 @@ router.get('/personal/attrs', async (req, res) => {
   })
 })
 
-router.get('/user/likes-list', async (_req, res) => {
-  const { username } = session
+router.get('/user/likes-list', async (req, res) => {
+  const { username } = req.session
   const query = `SELECT DISTINCT s.song_id, title
   FROM LikesSong l JOIN Song s on l.song_id = s.song_id
   WHERE l.username='${username}';  
@@ -473,28 +466,6 @@ router.get('/get-songs-related-allattributes', async (req, res) => {
       res.json({ error })
     } else if (results) {
       res.json({ results })
-    }
-  })
-})
-
-router.post('/login', async (req, res) => {
-  // res.setHeader('Access-Control-Allow-Credentials', 'true')
-  const { body } = req
-  const { username, password } = body
-  session = req.session
-  const sql = `SELECT password
-  FROM User u
-  WHERE u.username = '${username}'`
-  connection.query(sql, (error, results) => {
-    if (error) {
-      res.json({ error })
-    } else if (results) {
-      if (results[0].password === password) {
-        req.session.username = username
-        res.send('Successful login')
-      } else {
-        res.send('Unsuccessful login')
-      }
     }
   })
 })
