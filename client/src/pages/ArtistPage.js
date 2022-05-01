@@ -91,67 +91,39 @@ class ArtistPage extends React.Component {
                                 </Col>
                             </Row>
 
-                            <br>
-                            </br>
-
-                            {/* <Row gutter='30' align='middle' justify='left'>
+                            <Row gutter='30' align='middle' justify='left'>
                                 <Col>
-                                Duration (ms): {this.state.selectedArtistDetails.duration_ms}
-                                </Col>
-                                <Col>
-                                Tempo: {this.state.selectedArtistDetails.tempo}
+                                # of Listeners: {this.state.selectedArtistDetails.listeners}
                                 </Col>
                             </Row>
 
                             <Row gutter='30' align='middle' justify='left'>
-                                 <Col>
-                                Mode (Minor/Major): {this.state.selectedArtistDetails.mode}
-                                </Col>
                                 <Col>
-                                Explicit: {this.state.selectedArtistDetails.explicit}
+                                # of Scrobbles: {this.state.selectedArtistDetails.scrobbles}
                                 </Col>
-                                <Col>
-                                Popularity: {this.state.selectedArtistDetails.popularity}
-                                </Col>
-                            </Row> */}
+                            </Row>
 
                         </CardBody>
 
                     </Card>
 
-                    {/* <Card style={{marginTop: '2vh'}}>
+                    <br/>
+                    <br/>
+
+                    <Card>
                         <CardBody>
-                            <Row gutter='10' align='middle' justify='center'>
-                            <Col flex={1} style={{ textAlign: 'left' }}>
-
-                            <h6>Acousticness</h6>
-                                <Progress style={{ width: '40vw'}} value={this.state.selectedArtistDetails.acousticness * 100} animated="true">{this.state.selectedSongDetails.acousticness}</Progress>
-                            <h6>Danceability</h6>
-                                <Progress style={{ width: '40vw'}} value={this.state.selectedArtistDetails.danceability * 100 } animated="true">{this.state.selectedSongDetails.danceability}</Progress>
-                            <h6>Energy</h6>
-                                <Progress style={{ width: '40vw'}} value={this.state.selectedArtistDetails.energy * 100} animated="true">{this.state.selectedSongDetails.energy}</Progress>
-                            <h6>Instrumentalness</h6>
-                                <Progress style={{ width: '40vw'}} value={this.state.selectedArtistDetails.instrumentalness * 100} animated="true">{this.state.selectedSongDetails.instrumentalness}</Progress>
-                            <h6>Liveness</h6>
-                                <Progress style={{ width: '40vw'}} value={this.state.selectedArtistDetails.liveness * 100} animated="true">{this.state.selectedSongDetails.liveness}</Progress>
-                            <h6>Speechiness</h6>
-                                <Progress style={{ width: '40vw'}} value={this.state.selectedArtistDetails.speechiness * 100} animated="true">{this.state.selectedSongDetails.speechiness}</Progress>
-                            <h6>Valence</h6>
-                                <Progress style={{ width: '40vw'}} value={this.state.selectedArtistDetails.valence * 100} animated="true">{this.state.selectedSongDetails.valence}</Progress>
-                            <h6>Loudness</h6>
-                                <Progress style={{ width: '40vw'}} value={this.state.selectedArtistDetails.loudness * 100} animated="true">{this.state.selectedSongDetails.loudness}</Progress>
-                                
-                            </Col >
-                            <Col  push={1} flex={1}>
-
-                            <div className="centered-and-flexed">
-
-                            </div>
-
-                            </Col>
+                            <Row gutter='30' align='middle' justify='center'>
+                                <Col flex={2} style={{ textAlign: 'left' }}>
+                                    <h3>tags</h3>
+                                </Col>
+                            </Row>
+                            <Row gutter='30' align='middle' justify='left'>
+                                <Col>
+                                    {this.state.selectedArtistDetails.tags}
+                                </Col>
                             </Row>
                         </CardBody>
-                    </Card> */}
+                    </Card>
 
                 </div> : null}
 
