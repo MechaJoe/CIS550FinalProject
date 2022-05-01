@@ -8,6 +8,7 @@ import {
 
 import SearchPage from './pages/SearchPage'
 import LoginPage from './pages/LoginPage'
+import Heatmap from './pages/Heatmap'
 
 ReactDOM.render(
   <div>
@@ -26,6 +27,8 @@ ReactDOM.render(
           render={() => (
             <LoginPage />
           )}
+          path="/heatmap"
+          render={() => (<Heatmap />)}
         />
       </Switch>
     </Router>
