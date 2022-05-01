@@ -43,7 +43,8 @@ router.post('/login', async (req, res) => {
 
 router.get('/username', (req, res) => {
   console.log(req.session)
-  res.json(req.session.username)
+  // res.json(req.session.username)
+  res.json(session.username)
 })
 
 router.post('/logout', (req, res) => {
@@ -259,7 +260,6 @@ router.get('/get-random-songs', async (req, res) => {
 
 // Personal: Average attribute scores
 router.get('/user/stats', async (req, res) => {
-  console.log(req.session)
   const { username } = session
   connection.query(`
       SELECT 
@@ -525,6 +525,34 @@ router.get('/artist/recommended_by_location', async (req, res) => {
     FROM artist_location_likes
     WHERE p.location = ${location}
     ORDER BY num_likes DESC
+  `, (error, results) => {
+    if (error) {
+      res.json({ error })
+    } else if (results) {
+      res.json({ results })
+    }
+  })
+})
+
+router.post('/user/set-location', async (req, res) => {
+  const { username, location } = req.body
+  connection.query(`
+    UPDATE User SET location = '${location}' WHERE username = '${username}'
+  `, (error, results) => {
+    if (error) {
+      res.json({ error })
+    } else if (results) {
+      res.json({ results })
+    }
+  })
+})
+
+router.post('/user/location', async (_req, res) => {
+  const { username } = session
+  connection.query(`
+    SELECT location
+    FROM User
+    WHERE username = '${username}'
   `, (error, results) => {
     if (error) {
       res.json({ error })
