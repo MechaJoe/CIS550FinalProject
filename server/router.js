@@ -27,11 +27,6 @@ router.post('/user', async (req, res) => {
   // TODO: Update the DB for the current user
 })
 
-router.post('/logout', async (req, res) => {
-  req.session.username = null
-  res.redirect('/login')
-})
-
 // Artist: Match user to artist based on average attribute values
 router.get('/artist/recommended_by_attrs', async (req, res) => {
   const { username } = req.session
@@ -260,6 +255,8 @@ router.get('/user/likes-list', async (req, res) => {
       res.json({ error })
     } else if (results.length === 0) {
       res.json({ results: [] })
+    } else {
+      res.json({ results })
     }
   })
 })
@@ -473,25 +470,6 @@ router.get('/get-songs-related-allattributes', async (req, res) => {
   })
 })
 
-router.post('/login', async (req, res) => {
-  const { body } = req
-  const { username, password } = body
-  const sql = `SELECT password
-  FROM User u
-  WHERE u.username = '${username}'`
-  connection.query(sql, (error, results) => {
-    if (error) {
-      res.json({ error })
-    } else if (results) {
-      if (results[0].password === password) {
-        req.session.username = username
-        res.send('Successful login')
-      } else {
-        res.send('Unsuccessful login')
-      }
-    }
-  })
-})
 
 // Artist: Recommend artists that were liked by other users in the same geographic location - COMPLEX
 router.get('/artist/recommended_by_location', async (req, res) => {

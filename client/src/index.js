@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom'
 
 import SearchPage from './pages/SearchPage'
+import LoginPage from './pages/LoginPage'
 import Heatmap from './pages/Heatmap'
 
 ReactDOM.render(
@@ -22,6 +23,10 @@ ReactDOM.render(
         />
         <Route
           exact
+          path="/login"
+          render={() => (
+            <LoginPage />
+          )}
           path="/heatmap"
           render={() => (<Heatmap />)}
         />
