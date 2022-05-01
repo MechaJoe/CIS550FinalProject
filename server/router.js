@@ -14,8 +14,10 @@ const connection = mysql.createConnection({
 
 connection.connect()
 
+// TEMP FIX FOR SESSION PROBLEM
 let session
 
+// AUTH ROUTES
 router.post('/login', async (req, res) => {
   const { body } = req
   const { username, password } = body
@@ -52,6 +54,8 @@ router.post('/logout', (req, res) => {
   console.log(req.session.username)
   res.send('Logged out')
 })
+
+// END AUTH ROUTES
 
 router.get('/search', async (req, res) => {
   // TODO: Query the DB based on the query params
