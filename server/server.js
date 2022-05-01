@@ -20,8 +20,10 @@ app.use(session({
   resave: false,
   unset: 'destroy',
 }))
-// app.use(passport.initialize())
-// app.use(passport.session())
+app.use(passport.initialize())
+app.use(passport.session())
+app.use()
+
 
 app.use('/', Router)
 app.use('/', AuthRouter)
