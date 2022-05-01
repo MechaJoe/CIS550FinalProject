@@ -12,41 +12,10 @@ import { getArtistSearch, getArtist } from '../fetcher'
 import { color, fontSize } from '@mui/system';
 const wideFormat = format('.3r');
 
-const artistColumns = [
-    {
-        title: 'title',
-        dataIndex: 'title',
-        key: 'title',
-        sorter: (a, b) => a.title.localeCompare(b.title),
-        render: (text, row) => <a href={`/artist/artist_id?id=${row.artist_id}`}>{text}</a>
-    },
-    {
-        title: 'artist',
-        dataIndex: 'artist',
-        key: 'artist',
-        sorter: (a, b) => a.artist.localeCompare(b.artist)
-    },
-    {
-        title: 'year',
-        dataIndex: 'year',
-        key: 'year',
-        sorter: (a, b) => a.year - b.year
-
-    },
-];
-
-
 class ArtistPage extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            titleQuery: '',
-            nationalityQuery: '',
-            clubQuery: '',
-            ratingHighQuery: 100,
-            ratingLowQuery: 0,
-            potHighQuery: 100,
-            potLowQuery: 0,
             selectedArtistId: window.location.search ? window.location.search.substring(1).split('=')[1] : 229594,
             selectedArtistDetails: null,
             artistResults: []
@@ -54,7 +23,7 @@ class ArtistPage extends React.Component {
     }
 
     componentDidMount() {
-        getArtistSearch(this.state.titleQuery, this.state.nationalityQuery, this.state.clubQuery, this.state.ratingHighQuery, this.state.ratingLowQuery, this.state.potHighQuery, this.state.potLowQuery, null, null).then(res => {
+        getArtistSearch(null, null).then(res => {
             this.setState({ artistResults: res.results })
         })
 
@@ -114,7 +83,7 @@ class ArtistPage extends React.Component {
                         <CardBody>
                             <Row gutter='30' align='middle' justify='center'>
                                 <Col flex={2} style={{ textAlign: 'left' }}>
-                                    <h3>tags</h3>
+                                    <h3>related tags to {this.state.selectedArtistDetails.name}</h3>
                                 </Col>
                             </Row>
                             <Row gutter='30' align='middle' justify='left'>
