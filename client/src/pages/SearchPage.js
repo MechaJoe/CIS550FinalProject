@@ -19,16 +19,13 @@ function SearchPage() {
   const [livenessHighQuery, setLivenessHighQuery] = useState(1)
   const [speechinessLowQuery, setSpeechinessLowQuery] = useState(0)
   const [speechinessHighQuery, setSpeechinessHighQuery] = useState(1)
+  const [searchResults, setSearchResults] = useState([])
 
-  useEffect(() => {
-    getSearchBySong().then(setInput)
-  }, [])
-
+  // useStates for filter parameters
   const handleAcousticnessChange = (value) => {
     setAcousticnessLowQuery(value[0])
     setAcousticnessHighQuery(value[1])
   }
-
   const handleDanceabilityChange = (value) => {
     setDanceabilityLowQuery(value[0])
     setDanceabilityHighQuery(value[1])
@@ -48,6 +45,27 @@ function SearchPage() {
   const handleSpeechinessChange = (value) => {
     setSpeechinessLowQuery(value[0])
     setSpeechinessHighQuery(value[1])
+  }
+
+  // Call the fetch search query
+  const handleSearchBySong = async () => {
+    getSearchBySong(
+      input,
+      acousticnessLowQuery,
+      acousticnessHighQuery,
+      danceabilityLowQuery,
+      danceabilityHighQuery,
+      energyLowQuery,
+      energyHighQuery,
+      valenceLowQuery,
+      valenceHighQuery,
+      livenessLowQuery,
+      livenessHighQuery,
+      speechinessLowQuery,
+      speechinessHighQuery,
+    ).then((res) => {
+      setSearchResults(res.results)
+    })
   }
 
   return (
