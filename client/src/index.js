@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom'
 
 import SearchPage from './pages/SearchPage'
+import LoginPage from './pages/LoginPage'
 
 ReactDOM.render(
   <div>
@@ -17,6 +18,13 @@ ReactDOM.render(
           path="/"
           render={() => (
             <SearchPage />
+          )}
+        />
+        <Route
+          exact
+          path="/login"
+          render={() => (
+            <LoginPage />
           )}
         />
       </Switch>
