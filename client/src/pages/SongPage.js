@@ -144,68 +144,56 @@ class SongPage extends React.Component {
                             <h6>Loudness</h6>
                                 <Progress style={{ width: '40vw'}} value={this.state.selectedSongDetails.loudness * 100} animated="true">{this.state.selectedSongDetails.loudness}</Progress>
                                 
-                                </Col >
-                                <Col  push={1} flex={1}>
+                            </Col >
+                            <Col  push={1} flex={1}>
 
                             <div className="centered-and-flexed">
-                                <RadarChart
+                            <RadarChart
                                 animation
-                                        data={[this.state.selectedSongDetails]}
-                                        domains={[
-                                            { name: 'Energy', domain: [0, 1], getValue: d => d.energy },
-                                            { name: 'Danceability', domain: [0, 1], getValue: d => d.danceability },
-                                            { name: 'Acousticness', domain: [0, 1], getValue: d => d.acousticness },
-                                            { name: 'Speechiness', domain: [0, 1], getValue: d => d.speechiness },
-                                            { name: 'Liveness', domain: [0, 1], getValue: d => d.liveness },
-                                            { name: 'Instrumentalness', domain: [0, 1], getValue: d => d.instrumentalness }
-                                        ]}
-                                        style={{
-                                            polygons: {
-                                            fillOpacity: 0,
-                                            strokeWidth: 3,
-                                            },
-                                            axes: {
-                                            text: {
-                                                opacity: 1,
-                                            }
-                                            },
-                                            labels: {
-                                            textAnchor: 'middle'
-                                            }
-                                        }}
-                                        margin={{
-                                            left: 60,
-                                            top: 30,
-                                            bottom: 30,
-                                            right: 80
-                                        }}
-                                        tickFormat={t => ''}
-                                        width={400}
-                                        height={300}
-                                        >
-                                        <CircularGridLines
-                                            tickValues={[...new Array(5)].map((v, i) => i / 5- 1)}
-                                            style={{
-                                                
-                                                fill: 'rgba(114,172,240,0.5)',
-                                                fillOpacity: 0.5,
-                                                
-                                                }}
-                                        />
-                                        </RadarChart>
-                                </div>
+                                data={[this.state.selectedSongDetails]}
+                                domains={[
+                                    { name: 'Energy', domain: [0, 1], getValue: d => d.energy },
+                                    { name: 'Danceability', domain: [0, 1], getValue: d => d.danceability },
+                                    { name: 'Acousticness', domain: [0, 1], getValue: d => d.acousticness },
+                                    { name: 'Speechiness', domain: [0, 1], getValue: d => d.speechiness },
+                                    { name: 'Liveness', domain: [0, 1], getValue: d => d.liveness },
+                                    { name: 'Instrumentalness', domain: [0, 1], getValue: d => d.instrumentalness }
+                                ]}
+                                style={{
+                                    polygons: {
+                                    fillOpacity: 0,
+                                    strokeWidth: 3,
+                                    },
+                                    axes: {
+                                    text: {
+                                        opacity: 1,
+                                    }
+                                    },
+                                    labels: {
+                                    textAnchor: 'middle'
+                                    }
+                                }}
+                                margin={{
+                                    left: 60,
+                                    top: 30,
+                                    bottom: 30,
+                                    right: 80
+                                }}
+                                tickFormat={t => ''}
+                                width={400}
+                                height={300}
+                                >
+                                <CircularGridLines
+                                    tickValues={[...new Array(5)].map((v, i) => i / 5- 1)}
+                                    style={{
+                                        fill: 'rgba(114,172,240,0.5)',
+                                        fillOpacity: 0.5,
+                                    }}
+                                />
+                            </RadarChart>
+                            </div>
 
-
-
-                                
-
-
-
-
-
-
-                                
-                                </Col>
+                            </Col>
                             </Row>
                         </CardBody>
                     </Card>
