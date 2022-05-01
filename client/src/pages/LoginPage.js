@@ -21,6 +21,8 @@ export default function LoginPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+    console.log(username)
+    console.log(password)
     const { data } = await axios.post('http://localhost:8080/login', { username, password }, { withCredentials: true })
     if (data === 'Successful login') {
       history.push('/')
@@ -30,7 +32,7 @@ export default function LoginPage() {
   }
 
   const testSession = async () => {
-    const { data } = await axios.get('http://localhost:8080/session', { withCredentials: true })
+    const { data } = await axios.get('http://localhost:8080/username', { withCredentials: true })
     console.log(data)
   }
 
