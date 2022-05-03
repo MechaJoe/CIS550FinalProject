@@ -1,12 +1,25 @@
 import config from './config.json'
 
-const getSearchBySong = async () => {
-  const res = await fetch(`http://${config.server_host}:${config.server_port}/search/song`, {
+const getSearchBySong = async (
+  input,
+  acousticnessLowQuery,
+  acousticnessHighQuery,
+  danceabilityLowQuery,
+  danceabilityHighQuery,
+  energyLowQuery,
+  energyHighQuery,
+  valenceLowQuery,
+  valenceHighQuery,
+  // livenessLowQuery,
+  // livenessHighQuery,
+  // speechinessLowQuery,
+  // speechinessHighQuery,
+) => {
+  const res = await fetch(`http://${config.server_host}:${config.server_port}/search/song?song=${input}&acousticnessLow=${acousticnessLowQuery}&acousticnessHigh=${acousticnessHighQuery}&danceabilityLow=${danceabilityLowQuery}&danceabilityHigh=${danceabilityHighQuery}&energyLow=${energyLowQuery}&energyHigh=${energyHighQuery}&valenceLow=${valenceLowQuery}&valenceHigh=${valenceHighQuery}`, {
     method: 'GET',
   })
 
-  const json = await res.json()
-  return json.results[0]
+  return res.json()
 }
 
 // const getAllMatches = async (page, pagesize, league) => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   FormControl, TextField, Button, ButtonGroup, Typography, Slider,
 } from '@mui/material'
@@ -64,9 +64,30 @@ function SearchPage() {
       speechinessLowQuery,
       speechinessHighQuery,
     ).then((res) => {
-      setSearchResults(res.results)
+      setSearchResults(res)
     })
   }
+  console.log(searchResults)
+
+  // const handleSearchByArtist = async () => {
+  //   getSearchByArtist(
+  //     input,
+  //     acousticnessLowQuery,
+  //     acousticnessHighQuery,
+  //     danceabilityLowQuery,
+  //     danceabilityHighQuery,
+  //     energyLowQuery,
+  //     energyHighQuery,
+  //     valenceLowQuery,
+  //     valenceHighQuery,
+  //     livenessLowQuery,
+  //     livenessHighQuery,
+  //     speechinessLowQuery,
+  //     speechinessHighQuery,
+  //   ).then((res) => {
+  //     setSearchResults(res.results)
+  //   })
+  // }
 
   return (
     <FormControl>
@@ -76,19 +97,19 @@ function SearchPage() {
       <div id="hello">
         <TextField id="search-input" label="Search" variant="outlined" sx={{ padding: '15px' }} onChange={(e) => setInput(e.target.value)} />
         <Typography gutterBottom>Acousticness</Typography>
-        <Slider id="acousticness" range defaultValue={[0, 1]} valueLabelDisplay="auto" onChange={handleAcousticnessChange} />
+        <Slider id="acousticness" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleAcousticnessChange(e.target.value)} />
         <Typography gutterBottom>Danceability</Typography>
-        <Slider id="danceability" range defaultValue={[0, 1]} onChange={handleDanceabilityChange} />
+        <Slider id="danceability" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleDanceabilityChange(e.target.value)} />
         <Typography gutterBottom>Energy</Typography>
-        <Slider id="energy" range defaultValue={[0, 1]} onChange={handleEnergyChange} />
+        <Slider id="energy" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleEnergyChange(e.target.value)} />
         <Typography gutterBottom>Valence</Typography>
-        <Slider id="valence" range defaultValue={[0, 1]} onChange={handleValenceChange} />
+        <Slider id="valence" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleValenceChange(e.target.value)} />
         <Typography gutterBottom>Liveness</Typography>
-        <Slider id="liveness" range defaultValue={[0, 1]} onChange={handleLivenessChange} />
+        <Slider id="liveness" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleLivenessChange(e.target.value)} />
         <Typography gutterBottom>Speechiness</Typography>
-        <Slider id="speechiness" range defaultValue={[0, 1]} onChange={handleSpeechinessChange} />
+        <Slider id="speechiness" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleSpeechinessChange(e.target.value)} />
         <ButtonGroup orientation="vertical" variant="contained" aria-label="outlined primary button group">
-          <Button> By Song </Button>
+          <Button onClick={handleSearchBySong}> By Song </Button>
           <Button> By Artist </Button>
         </ButtonGroup>
       </div>
