@@ -4,7 +4,7 @@ import { ComposableMap, Geographies, Geography } from 'react-simple-maps'
 import { scaleQuantize } from 'd3-scale'
 
 import NavBar from '../components/NavBar'
-import config from '../config.json'
+import { getArtistData } from '../fetcher'
 
 const geoUrl = 'https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json'
 
@@ -24,14 +24,6 @@ const colorScale = scaleQuantize()
 
 function Heatmap() {
   const [data, setData] = useState([])
-
-  const getArtistData = async () => {
-    const res = await fetch(`http://${config.server_host}:${config.server_port}/heatmap`, {
-      method: 'GET',
-    })
-    const json = await res.json()
-    return json.results
-  }
 
   useEffect(() => {
     getArtistData().then((countries) => {
