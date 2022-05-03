@@ -11,12 +11,12 @@ export const getSearchBySong = async (
   energyHighQuery,
   valenceLowQuery,
   valenceHighQuery,
-  // livenessLowQuery,
-  // livenessHighQuery,
-  // speechinessLowQuery,
-  // speechinessHighQuery,
+  livenessLowQuery,
+  livenessHighQuery,
+  speechinessLowQuery,
+  speechinessHighQuery,
 ) => {
-  const res = await fetch(`http://${config.server_host}:${config.server_port}/search/song?song=${input}&acousticnessLow=${acousticnessLowQuery}&acousticnessHigh=${acousticnessHighQuery}&danceabilityLow=${danceabilityLowQuery}&danceabilityHigh=${danceabilityHighQuery}&energyLow=${energyLowQuery}&energyHigh=${energyHighQuery}&valenceLow=${valenceLowQuery}&valenceHigh=${valenceHighQuery}`, {
+  const res = await fetch(`http://${config.server_host}:${config.server_port}/search/song?song=${input}&acousticnessLow=${acousticnessLowQuery}&acousticnessHigh=${acousticnessHighQuery}&danceabilityLow=${danceabilityLowQuery}&danceabilityHigh=${danceabilityHighQuery}&energyLow=${energyLowQuery}&energyHigh=${energyHighQuery}&valenceLow=${valenceLowQuery}&valenceHigh=${valenceHighQuery}&livenessLow=${livenessLowQuery}&livenessHigh=${livenessHighQuery}&speechinessLow=${speechinessLowQuery}&speechinessHigh=${speechinessHighQuery}`, {
     method: 'GET',
   })
 
