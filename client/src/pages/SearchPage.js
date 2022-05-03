@@ -64,10 +64,11 @@ function SearchPage() {
       speechinessLowQuery,
       speechinessHighQuery,
     ).then((res) => {
-      setSearchResults(res)
+      setSearchResults(res.results)
     })
   }
   console.log(searchResults)
+  console.log(searchResults.length)
 
   // const handleSearchByArtist = async () => {
   //   getSearchByArtist(
@@ -90,30 +91,45 @@ function SearchPage() {
   // }
 
   return (
-    <FormControl>
-      <Typography variant="h1" component="h2">
-        MusicBar
-      </Typography>
-      <div id="hello">
-        <TextField id="search-input" label="Search" variant="outlined" sx={{ padding: '15px' }} onChange={(e) => setInput(e.target.value)} />
-        <Typography gutterBottom>Acousticness</Typography>
-        <Slider id="acousticness" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleAcousticnessChange(e.target.value)} />
-        <Typography gutterBottom>Danceability</Typography>
-        <Slider id="danceability" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleDanceabilityChange(e.target.value)} />
-        <Typography gutterBottom>Energy</Typography>
-        <Slider id="energy" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleEnergyChange(e.target.value)} />
-        <Typography gutterBottom>Valence</Typography>
-        <Slider id="valence" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleValenceChange(e.target.value)} />
-        <Typography gutterBottom>Liveness</Typography>
-        <Slider id="liveness" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleLivenessChange(e.target.value)} />
-        <Typography gutterBottom>Speechiness</Typography>
-        <Slider id="speechiness" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleSpeechinessChange(e.target.value)} />
-        <ButtonGroup orientation="vertical" variant="contained" aria-label="outlined primary button group">
-          <Button onClick={handleSearchBySong}> By Song </Button>
-          <Button> By Artist </Button>
-        </ButtonGroup>
-      </div>
-    </FormControl>
+    <>
+      <FormControl>
+        <Typography variant="h1" component="h2">
+          MusicBar
+        </Typography>
+        <div id="hello">
+          <TextField id="search-input" label="Search" variant="outlined" sx={{ padding: '15px' }} onChange={(e) => setInput(e.target.value)} />
+          <Typography gutterBottom>Acousticness</Typography>
+          <Slider id="acousticness" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleAcousticnessChange(e.target.value)} />
+          <Typography gutterBottom>Danceability</Typography>
+          <Slider id="danceability" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleDanceabilityChange(e.target.value)} />
+          <Typography gutterBottom>Energy</Typography>
+          <Slider id="energy" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleEnergyChange(e.target.value)} />
+          <Typography gutterBottom>Valence</Typography>
+          <Slider id="valence" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleValenceChange(e.target.value)} />
+          <Typography gutterBottom>Liveness</Typography>
+          <Slider id="liveness" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleLivenessChange(e.target.value)} />
+          <Typography gutterBottom>Speechiness</Typography>
+          <Slider id="speechiness" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleSpeechinessChange(e.target.value)} />
+          <ButtonGroup orientation="vertical" variant="contained" aria-label="outlined primary button group">
+            <Button onClick={handleSearchBySong}> By Song </Button>
+            <Button> By Artist </Button>
+          </ButtonGroup>
+        </div>
+      </FormControl>
+      { searchResults.length ? (
+        <>
+          <Typography gutterBottom>Results</Typography>
+          <Typography gutterBottom>Results</Typography>
+          <Typography gutterBottom>{searchResults[0].title}</Typography>
+
+          {searchResults.map((song) => (
+            <p>
+              {song.title}
+            </p>
+          ))}
+        </>
+      ) : null }
+    </>
   )
 }
 
