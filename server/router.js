@@ -229,6 +229,22 @@ router.get('/song/song_info', async (req, res) => {
   })
 })
 
+// get artist info
+router.get('/artist/artist_info', async (req, res) => {
+  const { id } = req.query
+  connection.query(`
+    SELECT *
+    FROM Artist
+    WHERE artist_id = '${id}';
+  `, (error, results) => {
+    if (error) {
+      res.json({ error })
+    } else if (results) {
+      res.json({ results })
+    }
+  })
+})
+
 router.get('/heatmap', async (req, res) => {
   const query = `SELECT location, COUNT(artist_id) AS num_artists
   FROM Artist
