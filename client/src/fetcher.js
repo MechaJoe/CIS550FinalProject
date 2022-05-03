@@ -32,9 +32,9 @@ export const getSearchBySong = async (
   // map song_id to [list of artists, title]
   const idToSong = res.reduce((acc, obj) => {
     try {
-      acc[obj.song_id] = [[obj.artist].concat(acc[obj.song_id][0]), obj.title]
+      acc[obj.song_id] = [[obj.artist].concat(acc[obj.song_id][0]), [obj.artist_id].concat(acc[obj.song_id][1]), obj.title]
     } catch (e) {
-      acc[obj.song_id] = [[obj.artist], obj.title]
+      acc[obj.song_id] = [[obj.artist], [obj.artist_id], obj.title]
     }
     return acc
   }, {})

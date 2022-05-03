@@ -95,11 +95,20 @@ function SearchPage() {
 
   const createData = (arr) => {
     const songId = arr[0]
-    const title = arr[1][1]
-    const artists = arr[1][0].join(', ') ?? ''
+    const title = arr[1][2]
+    // const artists = arr[1][0].join(', ') ?? ''
+    const artists = arr[1][0]
+    const artistIds = arr[1][1]
     const url = `/song/?id=${songId}`
+    const artistTups = []
+    for (let i = 0; i < artists.length; i += 1) {
+      const artist = artists[i]
+      const artistId = artistIds[i]
+      const artistUrl = `/artist/?id=${artistId}`
+      artistTups.push({ artist, artistUrl })
+    }
     return {
-      songId, title, artists, url,
+      songId, title, artists, url, artistIds, artistTups,
     }
   }
 
@@ -178,7 +187,14 @@ function SearchPage() {
                           {row.title}
                         </Link>
                       </TableCell>
-                      <TableCell align="right">{row.artists}</TableCell>
+                      <TableCell align="right">
+                        {row.artistTups.map((art) => (
+                          <Link href={art.artistUrl}>
+                            {art.artist}
+                            &nbsp;
+                          </Link>
+                        ))}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
