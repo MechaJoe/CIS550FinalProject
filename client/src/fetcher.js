@@ -22,7 +22,17 @@ export const getLikedSongs = async () => {
     `http://${config.server_host}:${config.server_port}/user/likes-list`,
     { withCredentials: true },
   )
-  return data?.results ?? []
+  const res = data?.results ?? []
+  // map song_id to [list of artists, title]
+  const idToSong = res.reduce((acc, obj) => {
+    try {
+      acc[obj.song_id] = [[obj.artist].concat(acc[obj.song_id][0]), obj.title]
+    } catch (e) {
+      acc[obj.song_id] = [[obj.artist], obj.title]
+    }
+    return acc
+  }, {})
+  return Object.entries(idToSong)
 }
 
 export const getTopArtists = async () => {
