@@ -93,7 +93,7 @@ router.get(
           return res.redirect('http://localhost:3000/signup-google')
         }
         if (user) {
-          req.session.username = user
+          req.session.username = user.id
           return res.redirect('http://localhost:3000/')
         }
         return res.redirect('http://localhost:3000/login')
