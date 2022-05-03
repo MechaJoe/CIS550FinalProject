@@ -46,7 +46,7 @@ export const getTopArtists = async () => {
 export const setUserLocation = async (user, location) => {
   const { data } = await axios.post(
     `http://${config.server_host}:${config.server_port}/user/set-location`,
-    { username: user, location },
+    { location },
     { withCredentials: true },
   )
   return data?.changedRows ?? 0
@@ -58,4 +58,20 @@ export const getUserLocation = async () => {
     { withCredentials: true },
   )
   return data?.results[0]?.location ?? 'N/A'
+}
+
+export const setLikeSong = async (songId, liked) => {
+  if (liked) {
+    await axios.post(
+      `http://${config.server_host}:${config.server_port}/like`,
+      { song_id: songId },
+      { withCredentials: true },
+    )
+  } else {
+    await axios.delete(
+      `http://${config.server_host}:${config.server_port}/unlike`,
+      { data: { song_id: songId } },
+      { withCredentials: true },
+    )
+  }
 }

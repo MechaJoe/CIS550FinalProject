@@ -6,8 +6,7 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import Slider from '@mui/material/Slider'
 import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
+import SongCard from '../components/SongCard'
 import {
   getStats, getLikedSongs, getTopArtists, getCurrUser, getUserLocation,
   setUserLocation,
@@ -47,7 +46,7 @@ export default function UserProfile() {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    setUserLocation(user, newLocation)
+    setUserLocation(newLocation)
     setLocation(newLocation)
   }
 
@@ -105,14 +104,13 @@ export default function UserProfile() {
           alignItems="flex-start"
         >
           {likedSongs.length === 0 ? null : likedSongs.map((elem) => (
-            <Grid item xs={12} sm={6} md={3} key={likedSongs.indexOf(elem)}>
-              <Card>
-                <CardHeader
-                  title={elem[1][1]}
-                  subheader={elem[1][0].join(', ') ?? ''}
-                />
-              </Card>
-            </Grid>
+            <SongCard
+              songId={elem[0]}
+              title={elem[1][1]}
+              artists={elem[1][0].join(', ') ?? ''}
+              key={likedSongs.indexOf(elem)}
+              alreadyLiked
+            />
           ))}
         </Grid>
       </Box>
