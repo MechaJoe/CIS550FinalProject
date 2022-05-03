@@ -31,10 +31,15 @@ ReactDOM.render(
         />
         <Route
           exact
-          path="/me"
+          path="/heatmap"
           render={() => (
-            <UserProfile />
+            <Heatmap />
           )}
+        />
+        <Route
+          exact
+          path="/me"
+          render={() => (<UserProfile />)}
         />
       </Switch>
     </Router>
