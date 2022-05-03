@@ -14,6 +14,49 @@ const connection = mysql.createConnection({
 
 connection.connect()
 
+// TEMP FIX FOR SESSION PROBLEM
+let session
+
+// AUTH ROUTES
+router.post('/login', async (req, res) => {
+  const { body } = req
+  const { username, password } = body
+  console.log(username)
+  console.log(password)
+  const sql = `SELECT password
+  FROM User u
+  WHERE u.username = '${username}'`
+  connection.query(sql, (error, results) => {
+    if (error) {
+      res.json({ error })
+    } else if (results) {
+      if (results.length !== 0 && results[0].password === password) {
+        req.session.username = username
+        req.session.save()
+        session = req.session
+        // console.log(req.session)
+        res.send('Successful login')
+      } else {
+        res.send('Unsuccessful login')
+      }
+    }
+  })
+})
+
+router.get('/username', (req, res) => {
+  console.log(req.session)
+  // res.json(req.session.username)
+  res.json(session.username)
+})
+
+router.post('/logout', (req, res) => {
+  req.session.username = null
+  console.log(req.session.username)
+  res.send('Logged out')
+})
+
+// END AUTH ROUTES
+
 router.get('/search', async (req, res) => {
   // TODO: Query the DB based on the query params
   res.send('TODO')
@@ -27,13 +70,8 @@ router.post('/user', async (req, res) => {
   // TODO: Update the DB for the current user
 })
 
-router.post('/logout', async (req, res) => {
-  req.session.username = null
-  res.redirect('/login')
-})
-
 // Artist: Match user to artist based on average attribute values
-router.get('/artist/recommended_by_attrs', async (req, res) => {
+router.get('/artist/recommended-by-attrs', async (req, res) => {
   const { username } = req.session
   connection.query(`
       WITH user_agg_song_attrs AS (
@@ -118,7 +156,6 @@ router.get('/location-score', async (req, res) => {
   nd displays the percentage of their liked songs for that artist - COMPLEX
 */
 router.get('/user/top-artists', async (req, res) => {
-  const { session } = req
   const { username } = session
   connection.query(`
   WITH userSongs AS (
@@ -193,7 +230,7 @@ router.get('/song/song_info', async (req, res) => {
 })
 
 router.get('/heatmap', async (req, res) => {
-  const query = `SELECT location, artist_id
+  const query = `SELECT location, COUNT(artist_id) AS num_artists
   FROM Artist
   GROUP BY location;
   `
@@ -226,8 +263,8 @@ router.get('/get-random-songs', async (req, res) => {
 })
 
 // Personal: Average attribute scores
-router.get('/personal/attrs', async (req, res) => {
-  const { username } = req.session
+router.get('/user/stats', async (req, res) => {
+  const { username } = session
   connection.query(`
       SELECT 
         AVG(acousticness) AS avg_acousticness, 
@@ -249,17 +286,19 @@ router.get('/personal/attrs', async (req, res) => {
 })
 
 router.get('/user/likes-list', async (req, res) => {
-  const { username } = req.session
-  const query = `SELECT DISTINCT title
+  const { username } = session
+  const query = `SELECT DISTINCT s.song_id, title, artist
   FROM LikesSong l JOIN Song s on l.song_id = s.song_id
   WHERE l.username='${username}';  
   `
-  connection.query(query, (error, results, fields) => {
+  connection.query(query, (error, results, _fields) => {
     if (error) {
       console.log(error)
       res.json({ error })
     } else if (results.length === 0) {
       res.json({ results: [] })
+    } else {
+      res.json({ results })
     }
   })
 })
@@ -433,7 +472,7 @@ router.get('/song/recommended_by_location', async (req, res) => {
 })
 
 router.get('/user/likes', async (req, res) => {
-  const { username } = req.session
+  const { username } = session
   const query = `SELECT COUNT(*) AS num_songs_liked
   FROM LikesSong l JOIN Song s on l.song_id = s.song_id
   WHERE l.username = '${username}'
@@ -473,26 +512,6 @@ router.get('/get-songs-related-allattributes', async (req, res) => {
   })
 })
 
-router.post('/login', async (req, res) => {
-  const { body } = req
-  const { username, password } = body
-  const sql = `SELECT password
-  FROM User u
-  WHERE u.username = '${username}'`
-  connection.query(sql, (error, results) => {
-    if (error) {
-      res.json({ error })
-    } else if (results) {
-      if (results[0].password === password) {
-        req.session.username = username
-        res.send('Successful login')
-      } else {
-        res.send('Unsuccessful login')
-      }
-    }
-  })
-})
-
 // Artist: Recommend artists that were liked by other users in the same geographic location - COMPLEX
 router.get('/artist/recommended_by_location', async (req, res) => {
   const { location } = req.session
@@ -510,6 +529,34 @@ router.get('/artist/recommended_by_location', async (req, res) => {
     FROM artist_location_likes
     WHERE p.location = ${location}
     ORDER BY num_likes DESC
+  `, (error, results) => {
+    if (error) {
+      res.json({ error })
+    } else if (results) {
+      res.json({ results })
+    }
+  })
+})
+
+router.post('/user/set-location', async (req, res) => {
+  const { username, location } = req.body
+  connection.query(`
+    UPDATE User SET location = '${location}' WHERE username = '${username}'
+  `, (error, results) => {
+    if (error) {
+      res.json({ error })
+    } else if (results) {
+      res.json({ results })
+    }
+  })
+})
+
+router.post('/user/location', async (_req, res) => {
+  const { username } = session
+  connection.query(`
+    SELECT location
+    FROM User
+    WHERE username = '${username}'
   `, (error, results) => {
     if (error) {
       res.json({ error })

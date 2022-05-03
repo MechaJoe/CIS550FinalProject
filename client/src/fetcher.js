@@ -1,6 +1,7 @@
+import axios from 'axios'
 import config from './config.json'
 
-const getSearchBySong = async (
+export const getSearchBySong = async (
   input,
   acousticnessLowQuery,
   acousticnessHighQuery,
@@ -22,47 +23,61 @@ const getSearchBySong = async (
   return res.json()
 }
 
-// const getAllMatches = async (page, pagesize, league) => {
-//     var res = await fetch(`http://${config.server_host}:${config.server_port}/matches/${league}?page=${page}&pagesize=${pagesize}`, {
-//         method: 'GET',
-//     })
-//     return res.json()
-// }
+export const getCurrUser = async () => {
+  const { data } = await axios.get(
+    `http://${config.server_host}:${config.server_port}/username`,
+    { withCredentials: true },
+  )
+  return data
+}
 
-// const getAllPlayers = async (page, pagesize) => {
-//     var res = await fetch(`http://${config.server_host}:${config.server_port}/players?page=${page}&pagesize=${pagesize}`, {
-//         method: 'GET',
-//     })
-//     return res.json()
-// }
+export const getStats = async () => {
+  const { data } = await axios.get(
+    `http://${config.server_host}:${config.server_port}/user/stats`,
+    { withCredentials: true },
+  )
+  return data.results[0]
+}
 
-// const getMatch = async (id) => {
-//     var res = await fetch(`http://${config.server_host}:${config.server_port}/match?id=${id}`, {
-//         method: 'GET',
-//     })
-//     return res.json()
-// }
+export const getLikedSongs = async () => {
+  const { data } = await axios.get(
+    `http://${config.server_host}:${config.server_port}/user/likes-list`,
+    { withCredentials: true },
+  )
+  const res = data?.results ?? []
+  // map song_id to [list of artists, title]
+  const idToSong = res.reduce((acc, obj) => {
+    try {
+      acc[obj.song_id] = [[obj.artist].concat(acc[obj.song_id][0]), obj.title]
+    } catch (e) {
+      acc[obj.song_id] = [[obj.artist], obj.title]
+    }
+    return acc
+  }, {})
+  return Object.entries(idToSong)
+}
 
-// const getPlayer = async (id) => {
-//     var res = await fetch(`http://${config.server_host}:${config.server_port}/player?id=${id}`, {
-//         method: 'GET',
-//     })
-//     return res.json()
-// }
+export const getTopArtists = async () => {
+  const { data } = await axios.get(
+    `http://${config.server_host}:${config.server_port}/user/top-artists`,
+    { withCredentials: true },
+  )
+  return data?.results ?? []
+}
 
-// const getMatchSearch = async (home, away, page, pagesize) => {
-//     var res = await fetch(`http://${config.server_host}:${config.server_port}/search/matches?Home=${home}&Away=${away}&page=${page}&pagesize=${pagesize}`, {
-//         method: 'GET',
-//     })
-//     return res.json()
-// }
+export const setUserLocation = async (user, location) => {
+  const { data } = await axios.post(
+    `http://${config.server_host}:${config.server_port}/user/set-location`,
+    { username: user, location },
+    { withCredentials: true },
+  )
+  return data?.changedRows ?? 0
+}
 
-// const getPlayerSearch = async (name, nationality, club, rating_high, rating_low,
-// pot_high, pot_low, page, pagesize) => {
-//     var res = await fetch(`http://${config.server_host}:${config.server_port}/search/players?Name=${name}&Nationality=${nationality}&Club=${club}&RatingLow=${rating_low}&RatingHigh=${rating_high}&PotentialHigh=${pot_high}&PotentialLow=${pot_low}&page=${page}&pagesize=${pagesize}`, {
-//         method: 'GET',
-//     })
-//     return res.json()
-// }
-
-export default getSearchBySong
+export const getUserLocation = async () => {
+  const { data } = await axios.post(
+    `http://${config.server_host}:${config.server_port}/user/location`,
+    { withCredentials: true },
+  )
+  return data?.results[0]?.location ?? 'N/A'
+}

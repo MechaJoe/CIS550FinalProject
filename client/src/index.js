@@ -7,6 +7,9 @@ import {
 } from 'react-router-dom'
 
 import SearchPage from './pages/SearchPage'
+import LoginPage from './pages/LoginPage'
+import Heatmap from './pages/Heatmap'
+import UserProfile from './pages/UserProfile'
 
 ReactDOM.render(
   <div>
@@ -18,6 +21,25 @@ ReactDOM.render(
           render={() => (
             <SearchPage />
           )}
+        />
+        <Route
+          exact
+          path="/login"
+          render={() => (
+            <LoginPage />
+          )}
+        />
+        <Route
+          exact
+          path="/heatmap"
+          render={() => (
+            <Heatmap />
+          )}
+        />
+        <Route
+          exact
+          path="/me"
+          render={() => (<UserProfile />)}
         />
       </Switch>
     </Router>
