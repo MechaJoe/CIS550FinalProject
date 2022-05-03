@@ -83,7 +83,7 @@ class ArtistPage extends React.Component {
                         <CardBody>
                             <Row gutter='30' align='middle' justify='center'>
                                 <Col flex={2} style={{ textAlign: 'left' }}>
-                                    <h3>related tags to {this.state.selectedArtistDetails.name}</h3>
+                                    <h5>related tags to {this.state.selectedArtistDetails.name}</h5>
                                 </Col>
                             </Row>
                             <Row gutter='30' align='middle' justify='left'>
