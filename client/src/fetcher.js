@@ -1,6 +1,28 @@
 import axios from 'axios'
 import config from './config.json'
 
+export const getSearchBySong = async (
+  input,
+  acousticnessLowQuery,
+  acousticnessHighQuery,
+  danceabilityLowQuery,
+  danceabilityHighQuery,
+  energyLowQuery,
+  energyHighQuery,
+  valenceLowQuery,
+  valenceHighQuery,
+  // livenessLowQuery,
+  // livenessHighQuery,
+  // speechinessLowQuery,
+  // speechinessHighQuery,
+) => {
+  const res = await fetch(`http://${config.server_host}:${config.server_port}/search/song?song=${input}&acousticnessLow=${acousticnessLowQuery}&acousticnessHigh=${acousticnessHighQuery}&danceabilityLow=${danceabilityLowQuery}&danceabilityHigh=${danceabilityHighQuery}&energyLow=${energyLowQuery}&energyHigh=${energyHighQuery}&valenceLow=${valenceLowQuery}&valenceHigh=${valenceHighQuery}`, {
+    method: 'GET',
+  })
+
+  return res.json()
+}
+
 export const getCurrUser = async () => {
   const { data } = await axios.get(
     `http://${config.server_host}:${config.server_port}/username`,
