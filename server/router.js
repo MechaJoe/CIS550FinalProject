@@ -539,7 +539,8 @@ router.get('/artist/recommended_by_location', async (req, res) => {
 })
 
 router.post('/user/set-location', async (req, res) => {
-  const { username, location } = req.body
+  const { username } = session
+  const { location } = req.body
   connection.query(`
     UPDATE User SET location = '${location}' WHERE username = '${username}'
   `, (error, results) => {
@@ -561,6 +562,36 @@ router.post('/user/location', async (_req, res) => {
     if (error) {
       res.json({ error })
     } else if (results) {
+      res.json({ results })
+    }
+  })
+})
+
+router.post('/like', async (req, res) => {
+  const { username } = session
+  const { song_id } = req.body
+  connection.query(`
+    INSERT INTO LikesSong VALUES ('${username}', '${song_id}');
+  `, (error, results) => {
+    if (error) {
+      res.json({ error })
+    } else if (results) {
+      res.json({ results })
+    }
+  })
+})
+
+router.delete('/unlike', async (req, res) => {
+  const { username } = session
+  const { song_id } = req.body
+  connection.query(`
+    DELETE FROM LikesSong WHERE username = '${username}' AND song_id = '${song_id}';
+  `, (error, results) => {
+    if (error) {
+      console.log(error)
+      res.json({ error })
+    } else if (results) {
+      console.log(results)
       res.json({ results })
     }
   })
