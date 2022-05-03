@@ -5,7 +5,7 @@ import {
   FormControl, TextField, Button, ButtonGroup, Typography, Slider,
 } from '@mui/material'
 
-import getSearchBySong from '../fetcher'
+import { getSearchBySong } from '../fetcher'
 
 function SearchPage() {
   const history = useHistory()
@@ -26,7 +26,7 @@ function SearchPage() {
     console.log(data)
     history.push('/login')
   }
-  
+
   const [input, setInput] = useState('')
   const [acousticnessLowQuery, setAcousticnessLowQuery] = useState(0)
   const [acousticnessHighQuery, setAcousticnessHighQuery] = useState(1)
