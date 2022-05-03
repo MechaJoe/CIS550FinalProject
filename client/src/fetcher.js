@@ -83,6 +83,11 @@ export const getUserLocation = async () => {
   return data?.results[0]?.location ?? 'N/A'
 }
 
+export const getUserLocationCounts = async () => {
+  const res = await axios.get(`http://${config.server_host}:${config.server_port}/user/count-by-location`)
+  return res.data.results
+}
+
 export const setLikeSong = async (songId, liked) => {
   let res
   if (liked) {
@@ -101,12 +106,9 @@ export const setLikeSong = async (songId, liked) => {
   return res?.affectedRows
 }
 
-export const getArtistData = async () => {
-  const res = await fetch(`http://${config.server_host}:${config.server_port}/artist/count-by-location`, {
-    method: 'GET',
-  })
-  const json = await res.json()
-  return json.results
+export const getArtistLocationCounts = async () => {
+  const res = await axios.get(`http://${config.server_host}:${config.server_port}/artist/count-by-location`)
+  return res.data.results
 }
 
 export const getArtist = async (id) => {
