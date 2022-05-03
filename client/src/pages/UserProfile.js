@@ -156,7 +156,6 @@ export default function UserProfile() {
         <TextField label="location" id="location" onChange={handleLocationChange} />
         <Button variant="contained" color="primary" onClick={handleSubmit}>Change</Button>
       </Box>
-
     </Box>
   )
 }
