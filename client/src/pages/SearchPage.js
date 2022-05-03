@@ -97,7 +97,10 @@ function SearchPage() {
     const songId = arr[0]
     const title = arr[1][1]
     const artists = arr[1][0].join(', ') ?? ''
-    return { songId, title, artists }
+    const url = `/song/?id=${songId}`
+    return {
+      songId, title, artists, url,
+    }
   }
 
   const rows = []
@@ -171,8 +174,9 @@ function SearchPage() {
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
-                        <Link href="/">Link</Link>
-                        {row.title}
+                        <Link href={row.url}>
+                          {row.title}
+                        </Link>
                       </TableCell>
                       <TableCell align="right">{row.artists}</TableCell>
                     </TableRow>
