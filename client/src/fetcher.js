@@ -55,7 +55,7 @@ export const getLikedSongs = async () => {
     }
     return acc
   }, {})
-  return Object.entries(idToSong)
+  return Object.entries(idToSong) //[song_id, [list of artists, title]]
 }
 
 export const getTopArtists = async () => {
@@ -66,7 +66,7 @@ export const getTopArtists = async () => {
   return data?.results ?? []
 }
 
-export const setUserLocation = async (user, location) => {
+export const setUserLocation = async (location) => {
   const { data } = await axios.post(
     `http://${config.server_host}:${config.server_port}/user/set-location`,
     { location },
@@ -101,18 +101,26 @@ export const setLikeSong = async (songId, liked) => {
   return res?.affectedRows
 }
 
+export const getArtistData = async () => {
+  const res = await fetch(`http://${config.server_host}:${config.server_port}/artist/count-by-location`, {
+    method: 'GET',
+  })
+  const json = await res.json()
+  return json.results
+}
+
 export const getArtist = async (id) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/artist/artist_info?id=${id}`, {
-        method: 'GET',
-    })
-    return res.json()
+  var res = await fetch(`http://${config.server_host}:${config.server_port}/artist/info?id=${id}`, {
+    method: 'GET',
+  })
+  return res.json()
 }
 
 export const getSong = async (id) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/song/song_info?id=${id}`, {
-        method: 'GET',
-    })
-    return res.json()
+  var res = await fetch(`http://${config.server_host}:${config.server_port}/song/info?id=${id}`, {
+    method: 'GET',
+  })
+  return res.json()
 }
 
 export const getArtistSearch = async (name, location, scrobbles, listeners, tags, genre, page, pagesize) => {
