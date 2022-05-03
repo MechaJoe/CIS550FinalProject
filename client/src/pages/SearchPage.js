@@ -5,6 +5,7 @@ import {
   FormControl, TextField, Button, ButtonGroup, Typography, Slider,
 } from '@mui/material'
 
+import NavBar from '../components/NavBar'
 import { getSearchBySong } from '../fetcher'
 
 function SearchPage() {
@@ -113,6 +114,7 @@ function SearchPage() {
 
   return (
     <>
+      <NavBar />
       <FormControl>
         <Typography variant="h1" component="h2">
           MusicBar
