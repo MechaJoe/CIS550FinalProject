@@ -53,7 +53,7 @@ export default function LoginPage() {
           <TextField label="username" id="username" onChange={handleUsernameChange} />
           <TextField label="password" id="password" onChange={handlePasswordChange} />
           <Button variant="contained" color="primary" type="submit">Login</Button>
-          <a className="button google" href="/login/federated/google">Sign in with Google</a>
+          <a className="button google" href="http://localhost:8080/login/federated/google">Sign in with Google</a>
         </Box>
       </form>
       <Button variant="contained" color="primary" onClick={testSession}>Test Session</Button>

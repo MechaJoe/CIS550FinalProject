@@ -15,30 +15,6 @@ const connection = mysql.createConnection({
 
 connection.connect()
 
-passport.use(new GoogleStrategy(
-  {
-    // clientID: process.env.GOOGLE_CLIENT_ID,
-    clientID: '628416004124-qmo6n9v38ip6sat09gjq92a7ctghfb2i.apps.googleusercontent.com',
-    // clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    clientSecret: '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',
-    callbackURL: '/oauth2/redirect/google',
-    scope: ['profile'],
-  },
-  ((issuer, profile, cb) => {
-    console.log(profile)
-    const username = profile.id
-    connection.query(`SELECT * FROM User WHERE username = '${username}'`, (err, user) => {
-      if (err) {
-        cb(err)
-      }
-      if (!user) {
-        return cb(null, false, { message: 'Create account' })
-      }
-      return cb(null, user, { message: 'Logged in through Google' })
-    })
-  }),
-))
-
 const router = express.Router()
 
 router.post('/login', async (req, res) => {
@@ -67,6 +43,9 @@ router.post('/login', async (req, res) => {
 
 router.get('/username', (req, res) => {
   console.log(req.session)
+  if (req.session.passport) {
+    req.session.username = req.session.passport.user.id
+  }
   res.json(req.session.username)
 })
 
@@ -79,14 +58,54 @@ router.post('/logout', (req, res) => {
 
 router.get('/login/federated/google', passport.authenticate('google'))
 
-router.get('/oauth2/redirect/google', passport.authenticate('google', {
-  successRedirect: 'http://localhost:3000/',
-  failureRedirect: 'http://localhost:3000/login',
-}))
+passport.use(new GoogleStrategy(
+  {
+    // clientID: process.env.GOOGLE_CLIENT_ID,
+    clientID: '628416004124-qmo6n9v38ip6sat09gjq92a7ctghfb2i.apps.googleusercontent.com',
+    // clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    clientSecret: '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',
+    callbackURL: '/oauth2/redirect/google',
+    scope: ['profile'],
+  },
+  (async (issuer, profile, cb) => {
+    // console.log(profile)
+    const username = profile.id
+    const exists = await connection.query(
+      `SELECT * FROM User WHERE username = '${username}'`,
+      (error, results) => (error || !results || results.length === 0),
+    )
+    if (exists) {
+      return cb(null, profile.id)
+    }
+    return cb(null, profile.id)
+  }),
+))
+
+router.get(
+  '/oauth2/redirect/google',
+  (req, res, next) => {
+    passport.authenticate(
+      'google',
+      (err, user) => {
+        // console.log(user)
+        if (err) {
+          req.session.username = user.id
+          return res.redirect('http://localhost:3000/signup-google')
+        }
+        if (user) {
+          req.session.username = user
+          return res.redirect('http://localhost:3000/')
+        }
+        return res.redirect('http://localhost:3000/login')
+      },
+    )(req, res, next)
+  },
+)
 
 passport.serializeUser((user, cb) => {
   process.nextTick(() => {
-    cb(null, { id: user.id, username: user.username, name: user.name })
+    console.log(user)
+    cb(null, { username: user.id })
   })
 })
 
