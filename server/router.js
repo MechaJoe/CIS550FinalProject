@@ -34,7 +34,7 @@ router.post('/login', async (req, res) => {
         req.session.username = username
         req.session.save()
         session = req.session
-        console.log(req.session)
+        // console.log(req.session)
         res.send('Successful login')
       } else {
         res.send('Unsuccessful login')
@@ -287,7 +287,7 @@ router.get('/user/stats', async (req, res) => {
 
 router.get('/user/likes-list', async (req, res) => {
   const { username } = session
-  const query = `SELECT DISTINCT s.song_id, title
+  const query = `SELECT DISTINCT s.song_id, title, artist
   FROM LikesSong l JOIN Song s on l.song_id = s.song_id
   WHERE l.username='${username}';  
   `
