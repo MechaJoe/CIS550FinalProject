@@ -41,6 +41,23 @@ router.post('/login', async (req, res) => {
   })
 })
 
+router.post('/signup', (req, res) => {
+  const {
+    username, password, first_name, last_name, pronouns, location,
+  } = req.body
+  console.log(req.body)
+  const sql = `INSERT INTO User (username, password, first_name, last_name, pronouns, location)
+               VALUES ('${username}', '${password}', '${first_name}', '${last_name}', '${pronouns}', '${location}')`
+  connection.query(sql, (error, results) => {
+    if (error) {
+      res.json({ error })
+    } else if (results) {
+      req.session.username = username
+      res.send('Successful signup')
+    }
+  })
+})
+
 router.get('/username', (req, res) => {
   console.log(req.session)
   if (req.session.passport) {
@@ -77,7 +94,9 @@ passport.use(new GoogleStrategy(
     if (exists) {
       return cb(null, profile.id)
     }
-    return cb(null, profile.id)
+    const { newProfile } = profile
+    newProfile.id.create = true
+    return cb(null, newProfile.id)
   }),
 ))
 
@@ -88,9 +107,9 @@ router.get(
       'google',
       (err, user) => {
         // console.log(user)
-        if (err) {
+        if (user.create) {
           req.session.username = user.id
-          return res.redirect('http://localhost:3000/signup-google')
+          return res.redirect('http://localhost:3000/google-signup')
         }
         if (user) {
           req.session.username = user.id

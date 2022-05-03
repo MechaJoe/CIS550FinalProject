@@ -10,6 +10,7 @@ import SearchPage from './pages/SearchPage'
 import LoginPage from './pages/LoginPage'
 import Heatmap from './pages/Heatmap'
 import UserProfile from './pages/UserProfile'
+import Signup from './pages/Signup'
 
 ReactDOM.render(
   <div>
@@ -40,6 +41,13 @@ ReactDOM.render(
           exact
           path="/me"
           render={() => (<UserProfile />)}
+        />
+        <Route
+          exact
+          path="/signup"
+          render={() => (
+            <Signup />
+          )}
         />
       </Switch>
     </Router>
