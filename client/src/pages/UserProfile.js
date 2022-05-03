@@ -104,11 +104,12 @@ export default function UserProfile() {
           justify="flex-start"
           alignItems="flex-start"
         >
-          {likedSongs.map((elem) => (
+          {likedSongs.length === 0 ? null : likedSongs.map((elem) => (
             <Grid item xs={12} sm={6} md={3} key={likedSongs.indexOf(elem)}>
               <Card>
                 <CardHeader
-                  title={elem.title}
+                  title={elem[1][1]}
+                  subheader={elem[1][0].join(', ') ?? ''}
                 />
               </Card>
             </Grid>
