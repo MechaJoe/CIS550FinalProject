@@ -2,7 +2,10 @@ const express = require('express')
 const session = require('express-session')
 const passport = require('passport')
 const cors = require('cors')
+require('https').globalAgent.options.rejectUnauthorized = false
+const GoogleStrategy = require('passport-google-oidc')
 const Router = require('./router')
+
 // const AuthRouter = require('./authRouter')
 
 const config = require('./config.json')
