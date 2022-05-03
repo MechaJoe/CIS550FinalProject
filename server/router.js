@@ -17,7 +17,7 @@ connection.connect()
 // TEMP FIX FOR SESSION PROBLEM
 let session
 
-// AUTH ROUTES
+/* AUTH ROUTES */
 router.post('/login', async (req, res) => {
   const { body } = req
   const { username, password } = body
@@ -133,7 +133,7 @@ router.get('/user/likes-list', async (req, res) => {
   })
 })
 
-router.get('/user/likes', async (req, res) => {
+router.get('/user/num-likes', async (req, res) => {
   const { username } = session
   const query = `SELECT COUNT(*) AS num_songs_liked
   FROM LikesSong l JOIN Song s on l.song_id = s.song_id
@@ -210,7 +210,7 @@ router.delete('/unlike', async (req, res) => {
 
 /* SONG ROUTES */
 // For the home page, select random songs from database for users to peruse
-router.get('/get-random-songs', async (req, res) => {
+router.get('/song/get-random', async (req, res) => {
   connection.query(`
   SELECT *
   FROM Song
@@ -226,7 +226,7 @@ router.get('/get-random-songs', async (req, res) => {
 })
 
 // get song info
-router.get('/song/song_info', async (req, res) => {
+router.get('/song/info', async (req, res) => {
   const { id } = req.query
   connection.query(`
     SELECT *
@@ -242,7 +242,7 @@ router.get('/song/song_info', async (req, res) => {
 })
 
 // get related songs based on each individual attribute
-router.get('/get-songs-related-attributes', async (req, res) => {
+router.get('/song/by-related-attributes', async (req, res) => {
   const {
     danceability, energy, liveness, speechiness, valence,
   } = req.query
@@ -276,7 +276,7 @@ router.get('/get-songs-related-attributes', async (req, res) => {
 })
 
 // get related songs based on all attributes
-router.get('/get-songs-related-allattributes', async (req, res) => {
+router.get('/song/by-related-all-attributes', async (req, res) => {
   const { danceability } = req.query.danceability
   const { energy } = req.query.energy
   const { valence } = req.query.valence
@@ -322,6 +322,22 @@ router.get('/song/recommended_by_location', async (req, res) => {
 })
 
 /* ARTIST ROUTES */
+// get artist info
+router.get('/artist/info', async (req, res) => {
+  const { id } = req.query
+  connection.query(`
+    SELECT *
+    FROM Artist
+    WHERE artist_id = '${id}';
+  `, (error, results) => {
+    if (error) {
+      res.json({ error })
+    } else if (results) {
+      res.json({ results })
+    }
+  })
+})
+
 // Artist: Match user to artist based on average attribute values
 router.get('/artist/recommended-by-attrs', async (req, res) => {
   const { username } = req.session
@@ -368,7 +384,7 @@ router.get('/artist/recommended-by-attrs', async (req, res) => {
   })
 })
 
-router.get('/location-score', async (req, res) => {
+router.get('/artist/location-score', async (req, res) => {
   const { artist_id } = req.query
   const query = `WITH song_likes AS (
     SELECT song_id, COUNT(*) AS num_likes
@@ -403,7 +419,7 @@ router.get('/location-score', async (req, res) => {
   })
 })
 
-router.get('/artist-likes', async (req, res) => {
+router.get('/artist/num-likes', async (req, res) => {
   const { artist_id } = req.query
   const query = `WITH song_likes AS (
     SELECT song_id, COUNT(*) AS num_likes
@@ -427,7 +443,7 @@ router.get('/artist-likes', async (req, res) => {
   })
 })
 
-router.get('/heatmap', async (req, res) => {
+router.get('/artist/count-by-location', async (req, res) => {
   const query = `SELECT location, COUNT(artist_id) AS num_artists
   FROM Artist
   GROUP BY location;
@@ -445,7 +461,7 @@ router.get('/heatmap', async (req, res) => {
 })
 
 // Artist: top songs for an artist by popularity attribute
-router.get('/artist/songs_popular', async (req, res) => {
+router.get('/artist/songs-popular', async (req, res) => {
   const { artistId } = req.query
   connection.query(`
       SELECT DISTINCT title
@@ -462,7 +478,7 @@ router.get('/artist/songs_popular', async (req, res) => {
 })
 
 // Artist: top songs for an artist by likes from users
-router.get('/artist/songs_most_liked', async (req, res) => {
+router.get('/artist/songs-most-liked', async (req, res) => {
   const { artistId } = req.query
   connection.query(`
       WITH song_likes AS (
@@ -485,7 +501,7 @@ router.get('/artist/songs_most_liked', async (req, res) => {
 })
 
 // Artist: Recommend artists that were liked by other users in the same geographic location - COMPLEX
-router.get('/artist/recommended_by_location', async (req, res) => {
+router.get('/artist/recommended-by-location', async (req, res) => {
   const { location } = req.session
   connection.query(`
     WITH song_location_likes AS (
