@@ -23,7 +23,9 @@ export default function SongCard({
           title={title}
           subheader={artists}
         />
-        <Button variant="contained" color="primary" onClick={handleLike}>Like</Button>
+        <Button variant="contained" color="primary" onClick={handleLike}>
+          {isLiked ? 'Unlike' : 'Like'}
+        </Button>
       </Card>
     </Grid>
   )

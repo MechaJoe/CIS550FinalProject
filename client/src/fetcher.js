@@ -61,17 +61,19 @@ export const getUserLocation = async () => {
 }
 
 export const setLikeSong = async (songId, liked) => {
+  let res
   if (liked) {
-    await axios.post(
+    res = await axios.post(
       `http://${config.server_host}:${config.server_port}/like`,
       { song_id: songId },
       { withCredentials: true },
     )
   } else {
-    await axios.delete(
+    res = await axios.delete(
       `http://${config.server_host}:${config.server_port}/unlike`,
       { data: { song_id: songId } },
       { withCredentials: true },
     )
   }
+  return res?.affectedRows
 }
