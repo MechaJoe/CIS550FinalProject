@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 import {
-  FormControl, TextField, Button, ButtonGroup, Typography, Slider,
+  FormControl, TextField, Button, ButtonGroup, Typography, Slider, TableContainer,
+  TableHead, TableRow, TableCell, TableBody, Table, Paper, Link,
 } from '@mui/material'
-
+// import SongCard from '../components/SongCard'
 import { getSearchBySong } from '../fetcher'
 
 function SearchPage() {
@@ -85,11 +86,21 @@ function SearchPage() {
       speechinessLowQuery,
       speechinessHighQuery,
     ).then((res) => {
-      setSearchResults(res.results)
+      setSearchResults(res)
     })
   }
   console.log(searchResults)
   console.log(searchResults.length)
+
+  const createData = (arr) => {
+    const songId = arr[0]
+    const title = arr[1][1]
+    const artists = arr[1][0].join(', ') ?? ''
+    return { songId, title, artists }
+  }
+
+  const rows = []
+  searchResults.forEach((song) => rows.push(createData(song)))
 
   // const handleSearchByArtist = async () => {
   //   getSearchByArtist(
@@ -139,19 +150,36 @@ function SearchPage() {
           </ButtonGroup>
         </div>
       </FormControl>
-      { searchResults.length ? (
-        <>
-          <Typography gutterBottom>Results</Typography>
-          <Typography gutterBottom>Results</Typography>
-          <Typography gutterBottom>{searchResults[0].title}</Typography>
-
-          {searchResults.map((song) => (
-            <p>
-              {song.title}
-            </p>
-          ))}
-        </>
-      ) : null }
+      {searchResults.length === 0
+        ? <Typography variant="overline">None yet!</Typography>
+        : (
+          <Paper>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Title</TableCell>
+                    <TableCell align="right">Artist</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row) => (
+                    <TableRow
+                      key={row.title}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        <Link href="/">Link</Link>
+                        {row.title}
+                      </TableCell>
+                      <TableCell align="right">{row.artists}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+        )}
     </>
   )
 }
