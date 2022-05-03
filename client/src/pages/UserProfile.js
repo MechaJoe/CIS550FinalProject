@@ -6,8 +6,7 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import Slider from '@mui/material/Slider'
 import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
+import SongCard from '../components/SongCard'
 import {
   getStats, getLikedSongs, getTopArtists, getCurrUser, getUserLocation,
   setUserLocation,
@@ -47,7 +46,7 @@ export default function UserProfile() {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    setUserLocation(user, newLocation)
+    setUserLocation(newLocation)
     setLocation(newLocation)
   }
 
@@ -74,17 +73,17 @@ export default function UserProfile() {
           My Stats
         </Typography>
         <Typography variant="overline">Average Acousticness</Typography>
-        <Slider value={stats.avg_acousticness ?? 0.5} min={0} max={1} disabled />
+        <Slider value={stats?.avg_acousticness ?? 0.5} min={0} max={1} disabled />
         <Typography variant="overline">Average Danceability</Typography>
-        <Slider value={stats.avg_danceability ?? 0.5} min={0} max={1} disabled />
+        <Slider value={stats?.avg_danceability ?? 0.5} min={0} max={1} disabled />
         <Typography variant="overline">Average Energy</Typography>
-        <Slider value={stats.avg_energy ?? 0.5} min={0} max={1} disabled />
+        <Slider value={stats?.avg_energy ?? 0.5} min={0} max={1} disabled />
         <Typography variant="overline">Average Valence</Typography>
-        <Slider value={stats.avg_valence ?? 0.5} min={0} max={1} disabled />
+        <Slider value={stats?.avg_valence ?? 0.5} min={0} max={1} disabled />
         <Typography variant="overline">Average Liveness</Typography>
-        <Slider value={stats.avg_liveness ?? 0.5} min={0} max={1} disabled />
+        <Slider value={stats?.avg_liveness ?? 0.5} min={0} max={1} disabled />
         <Typography variant="overline">Average Speechiness</Typography>
-        <Slider value={stats.avg_speechiness ?? 0.5} min={0} max={1} disabled />
+        <Slider value={stats?.avg_speechiness ?? 0.5} min={0} max={1} disabled />
       </Box>
 
       <Box
@@ -97,24 +96,27 @@ export default function UserProfile() {
         <Typography variant="h3">
           My Liked Songs
         </Typography>
-        <Grid
-          container
-          spacing={2}
-          direction="row"
-          justify="flex-start"
-          alignItems="flex-start"
-        >
-          {likedSongs.length === 0 ? null : likedSongs.map((elem) => (
-            <Grid item xs={12} sm={6} md={3} key={likedSongs.indexOf(elem)}>
-              <Card>
-                <CardHeader
+        {likedSongs.length === 0
+          ? <Typography variant="overline">None yet!</Typography>
+          : (
+            <Grid
+              container
+              spacing={2}
+              direction="row"
+              justify="flex-start"
+              alignItems="flex-start"
+            >
+              {likedSongs.map((elem) => (
+                <SongCard
+                  songId={elem[0]}
                   title={elem[1][1]}
-                  subheader={elem[1][0].join(', ') ?? ''}
+                  artists={elem[1][0].join(', ') ?? ''}
+                  key={likedSongs.indexOf(elem)}
+                  alreadyLiked
                 />
-              </Card>
+              ))}
             </Grid>
-          ))}
-        </Grid>
+          )}
       </Box>
 
       <Box
@@ -127,14 +129,16 @@ export default function UserProfile() {
         <Typography variant="h3">
           My Top Artists
         </Typography>
-        {topArtists.map((elem) => (
-          <Container key={elem.name}>
-            <Typography variant="h5">{elem.name}</Typography>
-            <Typography variant="subtitle1">
-              {`Listening percentage: ${elem.listening_percentage}%`}
-            </Typography>
-          </Container>
-        ))}
+        {topArtists.length === 0
+          ? <Typography variant="overline">None yet!</Typography>
+          : topArtists.map((elem) => (
+            <Container key={elem.name}>
+              <Typography variant="h5">{elem.name}</Typography>
+              <Typography variant="subtitle1">
+                {`Listening percentage: ${elem.listening_percentage}%`}
+              </Typography>
+            </Container>
+          ))}
       </Box>
 
       <Box
