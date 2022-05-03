@@ -7,6 +7,7 @@ import Button from '@mui/material/Button'
 import Slider from '@mui/material/Slider'
 import Grid from '@mui/material/Grid'
 import SongCard from '../components/SongCard'
+import NavBar from '../components/NavBar'
 import {
   getStats, getLikedSongs, getTopArtists, getCurrUser, getUserLocation,
   setUserLocation,
@@ -58,6 +59,7 @@ export default function UserProfile() {
         alignItems: 'center',
       }}
     >
+      <NavBar />
       <Typography variant="h1">
         {user}
       </Typography>
@@ -154,7 +156,6 @@ export default function UserProfile() {
         <TextField label="location" id="location" onChange={handleLocationChange} />
         <Button variant="contained" color="primary" onClick={handleSubmit}>Change</Button>
       </Box>
-
     </Box>
   )
 }
