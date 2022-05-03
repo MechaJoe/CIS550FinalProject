@@ -13,29 +13,57 @@ import SongPage from './pages/SongPage';
 import ArtistPage from './pages/ArtistPage';
 
 import 'antd/dist/antd.css';
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
+
+import LoginPage from './pages/LoginPage'
+import Heatmap from './pages/Heatmap'
+import UserProfile from './pages/UserProfile'
 
 ReactDOM.render(
   <div>
     <Router>
       <Switch>
-        <Route exact
-							path="/"
-							render={() => (
-								<SearchPage />
-							)}/>
-        <Route exact
-							path="/song"
-							render={() => (
-								<SongPage />
-							)}/>
-        <Route exact
-							path="/artist"
-							render={() => (
-								<ArtistPage />
-							)}/>
+        <Route 
+          exact
+          path="/song"
+          render={() => (
+            <SongPage />
+					)}
+        />
+        <Route 
+          exact
+          path="/artist"
+          render={() => (
+            <ArtistPage />
+					)}
+         />
+        <Route
+          exact
+          path="/"
+          render={() => (
+            <SearchPage />
+          )}
+        />
+        <Route
+          exact
+          path="/login"
+          render={() => (
+            <LoginPage />
+          )}
+        />
+        <Route
+          exact
+          path="/heatmap"
+          render={() => (
+            <Heatmap />
+          )}
+        />
+        <Route
+          exact
+          path="/me"
+          render={() => (<UserProfile />)}
+        />
       </Switch>
     </Router>
   </div>,
