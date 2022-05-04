@@ -2,7 +2,7 @@ const express = require('express')
 const mysql = require('mysql')
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oidc')
-
+const crypto = require('node:crypto')
 const config = require('./config.json')
 
 const connection = mysql.createConnection({
@@ -20,8 +20,6 @@ const router = express.Router()
 router.post('/login', async (req, res) => {
   const { body } = req
   const { username, password } = body
-  console.log(username)
-  console.log(password)
   const sql = `SELECT password
   FROM User u
   WHERE u.username = '${username}'`
@@ -32,7 +30,7 @@ router.post('/login', async (req, res) => {
       if (results.length !== 0 && results[0].password === password) {
         req.session.username = username
         req.session.save()
-        console.log(req.session)
+        // console.log(req.session)
         res.send('Successful login')
       } else {
         res.send('Unsuccessful login')
@@ -58,8 +56,26 @@ router.post('/signup', (req, res) => {
   })
 })
 
+router.post('/google-signup', (req, res) => {
+  const {
+    first_name, last_name, pronouns, location,
+  } = req.body
+  const { username } = req.session
+  const password = crypto.pbkdf2Sync(username, 'salt', 100000, 64, 'sha512').toString('hex')
+  const sql = `INSERT INTO User (username, password, first_name, last_name, pronouns, location)
+               VALUES ('${username}', '${password}', '${first_name}', '${last_name}', '${pronouns}', '${location}')`
+  connection.query(sql, (error, results) => {
+    if (error) {
+      res.json({ error })
+    } else if (results) {
+      req.session.username = username
+      res.send('Successful Google signup')
+    }
+  })
+})
+
 router.get('/username', (req, res) => {
-  console.log(req.session)
+  // console.log(req.session)
   if (req.session.passport) {
     req.session.username = req.session.passport.user.id
   }
@@ -69,7 +85,7 @@ router.get('/username', (req, res) => {
 router.post('/logout', (req, res) => {
   req.logout()
   req.session.username = null
-  console.log(req.session.username)
+  // console.log(req.session.username)
   res.send('Logged out')
 })
 
@@ -87,16 +103,18 @@ passport.use(new GoogleStrategy(
   (async (issuer, profile, cb) => {
     // console.log(profile)
     const username = profile.id
-    const exists = await connection.query(
+    connection.query(
       `SELECT * FROM User WHERE username = '${username}'`,
-      (error, results) => (error || !results || results.length === 0),
+      (error, results) => {
+        if (error || !results || results.length === 0) {
+          const newProfile = profile
+          console.log(profile)
+          newProfile.create = true
+          return cb(null, newProfile)
+        }
+        return cb(null, profile.id)
+      },
     )
-    if (exists) {
-      return cb(null, profile.id)
-    }
-    const { newProfile } = profile
-    newProfile.id.create = true
-    return cb(null, newProfile.id)
   }),
 ))
 
@@ -106,8 +124,7 @@ router.get(
     passport.authenticate(
       'google',
       (err, user) => {
-        // console.log(user)
-        if (user.create) {
+        if (user && user.create) {
           req.session.username = user.id
           return res.redirect('http://localhost:3000/google-signup')
         }
@@ -123,7 +140,6 @@ router.get(
 
 passport.serializeUser((user, cb) => {
   process.nextTick(() => {
-    console.log(user)
     cb(null, { username: user.id })
   })
 })

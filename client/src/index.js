@@ -11,6 +11,7 @@ import LoginPage from './pages/LoginPage'
 import Heatmap from './pages/Heatmap'
 import UserProfile from './pages/UserProfile'
 import Signup from './pages/Signup'
+import GoogleSignup from './pages/GoogleSignup'
 
 ReactDOM.render(
   <div>
@@ -47,6 +48,13 @@ ReactDOM.render(
           path="/signup"
           render={() => (
             <Signup />
+          )}
+        />
+        <Route
+          exact
+          path="/google-signup"
+          render={() => (
+            <GoogleSignup />
           )}
         />
       </Switch>

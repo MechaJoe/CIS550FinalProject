@@ -8,10 +8,11 @@ import Button from '@mui/material/Button'
 import InputLabel from '@mui/material/InputLabel'
 import Typography from '@mui/material/Typography'
 import axios from 'axios'
-
-const locationArray = require('./locations.json')
+import { useHistory } from 'react-router-dom'
+import locationArray from './locations.json'
 
 export default function Signup() {
+  const history = useHistory()
   const defaultValues = {
     first_name: '',
     last_name: '',
@@ -28,17 +29,20 @@ export default function Signup() {
 
   const [formValues, setFormValues] = useState(defaultValues)
   const handleInputChange = (e) => {
-    console.log(e.target)
     const { name, value } = e.target
     setFormValues({
       ...formValues,
       [name]: value,
     })
   }
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     console.log(formValues)
-    axios.post('/api/users', formValues, { withCredentials: true })
+    const { data } = await axios.post('http://localhost:8080/google-signup', formValues, { withCredentials: true })
+    console.log(data)
+    if (data === 'Successful Google signup') {
+      history.push('/')
+    }
   }
 
   return (
@@ -82,7 +86,7 @@ export default function Signup() {
           </FormControl>
         </Grid>
         <Grid item>
-          <Button variant="contained" color="primary" type="submit" sx={{ minWidth: 195 }}>Complete Google Signup</Button>
+          <Button variant="contained" color="primary" type="submit" sx={{ minWidth: 195 }}>Create Account</Button>
         </Grid>
       </Grid>
     </form>
