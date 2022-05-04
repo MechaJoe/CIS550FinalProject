@@ -9,6 +9,7 @@ import NavBar from '../components/NavBar'
 import { getSearchBySong, getSearchByArtist } from '../fetcher'
 
 function SearchPage() {
+  // const history = useHistory()
   const checkSession = async () => {
     const { data } = await axios.get('http://localhost:8080/username', { withCredentials: true })
     console.log(data)
@@ -82,6 +83,7 @@ function SearchPage() {
     })
   }
 
+  // OnClick for Search By Artist
   const handleSearchByArtist = async () => {
     getSearchByArtist(
       input,
@@ -103,9 +105,15 @@ function SearchPage() {
     })
   }
 
+  // const handleGoToSongLink = (e, url) => {
+  //   e.preventDefault()
+  //   history.push(url)
+  // }
+
   console.log(searchResults)
   console.log(searchResults.length)
 
+  // Transforms data received from Axios into an object
   const createData = (arr) => {
     const songId = arr[0]
     const title = arr[1][2]
@@ -125,6 +133,7 @@ function SearchPage() {
     }
   }
 
+  // Creates an array of objects for search results
   const rows = []
   searchResults.forEach((song) => rows.push(createData(song)))
 
@@ -135,7 +144,7 @@ function SearchPage() {
         <Typography variant="h1" component="h2">
           MusicBar
         </Typography>
-        <div id="hello">
+        <div id="hello" style={{ padding: '15px' }}>
           <TextField id="search-input" label="Search" variant="outlined" sx={{ padding: '15px' }} onChange={(e) => setInput(e.target.value)} />
           <Typography gutterBottom>Acousticness</Typography>
           <Slider id="acousticness" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleAcousticnessChange(e.target.value)} />
@@ -154,9 +163,49 @@ function SearchPage() {
             <Button onClick={handleSearchByArtist}> By Artist </Button>
           </ButtonGroup>
         </div>
+        {/* {searchResults.length === 0
+          ? <Typography gutterBottom variant="overline">None yet!</Typography>
+          : (
+            <Paper>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Title</TableCell>
+                      <TableCell align="right">Artist</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {rows.map((row) => (
+                      <TableRow
+                        key={row.songId}
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      >
+                        <TableCell component="th" scope="row">
+                          <Link href={row.url}>
+                            {row.title}
+                          </Link>
+                        </TableCell>
+                        <TableCell align="right">
+                          {row.artistTups.map((art) => (
+                            <>
+                              <Link href={art.artistUrl}>
+                                {art.artist.toUpperCase()}
+                              </Link>
+                              <br />
+                            </>
+                          ))}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Paper>
+          )} */}
       </FormControl>
       {searchResults.length === 0
-        ? <Typography variant="overline">None yet!</Typography>
+        ? <Typography gutterBottom variant="overline">None yet!</Typography>
         : (
           <Paper>
             <TableContainer component={Paper}>
@@ -174,16 +223,22 @@ function SearchPage() {
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
+                        {/* <Button onClick={(e) => handleGoToSongLink(e, row.url)}
+                        variant="contained">
+                          {row.title}
+                        </Button> */}
                         <Link href={row.url}>
                           {row.title}
                         </Link>
                       </TableCell>
                       <TableCell align="right">
                         {row.artistTups.map((art) => (
-                          <Link href={art.artistUrl}>
-                            {art.artist}
-                            &nbsp;
-                          </Link>
+                          <>
+                            <Link href={art.artistUrl}>
+                              {art.artist.toUpperCase()}
+                            </Link>
+                            <br />
+                          </>
                         ))}
                       </TableCell>
                     </TableRow>

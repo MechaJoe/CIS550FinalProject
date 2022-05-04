@@ -1,15 +1,16 @@
 /* eslint-disable */
 import React from 'react';
-import { Form, FormInput, FormGroup, Button, Card, CardBody, Progress } from 'shards-react';
+import { Form, FormInput, FormGroup, Card, CardBody, Progress } from 'shards-react';
 
 import { Table, Row, Col, Divider, Slider, Rate } from 'antd'
 import { RadarChart, CircularGridLines } from 'react-vis';
 import { format } from 'd3-format'; 
-
+import { Button } from '@mui/material'
 
 import MenuBar from '../components/MenuBar';
 import { getSongSearch, getSong } from '../fetcher'
 import { color, fontSize } from '@mui/system';
+// import { useHistory } from 'react-router';
 const wideFormat = format('.3r');
 
 const songColumns = [
@@ -52,6 +53,7 @@ class SongPage extends React.Component {
             songsResults: []
 
         }
+        // this.history = useHistory()
     }
 
     componentDidMount() {
@@ -65,6 +67,11 @@ class SongPage extends React.Component {
 
     }
 
+    // handleGoBack(e) {
+    //     e.preventDefault()
+    //     this.history.goBack()
+    // }
+
     render() {
         return (
 
@@ -74,6 +81,7 @@ class SongPage extends React.Component {
 
                 <Divider />
                 {this.state.selectedSongDetails ? <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
+                    {/* <Button onClick={(e) => this.handleGoBack(e)}> </Button> */}
                     <Card>
                     
                         <CardBody>
