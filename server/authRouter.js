@@ -2,6 +2,7 @@ const express = require('express')
 const mysql = require('mysql')
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oidc')
+const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy
 const crypto = require('node:crypto')
 const config = require('./config.json')
 
@@ -56,7 +57,7 @@ router.post('/signup', (req, res) => {
   })
 })
 
-router.post('/google-signup', (req, res) => {
+router.post('/federated-signup', (req, res) => {
   const {
     first_name, last_name, pronouns, location,
   } = req.body
@@ -69,7 +70,7 @@ router.post('/google-signup', (req, res) => {
       res.json({ error })
     } else if (results) {
       req.session.username = username
-      res.send('Successful Google signup')
+      res.send('Successful federated signup')
     }
   })
 })
@@ -89,6 +90,71 @@ router.post('/logout', (req, res) => {
   res.send('Logged out')
 })
 
+const verify = async (issuer, profile, cb) => {
+  // console.log(profile)
+  const username = profile.id
+  connection.query(
+    `SELECT * FROM User WHERE username = '${username}'`,
+    (error, results) => {
+      if (error || !results || results.length === 0) {
+        const newProfile = profile
+        console.log(profile)
+        newProfile.create = true
+        return cb(null, newProfile)
+      }
+      return cb(null, profile)
+    },
+  )
+}
+
+router.get('/login/federated/linkedin', passport.authenticate('linkedin'))
+
+passport.use(new LinkedInStrategy(
+  {
+    clientID: '78jkcxuzw46d4v',
+    clientSecret: '5Z9245UolcYPGuPX',
+    callbackURL: '/oauth2/redirect/linkedin',
+    scope: ['r_emailaddress', 'r_liteprofile'],
+    state: true,
+  },
+  ((accessToken, refreshToken, profile, cb) => {
+    console.log(profile)
+    const username = profile.id
+    connection.query(
+      `SELECT * FROM User WHERE username = '${username}'`,
+      (error, results) => {
+        if (error || !results || results.length === 0) {
+          const newProfile = profile
+          console.log(profile)
+          newProfile.create = true
+          return cb(null, newProfile)
+        }
+        return cb(null, profile)
+      },
+    )
+  }),
+))
+
+router.get(
+  '/oauth2/redirect/linkedin',
+  (req, res, next) => {
+    passport.authenticate(
+      'linkedin',
+      (err, user) => {
+        if (user && user.create) {
+          req.session.username = user.id
+          return res.redirect('http://localhost:3000/federated-signup')
+        }
+        if (user) {
+          req.session.username = user.id
+          return res.redirect('http://localhost:3000/')
+        }
+        return res.redirect('http://localhost:3000/login')
+      },
+    )(req, res, next)
+  },
+)
+
 router.get('/login/federated/google', passport.authenticate('google'))
 
 passport.use(new GoogleStrategy(
@@ -100,22 +166,7 @@ passport.use(new GoogleStrategy(
     callbackURL: '/oauth2/redirect/google',
     scope: ['profile'],
   },
-  (async (issuer, profile, cb) => {
-    // console.log(profile)
-    const username = profile.id
-    connection.query(
-      `SELECT * FROM User WHERE username = '${username}'`,
-      (error, results) => {
-        if (error || !results || results.length === 0) {
-          const newProfile = profile
-          console.log(profile)
-          newProfile.create = true
-          return cb(null, newProfile)
-        }
-        return cb(null, profile.id)
-      },
-    )
-  }),
+  verify,
 ))
 
 router.get(
@@ -126,7 +177,7 @@ router.get(
       (err, user) => {
         if (user && user.create) {
           req.session.username = user.id
-          return res.redirect('http://localhost:3000/google-signup')
+          return res.redirect('http://localhost:3000/federated-signup')
         }
         if (user) {
           req.session.username = user.id

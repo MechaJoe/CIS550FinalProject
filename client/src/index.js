@@ -11,7 +11,7 @@ import LoginPage from './pages/LoginPage'
 import Heatmap from './pages/Heatmap'
 import UserProfile from './pages/UserProfile'
 import Signup from './pages/Signup'
-import GoogleSignup from './pages/GoogleSignup'
+import FederatedSignup from './pages/FederatedSignup'
 
 ReactDOM.render(
   <div>
@@ -52,9 +52,9 @@ ReactDOM.render(
         />
         <Route
           exact
-          path="/google-signup"
+          path="/federated-signup"
           render={() => (
-            <GoogleSignup />
+            <FederatedSignup />
           )}
         />
       </Switch>

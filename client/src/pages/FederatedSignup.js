@@ -11,7 +11,7 @@ import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 import locationArray from './locations.json'
 
-export default function Signup() {
+export default function FederatedSignup() {
   const history = useHistory()
   const defaultValues = {
     first_name: '',
@@ -38,16 +38,16 @@ export default function Signup() {
   const handleSubmit = async (event) => {
     event.preventDefault()
     console.log(formValues)
-    const { data } = await axios.post('http://localhost:8080/google-signup', formValues, { withCredentials: true })
+    const { data } = await axios.post('http://localhost:8080/federated-signup', formValues, { withCredentials: true })
     console.log(data)
-    if (data === 'Successful Google signup') {
+    if (data === 'Successful federated signup') {
       history.push('/')
     }
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <Typography variant="h2" component="h1" align="center">Create Account</Typography>
+      <Typography variant="h2" component="h1" align="center">Finish Creating Account</Typography>
       <Grid container alignItems="center" justify="center" direction="column" spacing="10">
         {Object.keys(defaultValues).map((key) => (
           key !== 'location' ? (
@@ -86,7 +86,7 @@ export default function Signup() {
           </FormControl>
         </Grid>
         <Grid item>
-          <Button variant="contained" color="primary" type="submit" sx={{ minWidth: 195 }}>Create Account</Button>
+          <Button variant="contained" color="primary" type="submit" sx={{ minWidth: 195 }}>Finish Creating MusicBar Account</Button>
         </Grid>
       </Grid>
     </form>

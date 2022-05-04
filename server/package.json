@@ -13,6 +13,7 @@
     "nodemon": "^2.0.12",
     "passport": "^0.5.2",
     "passport-google-oidc": "^0.1.0",
+    "passport-linkedin-oauth2": "^2.0.0",
     "passport-local": "^1.0.0",
     "supertest": "^6.1.6"
   },
