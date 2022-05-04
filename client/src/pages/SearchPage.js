@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { useHistory } from 'react-router-dom'
+// import { useHistory } from 'react-router-dom'
 import {
   FormControl, TextField, Button, ButtonGroup, Typography, Slider, TableContainer,
   TableHead, TableRow, TableCell, TableBody, Table, Paper, Link,
 } from '@mui/material'
-// import SongCard from '../components/SongCard'
 import NavBar from '../components/NavBar'
 import { getSearchBySong } from '../fetcher'
 
 function SearchPage() {
-  const history = useHistory()
-  // const [signedIn, setSignedIn] = useState(false)
-
   const checkSession = async () => {
     const { data } = await axios.get('http://localhost:8080/username', { withCredentials: true })
     console.log(data)
@@ -22,12 +18,6 @@ function SearchPage() {
   useEffect(() => {
     checkSession()
   }, [])
-
-  const logout = async () => {
-    const { data } = await axios.post('http://localhost:8080/logout', {}, { withCredentials: true })
-    console.log(data)
-    history.push('/login')
-  }
 
   const [input, setInput] = useState('')
   const [acousticnessLowQuery, setAcousticnessLowQuery] = useState(0)
@@ -143,8 +133,6 @@ function SearchPage() {
         <Typography variant="h1" component="h2">
           MusicBar
         </Typography>
-        <Button variant="text" onClick={() => { history.push('/me') }}>Personal</Button>
-        <Button variant="contained" color="primary" onClick={logout}>Logout</Button>
         <div id="hello">
           <TextField id="search-input" label="Search" variant="outlined" sx={{ padding: '15px' }} onChange={(e) => setInput(e.target.value)} />
           <Typography gutterBottom>Acousticness</Typography>
