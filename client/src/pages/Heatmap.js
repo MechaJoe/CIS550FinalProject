@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
 import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import ButtonGroup from '@mui/material/ButtonGroup'
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps'
 import { scaleQuantize } from 'd3-scale'
 
 import NavBar from '../components/NavBar'
-import { getArtistData } from '../fetcher'
+import { getArtistLocationCounts, getUserLocationCounts } from '../fetcher'
 
 const geoUrl = 'https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json'
 
@@ -22,32 +25,75 @@ const colorScale = scaleQuantize()
     '#782618',
   ])
 
+const theme = createTheme({
+  palette: {
+    secondary: {
+      main: '#808080',
+    },
+  },
+})
+
 function Heatmap() {
   const [data, setData] = useState([])
+  const [displayArtistData, setDisplayArtistData] = useState(true)
 
   useEffect(() => {
-    getArtistData().then((countries) => {
-      setData(countries)
-    })
+    if (displayArtistData) {
+      getArtistLocationCounts().then((countries) => {
+        setData(countries)
+      })
+    } else {
+      getUserLocationCounts().then((countries) => {
+        setData(countries)
+      })
+    }
   }, [])
 
   return (
     <Box>
       <NavBar />
-      <ComposableMap projection="geoMercator">
-        <Geographies geography={geoUrl}>
-          {({ geographies }) => geographies.map((geo) => {
-            const cur = data.find((s) => s.location.includes(geo.properties.NAME_LONG))
-            return (
-              <Geography
-                key={geo.rsmKey}
-                geography={geo}
-                fill={colorScale(cur ? cur.num_artists : '#EEE')}
-              />
-            )
-          })}
-        </Geographies>
-      </ComposableMap>
+      <Box>
+        <ThemeProvider theme={theme}>
+          <ButtonGroup variant="contained" aria-label="text button group">
+            <Button
+              onClick={() => {
+                setDisplayArtistData(true)
+                getArtistLocationCounts().then((countries) => {
+                  setData(countries)
+                })
+              }}
+              color={displayArtistData ? 'primary' : 'secondary'}
+            >
+              Artist Map
+            </Button>
+            <Button
+              onClick={() => {
+                setDisplayArtistData(false)
+                getUserLocationCounts().then((countries) => {
+                  setData(countries)
+                })
+              }}
+              color={displayArtistData ? 'secondary' : 'primary'}
+            >
+              User Map
+            </Button>
+          </ButtonGroup>
+        </ThemeProvider>
+        <ComposableMap projection="geoMercator">
+          <Geographies geography={geoUrl}>
+            {({ geographies }) => geographies.map((geo) => {
+              const cur = data.find((s) => s.location.includes(geo.properties.NAME_LONG))
+              return (
+                <Geography
+                  key={geo.rsmKey}
+                  geography={geo}
+                  fill={colorScale(cur ? cur.num_artists : '#EEE')}
+                />
+              )
+            })}
+          </Geographies>
+        </ComposableMap>
+      </Box>
     </Box>
   )
 }

@@ -19,6 +19,14 @@ export default function NavBar() {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }
+  const linkStyle = {
+    minWidth: '100px',
+    fontFamily: 'Roboto, Arial',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+  }
+
   const handleClose = () => {
     setAnchorEl(null)
   }
@@ -29,11 +37,18 @@ export default function NavBar() {
   return (
     <>
       <Box sx={{
-        display: 'flex', alignItems: 'center', textAlign: 'center', float: 'right',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        textAlign: 'center',
+        width: '100%',
+        padding: '1rem',
       }}
       >
-        <Link sx={{ minWidth: '100px', fontFamily: 'Roboto, Arial' }} href="/" underline="hover">Search</Link>
-        <Link sx={{ minWidth: '100px', fontFamily: 'Roboto, Arial' }} href="/heatmap" underline="hover">Heatmap</Link>
+        <Link sx={linkStyle} href="/" underline="hover">
+          Search
+        </Link>
+        <Link sx={linkStyle} href="/heatmap" underline="hover">Heatmap</Link>
         <Tooltip title="Me">
           <IconButton
             onClick={handleClick}
@@ -59,7 +74,7 @@ export default function NavBar() {
         <MenuItem onClick={() => { history.push('/me') }}>
           Profile
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => { history.push('/edit') }}>
           Edit Information
         </MenuItem>
         <Divider />
