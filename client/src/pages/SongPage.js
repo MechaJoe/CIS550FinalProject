@@ -5,7 +5,7 @@ import { Form, FormInput, FormGroup, Button, Card, CardBody, Progress } from 'sh
 import { Table, Row, Col, Divider, Slider, Rate } from 'antd'
 import { RadarChart, CircularGridLines } from 'react-vis';
 import { format } from 'd3-format'; 
-
+import SongCard from '../components/SongCard'
 
 import MenuBar from '../components/MenuBar';
 import { getSongSearch, getSong } from '../fetcher'
@@ -75,26 +75,27 @@ class SongPage extends React.Component {
                 <Divider />
                 {this.state.selectedSongDetails ? <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
                     <Card>
+                        <CardBody>
+                            <Col flex={1} style={{ textAlign: 'center' }}>
+                                <SongCard
+                                    songId={this.state.selectedSongDetails.song_id}
+                                    title={this.state.selectedSongDetails.title}
+                                    artists={this.state.selectedSongDetails.title}
+                                    // key={likedSongs.indexOf(elem)}
+                                    alreadyLiked
+                                />
+                            </Col>
+                        </CardBody>
+                    </Card>
+                    <br/>
+                    <Card>
                     
                         <CardBody>
-                            <Row gutter='30' align='middle' justify='center'>
-                                <Col flex={2} style={{ textAlign: 'left' }}>
-                                    <h3>{this.state.selectedSongDetails.title}</h3>
-                                </Col>
-                            </Row>
-                            
                             <Row gutter='30' align='middle' justify='left'>
                                 <Col>
-                                <h5>{this.state.selectedSongDetails.artist}</h5>
-                                </Col>
-                                <Col>
-                                <h5>{this.state.selectedSongDetails.year}</h5>
+                                    Year Released: {this.state.selectedSongDetails.year}
                                 </Col>
                             </Row>
-
-                            <br>
-                            </br>
-
                             <Row gutter='30' align='middle' justify='left'>
                                 <Col>
                                 Duration (ms): {this.state.selectedSongDetails.duration_ms}
