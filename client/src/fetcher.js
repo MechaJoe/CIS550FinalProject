@@ -21,6 +21,40 @@ export const getSearchBySong = async (
     `http://${config.server_host}:${config.server_port}/search/song?song=${input}&acousticnessLow=${acousticnessLowQuery}&acousticnessHigh=${acousticnessHighQuery}&danceabilityLow=${danceabilityLowQuery}&danceabilityHigh=${danceabilityHighQuery}&energyLow=${energyLowQuery}&energyHigh=${energyHighQuery}&valenceLow=${valenceLowQuery}&valenceHigh=${valenceHighQuery}&livenessLow=${livenessLowQuery}&livenessHigh=${livenessHighQuery}&speechinessLow=${speechinessLowQuery}&speechinessHigh=${speechinessHighQuery}`,
     { withCredentials: true },
   )
+
+  const res = data?.results ?? []
+  console.log(`Results: ${res}`)
+  // map song_id to [list of artists, title]
+  const idToSong = res.reduce((acc, obj) => {
+    try {
+      acc[obj.song_id] = [[obj.artist].concat(acc[obj.song_id][0]), [obj.artist_id].concat(acc[obj.song_id][1]), obj.title]
+    } catch (e) {
+      acc[obj.song_id] = [[obj.artist], [obj.artist_id], obj.title]
+    }
+    return acc
+  }, {})
+  return Object.entries(idToSong)
+}
+
+export const getSearchByArtist = async (
+  input,
+  acousticnessLowQuery,
+  acousticnessHighQuery,
+  danceabilityLowQuery,
+  danceabilityHighQuery,
+  energyLowQuery,
+  energyHighQuery,
+  valenceLowQuery,
+  valenceHighQuery,
+  livenessLowQuery,
+  livenessHighQuery,
+  speechinessLowQuery,
+  speechinessHighQuery,
+) => {
+  const { data } = await axios.get(
+    `http://${config.server_host}:${config.server_port}/search/artist?artist=${input}&acousticnessLow=${acousticnessLowQuery}&acousticnessHigh=${acousticnessHighQuery}&danceabilityLow=${danceabilityLowQuery}&danceabilityHigh=${danceabilityHighQuery}&energyLow=${energyLowQuery}&energyHigh=${energyHighQuery}&valenceLow=${valenceLowQuery}&valenceHigh=${valenceHighQuery}&livenessLow=${livenessLowQuery}&livenessHigh=${livenessHighQuery}&speechinessLow=${speechinessLowQuery}&speechinessHigh=${speechinessHighQuery}`,
+    { withCredentials: true },
+  )
   // const data = await fetch(`http://${config.server_host}:${config.server_port}/search/song?song=${input}&acousticnessLow=${acousticnessLowQuery}&acousticnessHigh=${acousticnessHighQuery}&danceabilityLow=${danceabilityLowQuery}&danceabilityHigh=${danceabilityHighQuery}&energyLow=${energyLowQuery}&energyHigh=${energyHighQuery}&valenceLow=${valenceLowQuery}&valenceHigh=${valenceHighQuery}&livenessLow=${livenessLowQuery}&livenessHigh=${livenessHighQuery}&speechinessLow=${speechinessLowQuery}&speechinessHigh=${speechinessHighQuery}`, {
   //   method: 'GET',
   // })
@@ -32,9 +66,9 @@ export const getSearchBySong = async (
   // map song_id to [list of artists, title]
   const idToSong = res.reduce((acc, obj) => {
     try {
-      acc[obj.song_id] = [[obj.artist].concat(acc[obj.song_id][0]), obj.title]
+      acc[obj.song_id] = [[obj.artist].concat(acc[obj.song_id][0]), [obj.artist_id].concat(acc[obj.song_id][1]), obj.title]
     } catch (e) {
-      acc[obj.song_id] = [[obj.artist], obj.title]
+      acc[obj.song_id] = [[obj.artist], [obj.artist_id], obj.title]
     }
     return acc
   }, {})
