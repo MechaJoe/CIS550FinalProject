@@ -87,6 +87,7 @@ function SearchPage() {
       speechinessLowQuery,
       speechinessHighQuery,
     ).then((res) => {
+      setSearchResults([])
       setSearchResults(res)
     })
   }
