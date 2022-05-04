@@ -580,16 +580,18 @@ router.get('/search/artist', async (req, res) => {
     SELECT cb.artist_id, cb.song_id, a.name, a.location, a.listeners, a.scrobbles, a.ambiguous_artist, 
     a.tags, a.genre
     FROM Artist a JOIN ComposedBy cb ON a.artist_id = cb.artist_id
+  ), songsByArtists AS (
+    SELECT s.song_id AS song_id
+    FROM Song s JOIN artistSongs artSongs ON s.song_id = artSongs.song_id AND artSongs.name = s.artist
+    WHERE artSongs.name LIKE '%${artist}%' AND acousticness >= ${acousticnessLow} AND 
+    acousticness <= ${acousticnessHigh} AND danceability >= ${danceabilityLow} AND 
+    danceability <= ${danceabilityHigh} AND energy >= ${energyLow} AND energy <= ${energyHigh} AND 
+    valence >= ${valenceLow} AND valence <= ${valenceHigh} AND liveness >= ${livenessLow} AND 
+    liveness <= ${livenessHigh} AND speechiness >= ${speechinessLow} AND 
+    speechiness <= ${speechinessHigh}
   )
-  SELECT s.song_id AS song_id, title, artist, artist_id, acousticness, danceability, duration_ms, energy, 
-  explicit, instrumentalness, liveness, loudness, mode, popularity, speechiness, tempo, valence, year
-  FROM Song s JOIN artistSongs artSongs ON s.song_id = artSongs.song_id AND artSongs.name = s.artist
-  WHERE artSongs.name LIKE '%${artist}%' AND acousticness >= ${acousticnessLow} AND 
-  acousticness <= ${acousticnessHigh} AND danceability >= ${danceabilityLow} AND 
-  danceability <= ${danceabilityHigh} AND energy >= ${energyLow} AND energy <= ${energyHigh} AND 
-  valence >= ${valenceLow} AND valence <= ${valenceHigh} AND liveness >= ${livenessLow} AND 
-  liveness <= ${livenessHigh} AND speechiness >= ${speechinessLow} AND 
-  speechiness <= ${speechinessHigh}
+  SELECT *
+  FROM Song JOIN ComposedBy cb ON Song.song_id = cb.song_id JOIN Artist ON cb.artist_id = Artist.artist_id AND Artist.name = Song.artist JOIN songsByArtists ON Song.song_id = songsByArtists.song_id
   `, (error, results) => {
     if (error) {
       res.json({ error })
