@@ -179,6 +179,24 @@ router.post('/user/location', async (_req, res) => {
   })
 })
 
+router.get('/user/count-by-location', async (req, res) => {
+  const query = `
+    SELECT location, COUNT(username) AS num_users
+    FROM User
+    GROUP BY location;
+  `
+  connection.query(query, (error, results, fields) => {
+    if (error) {
+      console.log(error)
+      res.json({ error })
+    } else if (results.length === 0) {
+      res.json({ results: [] })
+    } else {
+      res.json({ results })
+    }
+  })
+})
+
 router.post('/like', async (req, res) => {
   const { username } = session
   const { song_id } = req.body
@@ -300,7 +318,7 @@ router.get('/song/by-related-all-attributes', async (req, res) => {
 })
 
 // Song: Recommend songs that were liked by other users in the same geographic location
-router.get('/song/recommended_by_location', async (req, res) => {
+router.get('/song/recommended-by-location', async (req, res) => {
   const { location } = req.session
   connection.query(`
       WITH song_location_likes AS (
