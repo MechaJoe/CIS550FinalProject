@@ -6,7 +6,7 @@ import {
   TableHead, TableRow, TableCell, TableBody, Table, Paper, Link,
 } from '@mui/material'
 import NavBar from '../components/NavBar'
-import { getSearchBySong } from '../fetcher'
+import { getSearchBySong, getSearchByArtist } from '../fetcher'
 
 function SearchPage() {
   const checkSession = async () => {
@@ -81,6 +81,28 @@ function SearchPage() {
       setSearchResults(res)
     })
   }
+
+  const handleSearchByArtist = async () => {
+    getSearchByArtist(
+      input,
+      acousticnessLowQuery,
+      acousticnessHighQuery,
+      danceabilityLowQuery,
+      danceabilityHighQuery,
+      energyLowQuery,
+      energyHighQuery,
+      valenceLowQuery,
+      valenceHighQuery,
+      livenessLowQuery,
+      livenessHighQuery,
+      speechinessLowQuery,
+      speechinessHighQuery,
+    ).then((res) => {
+      setSearchResults([])
+      setSearchResults(res)
+    })
+  }
+
   console.log(searchResults)
   console.log(searchResults.length)
 
@@ -106,26 +128,6 @@ function SearchPage() {
   const rows = []
   searchResults.forEach((song) => rows.push(createData(song)))
 
-  // const handleSearchByArtist = async () => {
-  //   getSearchByArtist(
-  //     input,
-  //     acousticnessLowQuery,
-  //     acousticnessHighQuery,
-  //     danceabilityLowQuery,
-  //     danceabilityHighQuery,
-  //     energyLowQuery,
-  //     energyHighQuery,
-  //     valenceLowQuery,
-  //     valenceHighQuery,
-  //     livenessLowQuery,
-  //     livenessHighQuery,
-  //     speechinessLowQuery,
-  //     speechinessHighQuery,
-  //   ).then((res) => {
-  //     setSearchResults(res.results)
-  //   })
-  // }
-
   return (
     <>
       <NavBar />
@@ -149,7 +151,7 @@ function SearchPage() {
           <Slider id="speechiness" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleSpeechinessChange(e.target.value)} />
           <ButtonGroup orientation="vertical" variant="contained" aria-label="outlined primary button group">
             <Button onClick={handleSearchBySong}> By Song </Button>
-            <Button> By Artist </Button>
+            <Button onClick={handleSearchByArtist}> By Artist </Button>
           </ButtonGroup>
         </div>
       </FormControl>
