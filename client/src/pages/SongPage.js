@@ -7,7 +7,7 @@ import { RadarChart, CircularGridLines } from 'react-vis';
 import { format } from 'd3-format'; 
 import SongCard from '../components/SongCard'
 
-import MenuBar from '../components/MenuBar';
+import NavBar from '../components/NavBar'
 import { getSongSearch, getSong } from '../fetcher'
 import { color, fontSize } from '@mui/system';
 const wideFormat = format('.3r');
@@ -70,7 +70,7 @@ class SongPage extends React.Component {
 
             <div>
 
-                <MenuBar />
+                <NavBar />
 
                 <Divider />
                 {this.state.selectedSongDetails ? <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
