@@ -6,7 +6,7 @@ import { Table, Row, Col, Divider, Slider, Rate } from 'antd'
 import { format } from 'd3-format'; 
 
 
-import MenuBar from '../components/MenuBar';
+import NavBar from '../components/NavBar'
 import { getArtistSearch, getArtist } from '../fetcher'
 
 import { color, fontSize } from '@mui/system';
@@ -38,7 +38,7 @@ class ArtistPage extends React.Component {
 
             <div>
 
-                <MenuBar />
+                <NavBar />
 
                 <Divider />
                 {this.state.selectedArtistDetails ? <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
