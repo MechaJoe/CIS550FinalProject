@@ -74,7 +74,7 @@ export default function NavBar() {
         <MenuItem onClick={() => { history.push('/me') }}>
           Profile
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => { history.push('/edit') }}>
           Edit Information
         </MenuItem>
         <Divider />

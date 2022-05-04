@@ -2,21 +2,16 @@ import React, { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
-import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
 import Slider from '@mui/material/Slider'
 import Grid from '@mui/material/Grid'
 import SongCard from '../components/SongCard'
 import NavBar from '../components/NavBar'
 import {
-  getStats, getLikedSongs, getTopArtists, getCurrUser, getUserLocation,
-  setUserLocation,
+  getStats, getLikedSongs, getTopArtists, getCurrUser,
 } from '../fetcher'
 
 export default function UserProfile() {
   const [user, setUser] = useState('')
-  const [location, setLocation] = useState('')
-  const [newLocation, setNewLocation] = useState('')
   const [stats, setStats] = useState({})
   const [likedSongs, setLikedSongs] = useState([])
   const [topArtists, setTopArtists] = useState([])
@@ -36,20 +31,6 @@ export default function UserProfile() {
   useEffect(() => {
     getCurrUser().then(setUser)
   })
-
-  useEffect(() => {
-    getUserLocation().then(setLocation)
-  })
-
-  const handleLocationChange = (event) => {
-    setNewLocation(event.target.value)
-  }
-
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    setUserLocation(newLocation)
-    setLocation(newLocation)
-  }
 
   return (
     <Box
@@ -141,20 +122,6 @@ export default function UserProfile() {
               </Typography>
             </Container>
           ))}
-      </Box>
-
-      <Box
-        sx={{
-          width: '90%',
-          justify: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Typography variant="h3">
-          {`Change my location (current: ${location})`}
-        </Typography>
-        <TextField label="location" id="location" onChange={handleLocationChange} />
-        <Button variant="contained" color="primary" onClick={handleSubmit}>Change</Button>
       </Box>
     </Box>
   )
