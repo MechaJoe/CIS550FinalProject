@@ -180,7 +180,7 @@ function SearchPage() {
                 <TableBody>
                   {rows.map((row) => (
                     <TableRow
-                      key={row.title}
+                      key={row.songId}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
