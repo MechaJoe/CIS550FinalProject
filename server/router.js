@@ -581,7 +581,7 @@ router.get('/search/artist', async (req, res) => {
     a.tags, a.genre
     FROM Artist a JOIN ComposedBy cb ON a.artist_id = cb.artist_id
   )
-  SELECT s.song_id AS song_id, title, artist, acousticness, danceability, duration_ms, energy, 
+  SELECT s.song_id AS song_id, title, artist, artist_id, acousticness, danceability, duration_ms, energy, 
   explicit, instrumentalness, liveness, loudness, mode, popularity, speechiness, tempo, valence, year
   FROM Song s JOIN artistSongs artSongs ON s.song_id = artSongs.song_id
   WHERE artSongs.name LIKE '%${artist}%' AND acousticness >= ${acousticnessLow} AND 
