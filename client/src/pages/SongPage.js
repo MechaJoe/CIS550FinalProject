@@ -80,7 +80,7 @@ class SongPage extends React.Component {
                                 <SongCard
                                     songId={this.state.selectedSongDetails.song_id}
                                     title={this.state.selectedSongDetails.title}
-                                    artists={this.state.selectedSongDetails.title}
+                                    artists={this.state.selectedSongDetails.artist}
                                     // key={likedSongs.indexOf(elem)}
                                     alreadyLiked
                                 />
