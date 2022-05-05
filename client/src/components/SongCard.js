@@ -15,8 +15,8 @@ export default function SongCard({
   const [realSongId, setSongId] = useState(songId)
   const handleLike = (e) => {
     e.preventDefault()
+    setLikeSong(realSongId, !isLiked)
     setIsLiked(!isLiked)
-    setLikeSong(songId, !isLiked)
   }
 
   useEffect(async () => {
