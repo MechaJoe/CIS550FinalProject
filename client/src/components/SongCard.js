@@ -11,7 +11,8 @@ export default function SongCard({
   songId, title, artists, alreadyLiked,
 }) {
   const [isLiked, setIsLiked] = useState(alreadyLiked)
-  const handleLike = () => {
+  const handleLike = (e) => {
+    e.preventDefault()
     setIsLiked(!isLiked)
     setLikeSong(songId, !isLiked)
   }
@@ -23,7 +24,7 @@ export default function SongCard({
           title={title}
           subheader={artists}
         />
-        <Button variant="contained" color="primary" onClick={handleLike}>
+        <Button variant="contained" color="primary" onClick={(e) => handleLike(e)}>
           {isLiked ? 'Unlike' : 'Like'}
         </Button>
       </Card>
