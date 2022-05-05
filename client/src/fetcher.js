@@ -1,3 +1,4 @@
+/* eslint-disable */
 import axios from 'axios'
 import config from './config.json'
 
@@ -11,16 +12,67 @@ export const getSearchBySong = async (
   energyHighQuery,
   valenceLowQuery,
   valenceHighQuery,
-  // livenessLowQuery,
-  // livenessHighQuery,
-  // speechinessLowQuery,
-  // speechinessHighQuery,
+  livenessLowQuery,
+  livenessHighQuery,
+  speechinessLowQuery,
+  speechinessHighQuery,
 ) => {
-  const res = await fetch(`http://${config.server_host}:${config.server_port}/search/song?song=${input}&acousticnessLow=${acousticnessLowQuery}&acousticnessHigh=${acousticnessHighQuery}&danceabilityLow=${danceabilityLowQuery}&danceabilityHigh=${danceabilityHighQuery}&energyLow=${energyLowQuery}&energyHigh=${energyHighQuery}&valenceLow=${valenceLowQuery}&valenceHigh=${valenceHighQuery}`, {
-    method: 'GET',
-  })
+  const { data } = await axios.get(
+    `http://${config.server_host}:${config.server_port}/search/song?song=${input}&acousticnessLow=${acousticnessLowQuery}&acousticnessHigh=${acousticnessHighQuery}&danceabilityLow=${danceabilityLowQuery}&danceabilityHigh=${danceabilityHighQuery}&energyLow=${energyLowQuery}&energyHigh=${energyHighQuery}&valenceLow=${valenceLowQuery}&valenceHigh=${valenceHighQuery}&livenessLow=${livenessLowQuery}&livenessHigh=${livenessHighQuery}&speechinessLow=${speechinessLowQuery}&speechinessHigh=${speechinessHighQuery}`,
+    { withCredentials: true },
+  )
 
-  return res.json()
+  const res = data?.results ?? []
+  console.log(`Results: ${res}`)
+  // map song_id to [list of artists, title]
+  const idToSong = res.reduce((acc, obj) => {
+    try {
+      acc[obj.song_id] = [[obj.artist].concat(acc[obj.song_id][0]), [obj.artist_id].concat(acc[obj.song_id][1]), obj.title]
+    } catch (e) {
+      acc[obj.song_id] = [[obj.artist], [obj.artist_id], obj.title]
+    }
+    return acc
+  }, {})
+  return Object.entries(idToSong)
+}
+
+export const getSearchByArtist = async (
+  input,
+  acousticnessLowQuery,
+  acousticnessHighQuery,
+  danceabilityLowQuery,
+  danceabilityHighQuery,
+  energyLowQuery,
+  energyHighQuery,
+  valenceLowQuery,
+  valenceHighQuery,
+  livenessLowQuery,
+  livenessHighQuery,
+  speechinessLowQuery,
+  speechinessHighQuery,
+) => {
+  const { data } = await axios.get(
+    `http://${config.server_host}:${config.server_port}/search/artist?artist=${input}&acousticnessLow=${acousticnessLowQuery}&acousticnessHigh=${acousticnessHighQuery}&danceabilityLow=${danceabilityLowQuery}&danceabilityHigh=${danceabilityHighQuery}&energyLow=${energyLowQuery}&energyHigh=${energyHighQuery}&valenceLow=${valenceLowQuery}&valenceHigh=${valenceHighQuery}&livenessLow=${livenessLowQuery}&livenessHigh=${livenessHighQuery}&speechinessLow=${speechinessLowQuery}&speechinessHigh=${speechinessHighQuery}`,
+    { withCredentials: true },
+  )
+  // const data = await fetch(`http://${config.server_host}:${config.server_port}/search/song?song=${input}&acousticnessLow=${acousticnessLowQuery}&acousticnessHigh=${acousticnessHighQuery}&danceabilityLow=${danceabilityLowQuery}&danceabilityHigh=${danceabilityHighQuery}&energyLow=${energyLowQuery}&energyHigh=${energyHighQuery}&valenceLow=${valenceLowQuery}&valenceHigh=${valenceHighQuery}&livenessLow=${livenessLowQuery}&livenessHigh=${livenessHighQuery}&speechinessLow=${speechinessLowQuery}&speechinessHigh=${speechinessHighQuery}`, {
+  //   method: 'GET',
+  // })
+
+  // return res.json()
+
+  const res = data?.results ?? []
+  console.log(`Results: ${res}`)
+  // map song_id to [list of artists, title]
+  const idToSong = res.reduce((acc, obj) => {
+    try {
+      acc[obj.song_id] = [[obj.artist].concat(acc[obj.song_id][0]), [obj.artist_id].concat(acc[obj.song_id][1]), obj.title]
+    } catch (e) {
+      acc[obj.song_id] = [[obj.artist], [obj.artist_id], obj.title]
+    }
+    return acc
+  }, {})
+  return Object.entries(idToSong)
 }
 
 export const getCurrUser = async () => {
@@ -54,7 +106,7 @@ export const getLikedSongs = async () => {
     }
     return acc
   }, {})
-  return Object.entries(idToSong)
+  return Object.entries(idToSong) //[song_id, [list of artists, title]]
 }
 
 export const getTopArtists = async () => {
@@ -65,7 +117,7 @@ export const getTopArtists = async () => {
   return data?.results ?? []
 }
 
-export const setUserLocation = async (user, location) => {
+export const setUserLocation = async (location) => {
   const { data } = await axios.post(
     `http://${config.server_host}:${config.server_port}/user/set-location`,
     { location },
@@ -80,6 +132,11 @@ export const getUserLocation = async () => {
     { withCredentials: true },
   )
   return data?.results[0]?.location ?? 'N/A'
+}
+
+export const getUserLocationCounts = async () => {
+  const res = await axios.get(`http://${config.server_host}:${config.server_port}/user/count-by-location`)
+  return res.data.results
 }
 
 export const setLikeSong = async (songId, liked) => {
@@ -98,4 +155,40 @@ export const setLikeSong = async (songId, liked) => {
     )
   }
   return res?.affectedRows
+}
+
+export const getArtistLocationCounts = async () => {
+  const res = await fetch(`http://${config.server_host}:${config.server_port}/artist/count-by-location`, {
+    method: 'GET',
+  })
+  const json = await res.json()
+  return json.results
+}
+
+export const getArtist = async (id) => {
+  var res = await fetch(`http://${config.server_host}:${config.server_port}/artist/info?id=${id}`, {
+    method: 'GET',
+  })
+  return res.json()
+}
+
+export const getSong = async (id) => {
+  var res = await fetch(`http://${config.server_host}:${config.server_port}/song/info?id=${id}`, {
+    method: 'GET',
+  })
+  return res.json()
+}
+
+export const getArtistSearch = async (name, location, scrobbles, listeners, tags, genre, page, pagesize) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/search/artists?name=${name}}&location=${location}&listeners=${listeners}&scrobbles=${scrobbles}&tags=${tags}&genre=${genre}&page=${page}&pagesize=${pagesize}`, {
+        method: 'GET',
+    })
+    return res.json()
+}
+
+export const getSongSearch = async (title, artist, acousticness, danceability, duration_ms, energy, explicit, instrumentalness, liveness, loudness, mode, popularity, speechiness, tempo, valence, year, page, pagesize) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/search/songs?title=${title}&artist=${artist}&acousticness=${acousticness}&danceability=${danceability}&duration_ms=${duration_ms}&energy=${energy}&explicit=${explicit}&instrumentalness=${instrumentalness}&liveness=${liveness}&loudness=${loudness}&mode=${mode}&popularity=${popularity}&speechiness=${speechiness}&tempo=${tempo}&valence=${valence}&year=${year}&page=${page}&pagesize=${pagesize}`, {
+        method: 'GET',
+    })
+    return res.json()
 }
