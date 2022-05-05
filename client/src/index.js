@@ -20,6 +20,8 @@ import "shards-ui/dist/css/shards.min.css"
 import LoginPage from './pages/LoginPage'
 import Heatmap from './pages/Heatmap'
 import UserProfile from './pages/UserProfile'
+import Signup from './pages/Signup'
+import FederatedSignup from './pages/FederatedSignup'
 
 ReactDOM.render(
   <div>
@@ -57,6 +59,17 @@ ReactDOM.render(
         />
         <Route
           exact
+          path="/signup"
+          render={() => (
+            <Signup />
+          )}
+        />
+        <Route
+          exact
+          path="/federated-signup"
+          render={() => (
+            <FederatedSignup />
+          )}
           path="/edit"
           render={() => <EditUser />}
         />
