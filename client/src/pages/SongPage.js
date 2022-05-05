@@ -7,7 +7,7 @@ import { RadarChart, CircularGridLines } from 'react-vis';
 import { format } from 'd3-format'; 
 import SongCard from '../components/SongCard'
 import NavBar from '../components/NavBar'
-import { getSongSearch, getSong } from '../fetcher'
+import { getSong } from '../fetcher'
 import { color, fontSize } from '@mui/system';
 const wideFormat = format('.3r');
 
@@ -55,10 +55,6 @@ class SongPage extends React.Component {
     }
 
     componentDidMount() {
-        getSongSearch(this.state.titleQuery, this.state.nationalityQuery, this.state.clubQuery, this.state.ratingHighQuery, this.state.ratingLowQuery, this.state.potHighQuery, this.state.potLowQuery, null, null).then(res => {
-            this.setState({ songsResults: res.results })
-        })
-
         getSong(this.state.selectedSongId).then(res => {
             this.setState({ selectedSongDetails: res.results[0] })
         })

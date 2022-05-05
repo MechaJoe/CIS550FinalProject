@@ -65,7 +65,7 @@ export const getSearchByArtist = async (
   // return res.json()
 
   const res = data?.results ?? []
-  console.log(`Results: ${res}`)
+  // console.log(`Results: ${res}`)
   // map song_id to [list of artists, title]
   const idToSong = res.reduce((acc, obj) => {
     try {
@@ -170,6 +170,11 @@ export const getArtistLocationCounts = async () => {
   return data.results
 }
 
+export const getArtistLocationPopularity = async (id) => {
+  const { data } = await axios.get(`http://${config.server_host}:${config.server_port}/artist/location-score?artist_id=${id}`)
+  return data.results
+}
+
 export const getArtist = async (id) => {
   const { data } = await axios.get(`http://${config.server_host}:${config.server_port}/artist/info?id=${id}`)
   return data
@@ -178,42 +183,4 @@ export const getArtist = async (id) => {
 export const getSong = async (id) => {
   const { data } = await axios.get(`http://${config.server_host}:${config.server_port}/song/info?id=${id}`)
   return data
-}
-
-// eslint-disable-next-line max-len
-export const getArtistSearch = async (name, location, scrobbles, listeners, tags, genre, page, pagesize) => {
-  const res = await axios.get(`http://${config.server_host}:${config.server_port}/search/artists?
-        ${name ? `name=${name}&` : ''}
-        ${location ? `location=${location}&` : ''}
-        ${scrobbles ? `scrobbles=${scrobbles}&` : ''}
-        ${listeners ? `listeners=${listeners}&` : ''}
-        ${tags ? `tags=${tags}&` : ''}
-        ${genre ? `genre=${genre}&` : ''}
-        ${page ? `page=${page}&` : ''}
-        ${pagesize ? `pagesize=${pagesize}` : ''}`.replace(/(\r\n|\n|\r)/gm, ''))
-  return res.json()
-}
-
-// eslint-disable-next-line max-len
-export const getSongSearch = async (title, artist, acousticness, danceability, durationMs, energy, explicit, instrumentalness, liveness, loudness, mode, popularity, speechiness, tempo, valence, year, page, pagesize) => {
-  const res = await axios.get(`
-      http://${config.server_host}:${config.server_port}/search/songs?
-        ${title ? `title=${title}&` : ''}
-        ${artist ? `artist=${artist}&` : ''}
-        ${acousticness ? `acousticness=${acousticness}&` : ''}
-        ${danceability ? `danceability=${danceability}&` : ''}
-        ${durationMs ? `duration_ms=${durationMs}&` : ''}
-        ${energy ? `energy=${energy}&` : ''}
-        ${explicit ? `explicit=${explicit}&` : ''}
-        ${instrumentalness ? `instrumentalness=${instrumentalness}&` : ''}
-        ${liveness ? `liveness=${liveness}&` : ''}
-        ${loudness ? `loudness=${loudness}&` : ''}
-        ${mode ? `mode=${mode}&` : ''}
-        ${popularity ? `popularity=${popularity}&` : ''}
-        ${speechiness ? `speechiness=${speechiness}&` : ''}
-        ${tempo ? `tempo=${tempo}&` : ''}
-        ${year ? `year=${year}&` : ''}
-        ${page ? `page=${page}&` : ''}
-        ${pagesize ? `pagesize=${pagesize}` : ''}`.replace(/(\r\n|\n|\r)/gm))
-  return res.json()
 }
