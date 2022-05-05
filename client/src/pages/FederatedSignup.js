@@ -47,8 +47,8 @@ export default function FederatedSignup() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Typography variant="h2" component="h1" align="center">Finish Creating Account</Typography>
-      <Grid container alignItems="center" justify="center" direction="column" spacing="10">
+      <Grid container justifyContent="center" alignItems="center" direction="column" style={{ minHeight: '100vh' }} spacing="10">
+        <Typography variant="h2" component="h1" align="center">Finish Creating Account</Typography>
         {Object.keys(defaultValues).map((key) => (
           key !== 'location' ? (
             <Grid item key={key}>
