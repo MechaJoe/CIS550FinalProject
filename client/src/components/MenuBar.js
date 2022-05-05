@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import {
     Navbar,
@@ -11,23 +12,14 @@ class MenuBar extends React.Component {
     render() {
         return(
             <Navbar type="dark" theme="primary" expand="md">
-        <NavbarBrand href="/">CIS 550 FIFA</NavbarBrand>
+        <NavbarBrand href="/">MusicBar</NavbarBrand>
           <Nav navbar>
-          <NavItem>
+            <NavItem>
               <NavLink active href="/">
-                Home
+                Search
               </NavLink>
             </NavItem>
-            <NavItem>
-              <NavLink active href="/players">
-                Players
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink active  href="/matches" >
-                Matches
-              </NavLink>
-            </NavItem>
+            
           </Nav>
       </Navbar>
         )
