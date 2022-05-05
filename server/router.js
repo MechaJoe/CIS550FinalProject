@@ -15,7 +15,7 @@ const connection = mysql.createConnection({
 connection.connect()
 
 // TEMP FIX FOR SESSION PROBLEM
-let session
+// let session
 
 
 // AUTH ROUTES
@@ -63,7 +63,7 @@ let session
 // Determines the top artists for a user relative to the songs that they have liked
 // and displays the percentage of their liked songs for that artist - COMPLEX
 router.get('/user/top-artists', async (req, res) => {
-  const { username } = session
+  const { username } = req.session
   connection.query(`
   WITH userSongs AS (
     SELECT *
@@ -98,7 +98,7 @@ router.get('/user/top-artists', async (req, res) => {
 
 // Personal: Average attribute scores
 router.get('/user/stats', async (req, res) => {
-  const { username } = session
+  const { username } = req.session
   connection.query(`
       SELECT 
         AVG(acousticness) AS avg_acousticness, 
@@ -120,7 +120,7 @@ router.get('/user/stats', async (req, res) => {
 })
 
 router.get('/user/likes-list', async (req, res) => {
-  const { username } = session
+  const { username } = req.session
   const query = `SELECT DISTINCT s.song_id, title, artist
   FROM LikesSong l JOIN Song s on l.song_id = s.song_id
   WHERE l.username='${username}';  
@@ -138,7 +138,7 @@ router.get('/user/likes-list', async (req, res) => {
 })
 
 router.get('/user/num-likes', async (req, res) => {
-  const { username } = session
+  const { username } = req.session
   const query = `SELECT COUNT(*) AS num_songs_liked
   FROM LikesSong l JOIN Song s on l.song_id = s.song_id
   WHERE l.username = '${username}'
@@ -155,7 +155,7 @@ router.get('/user/num-likes', async (req, res) => {
 })
 
 router.post('/user/set-location', async (req, res) => {
-  const { username } = session
+  const { username } = req.session
   const { location } = req.body
   connection.query(`
     UPDATE User SET location = '${location}' WHERE username = '${username}'
@@ -168,8 +168,8 @@ router.post('/user/set-location', async (req, res) => {
   })
 })
 
-router.post('/user/location', async (_req, res) => {
-  const { username } = session
+router.post('/user/location', async (req, res) => {
+  const { username } = req.session
   connection.query(`
     SELECT location
     FROM User
@@ -202,7 +202,7 @@ router.get('/user/count-by-location', async (req, res) => {
 })
 
 router.post('/like', async (req, res) => {
-  const { username } = session
+  const { username } = req.session
   const { song_id } = req.body
   connection.query(`
     INSERT INTO LikesSong VALUES ('${username}', '${song_id}');
@@ -216,7 +216,7 @@ router.post('/like', async (req, res) => {
 })
 
 router.delete('/unlike', async (req, res) => {
-  const { username } = session
+  const { username } = req.session
   const { song_id } = req.body
   connection.query(`
     DELETE FROM LikesSong WHERE username = '${username}' AND song_id = '${song_id}';
