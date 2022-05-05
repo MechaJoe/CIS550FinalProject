@@ -156,9 +156,9 @@ export const setLikeSong = async (songId, liked) => {
       { withCredentials: true },
     )
   } else {
-    res = await axios.delete(
+    res = await axios.post(
       `http://${config.server_host}:${config.server_port}/unlike`,
-      { data: { song_id: songId } },
+      { song_id: songId },
       { withCredentials: true },
     )
   }
