@@ -51,8 +51,8 @@ export default function Signup() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Typography variant="h2" component="h1" align="center">Create Account</Typography>
-      <Grid container alignItems="center" justify="center" direction="column" spacing="10">
+      <Grid container justifyContent="center" alignItems="center" direction="column" style={{ minHeight: '100vh' }} spacing="10">
+        <Typography variant="h2" component="h1" align="center">Create MusicBar Account</Typography>
         {Object.keys(defaultValues).map((key) => (
           key !== 'location' ? (
             <Grid item key={key}>
@@ -91,6 +91,9 @@ export default function Signup() {
         </Grid>
         <Grid item>
           <Button variant="contained" color="primary" type="submit" sx={{ minWidth: 195 }}>Create Account</Button>
+        </Grid>
+        <Grid item>
+          <Button variant="outline" color="primary" type="button" sx={{ minWidth: 195 }} onClick={() => history.push('/login')}>Back</Button>
         </Grid>
       </Grid>
     </form>
