@@ -1,21 +1,18 @@
-/* eslint-disable */
-
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react'
+import ReactDOM from 'react-dom'
 import {
-	BrowserRouter as Router,
-	Route,
-	Switch
-} from 'react-router-dom';
+  BrowserRouter as Router,
+  Route,
+  Switch,
+} from 'react-router-dom'
 
 import SearchPage from './pages/SearchPage'
 import SongPage from './pages/SongPage'
 import ArtistPage from './pages/ArtistPage'
 import EditUser from './pages/EditUser'
 
-import 'antd/dist/antd.css';
-import "bootstrap/dist/css/bootstrap.min.css"
-import "shards-ui/dist/css/shards.min.css"
+import 'antd/dist/antd.min.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 import LoginPage from './pages/LoginPage'
 import Heatmap from './pages/Heatmap'
@@ -27,16 +24,16 @@ ReactDOM.render(
   <div>
     <Router>
       <Switch>
-        <Route 
+        <Route
           exact
           path="/song"
           render={() => <SongPage />}
         />
-        <Route 
+        <Route
           exact
           path="/artist"
           render={() => <ArtistPage />}
-         />
+        />
         <Route
           exact
           path="/"
@@ -45,12 +42,12 @@ ReactDOM.render(
         <Route
           exact
           path="/login"
-          render={() =>  <LoginPage />}
+          render={() => <LoginPage />}
         />
         <Route
           exact
           path="/heatmap"
-          render={() =>  <Heatmap />}
+          render={() => <Heatmap />}
         />
         <Route
           exact
@@ -69,7 +66,7 @@ ReactDOM.render(
           path="/federated-signup"
           render={() => (
             <FederatedSignup />
-          )} 
+          )}
         />
         <Route
           exact
@@ -79,5 +76,5 @@ ReactDOM.render(
       </Switch>
     </Router>
   </div>,
-  document.getElementById('root')
-);
+  document.getElementById('root'),
+)
