@@ -1,23 +1,6 @@
 const express = require('express')
-const mysql = require('mysql')
-// const config = require('./config.json')
-
-// const router = express.Router()
-
-// const connection = mysql.createConnection({
-//   host: process.env.RDS_HOST ? process.env.RDS_HOST : config.rds_host,
-//   user: process.env.RDS_USER ? process.env.RDS_USER : config.rds_user,
-//   password: process.env.RDS_PASSWORD ? process.env.RDS_PASSWORD : config.rds_password,
-//   port: process.env.RDS_PORT ? process.env.RDS_PORT : config.rds_port,
-//   database: process.env.RDS_DB ? process.env.RDS_DB : config.rds_db,
-// })
-
-// connection.connect()
-
-// TEMP FIX FOR SESSION PROBLEM
-let session
-
-// const mysql = require('mysql')
+const mysql = require('mysql2')
+const config = require('./config.json')
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oidc')
 const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy
@@ -37,144 +20,6 @@ const router = express.Router()
 
 // TEMP FIX FOR SESSION PROBLEM
 // let session
-
-router.post('/federated-signup', (req, res) => {
-  const {
-    first_name, last_name, pronouns, location,
-  } = req.body
-  const { username } = session
-  console.log(req.session)
-  const password = crypto.pbkdf2Sync(username, 'joeisunhackable', 100000, 64, 'sha512').toString('hex')
-  const sql = `INSERT INTO User (username, password, first_name, last_name, pronouns, location)
-               VALUES ('${username}', '${password}', '${first_name}', '${last_name}', '${pronouns}', '${location}')`
-  connection.query(sql, (error, results) => {
-    if (error) {
-      res.json({ error })
-    } else if (results) {
-      req.session.username = username
-      res.send('Successful federated signup')
-    }
-  })
-})
-
-router.get('/username', (req, res) => {
-  if (req.session.passport) {
-    req.session.username = session.passport.user.id
-  }
-  res.json(req.session.username)
-})
-
-router.post('/logout', (req, res) => {
-  req.logout()
-  req.session.username = null
-  res.send('Logged out')
-})
-
-const verify = async (issuer, profile, cb) => {
-  const username = profile.id
-  connection.query(
-    `SELECT * FROM User WHERE username = '${username}'`,
-    (error, results) => {
-      if (error || !results || results.length === 0) {
-        const newProfile = profile
-        console.log(profile)
-        newProfile.create = true
-        return cb(null, newProfile)
-      }
-      return cb(null, profile)
-    },
-  )
-}
-
-router.get('/login/federated/linkedin', passport.authenticate('linkedin'))
-
-passport.use(new LinkedInStrategy(
-  {
-    clientID: process.env.LINKEDIN_CLIENT_ID ? process.env.LINKEDIN_CLIENT_ID : config.linkedin_client_id,
-    clientSecret: process.env.LINKEDIN_CLIENT_SECRET ? process.env.LINKEDIN_CLIENT_SECRET : config.linkedin_client_secret,
-    callbackURL: '/oauth2/redirect/linkedin',
-    scope: ['r_emailaddress', 'r_liteprofile'],
-    state: true,
-  },
-  ((accessToken, refreshToken, profile, cb) => {
-    console.log(profile)
-    const username = profile.id
-    connection.query(
-      `SELECT * FROM User WHERE username = '${username}'`,
-      (error, results) => {
-        if (error || !results || results.length === 0) {
-          const newProfile = profile
-          console.log(profile)
-          newProfile.create = true
-          return cb(null, newProfile)
-        }
-        return cb(null, profile)
-      },
-    )
-  }),
-))
-
-router.get(
-  '/oauth2/redirect/linkedin',
-  (req, res, next) => {
-    passport.authenticate(
-      'linkedin',
-      (err, user) => {
-        if (user && user.create) {
-          req.session.username = user.id
-          return res.redirect('http://localhost:3000/federated-signup')
-        }
-        if (user) {
-          req.session.username = user.id
-          return res.redirect('http://localhost:3000/')
-        }
-        return res.redirect('http://localhost:3000/login')
-      },
-    )(req, res, next)
-  },
-)
-
-router.get('/login/federated/google', passport.authenticate('google'))
-
-passport.use(new GoogleStrategy(
-  {
-    clientID: process.env.GOOGLE_CLIENT_ID ? process.env.GOOGLE_CLIENT_ID : config.google_client_id,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET ? process.env.GOOGLE_CLIENT_SECRET : config.google_client_secret,
-    callbackURL: '/oauth2/redirect/google',
-    scope: ['profile'],
-  },
-  verify,
-))
-
-router.get(
-  '/oauth2/redirect/google',
-  (req, res, next) => {
-    passport.authenticate(
-      'google',
-      (err, user) => {
-        if (user && user.create) {
-          req.session.username = user.id
-          return res.redirect('http://localhost:3000/federated-signup')
-        }
-        if (user) {
-          req.session.username = user.id
-          return res.redirect('http://localhost:3000/')
-        }
-        return res.redirect('http://localhost:3000/login')
-      },
-    )(req, res, next)
-  },
-)
-
-passport.serializeUser((user, cb) => {
-  process.nextTick(() => {
-    cb(null, { username: user.id })
-  })
-})
-
-passport.deserializeUser((user, cb) => {
-  process.nextTick(() => cb(null, user))
-})
 
 // AUTH ROUTES
 // router.post('/login', async (req, res) => {
@@ -280,7 +125,7 @@ router.get('/user/likes-list', async (req, res) => {
   const { username } = req.session
   const query = `SELECT DISTINCT s.song_id, title, artist
   FROM LikesSong l JOIN Song s on l.song_id = s.song_id
-  WHERE l.username='${username}';  
+  WHERE l.username='${username}';
   `
   connection.query(query, (error, results, _fields) => {
     if (error) {
@@ -482,7 +327,7 @@ router.get('/song/by-related-all-attributes', async (req, res) => {
 
 // Song: Recommend songs that were liked by other users in the same geographic location
 router.get('/song/recommended-by-location', async (req, res) => {
-  const { location } = session
+  const { location } = req.session
   connection.query(`
       WITH song_location_likes AS (
         SELECT location, song_id, COUNT(*) AS num_likes
@@ -521,7 +366,7 @@ router.get('/artist/info', async (req, res) => {
 
 // Artist: Match user to artist based on average attribute values
 router.get('/artist/recommended-by-attrs', async (req, res) => {
-  const { username } = session
+  const { username } = req.session
   connection.query(`
       WITH user_agg_song_attrs AS (
         SELECT 
@@ -685,7 +530,7 @@ router.get('/artist/songs-most-liked', async (req, res) => {
 
 // Artist: Recommend artists that were liked by other users in the same geographic location - COMPLEX
 router.get('/artist/recommended-by-location', async (req, res) => {
-  const { location } = session
+  const { location } = req.session
   connection.query(`
     WITH song_location_likes AS (
       SELECT location, song_id, COUNT(*) AS num_likes
