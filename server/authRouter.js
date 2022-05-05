@@ -6,15 +6,14 @@ const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy
 const crypto = require('node:crypto')
 const config = require('./config.json')
 
-const connection = mysql.createConnection({
+const connection = mysql.createPool({
+  connectionLimit: 10,
   host: process.env.RDS_HOST ? process.env.RDS_HOST : config.rds_host,
   user: process.env.RDS_USER ? process.env.RDS_USER : config.rds_user,
   password: process.env.RDS_PASSWORD ? process.env.RDS_PASSWORD : config.rds_password,
   port: process.env.RDS_PORT ? process.env.RDS_PORT : config.rds_port,
   database: process.env.RDS_DB ? process.env.RDS_DB : config.rds_db,
 })
-
-connection.connect()
 
 const router = express.Router()
 
@@ -62,7 +61,8 @@ router.post('/federated-signup', (req, res) => {
     first_name, last_name, pronouns, location,
   } = req.body
   const { username } = req.session
-  const password = crypto.pbkdf2Sync(username, 'salt', 100000, 64, 'sha512').toString('hex')
+  console.log(req.session)
+  const password = crypto.pbkdf2Sync(username, 'joeisunhackable', 100000, 64, 'sha512').toString('hex')
   const sql = `INSERT INTO User (username, password, first_name, last_name, pronouns, location)
                VALUES ('${username}', '${password}', '${first_name}', '${last_name}', '${pronouns}', '${location}')`
   connection.query(sql, (error, results) => {
@@ -76,7 +76,6 @@ router.post('/federated-signup', (req, res) => {
 })
 
 router.get('/username', (req, res) => {
-  // console.log(req.session)
   if (req.session.passport) {
     req.session.username = req.session.passport.user.id
   }
@@ -86,12 +85,10 @@ router.get('/username', (req, res) => {
 router.post('/logout', (req, res) => {
   req.logout()
   req.session.username = null
-  // console.log(req.session.username)
   res.send('Logged out')
 })
 
 const verify = async (issuer, profile, cb) => {
-  // console.log(profile)
   const username = profile.id
   connection.query(
     `SELECT * FROM User WHERE username = '${username}'`,
@@ -111,8 +108,8 @@ router.get('/login/federated/linkedin', passport.authenticate('linkedin'))
 
 passport.use(new LinkedInStrategy(
   {
-    clientID: '78jkcxuzw46d4v',
-    clientSecret: '5Z9245UolcYPGuPX',
+    clientID: process.env.LINKEDIN_CLIENT_ID ? process.env.LINKEDIN_CLIENT_ID : config.linkedin_client_id,
+    clientSecret: process.env.LINKEDIN_CLIENT_SECRET ? process.env.LINKEDIN_CLIENT_SECRET : config.linkedin_client_secret,
     callbackURL: '/oauth2/redirect/linkedin',
     scope: ['r_emailaddress', 'r_liteprofile'],
     state: true,
@@ -159,10 +156,8 @@ router.get('/login/federated/google', passport.authenticate('google'))
 
 passport.use(new GoogleStrategy(
   {
-    // clientID: process.env.GOOGLE_CLIENT_ID,
-    clientID: '628416004124-qmo6n9v38ip6sat09gjq92a7ctghfb2i.apps.googleusercontent.com',
-    // clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    clientSecret: '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',
+    clientID: process.env.GOOGLE_CLIENT_ID ? process.env.GOOGLE_CLIENT_ID : config.google_client_id,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET ? process.env.GOOGLE_CLIENT_SECRET : config.google_client_secret,
     callbackURL: '/oauth2/redirect/google',
     scope: ['profile'],
   },
