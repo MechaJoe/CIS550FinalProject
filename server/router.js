@@ -1,10 +1,14 @@
 const express = require('express')
 const mysql = require('mysql2')
 const config = require('./config.json')
+const passport = require('passport')
+const GoogleStrategy = require('passport-google-oidc')
+const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy
+const crypto = require('node:crypto')
+const config = require('./config.json')
 
-const router = express.Router()
-
-const connection = mysql.createConnection({
+const connection = mysql.createPool({
+  connectionLimit: 10,
   host: process.env.RDS_HOST ? process.env.RDS_HOST : config.rds_host,
   user: process.env.RDS_USER ? process.env.RDS_USER : config.rds_user,
   password: process.env.RDS_PASSWORD ? process.env.RDS_PASSWORD : config.rds_password,
@@ -12,7 +16,7 @@ const connection = mysql.createConnection({
   database: process.env.RDS_DB ? process.env.RDS_DB : config.rds_db,
 })
 
-connection.connect()
+const router = express.Router()
 
 // TEMP FIX FOR SESSION PROBLEM
 // let session
@@ -148,6 +152,8 @@ router.get('/user/num-likes', async (req, res) => {
       res.json({ error })
     } else if (results.length === 0) {
       res.json({ results: [] })
+    } else {
+      res.json({ results })
     }
   })
 })
