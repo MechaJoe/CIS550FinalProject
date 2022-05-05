@@ -1,5 +1,5 @@
 const express = require('express')
-const mysql = require('mysql')
+const mysql = require('mysql2')
 const config = require('./config.json')
 
 const router = express.Router()
@@ -17,7 +17,6 @@ connection.connect()
 // TEMP FIX FOR SESSION PROBLEM
 // let session
 
-
 // AUTH ROUTES
 // router.post('/login', async (req, res) => {
 //   const { body } = req
@@ -33,7 +32,6 @@ connection.connect()
 //     } else if (results) {
 //       if (results.length !== 0 && results[0].password === password) {
 //         req.
-
 
 // .username = username
 //         req.session.save()
@@ -123,7 +121,7 @@ router.get('/user/likes-list', async (req, res) => {
   const { username } = req.session
   const query = `SELECT DISTINCT s.song_id, title, artist
   FROM LikesSong l JOIN Song s on l.song_id = s.song_id
-  WHERE l.username='${username}';  
+  WHERE l.username='${username}';
   `
   connection.query(query, (error, results, _fields) => {
     if (error) {
@@ -437,6 +435,8 @@ router.get('/artist/location-score', async (req, res) => {
       res.json({ error })
     } else if (results.length === 0) {
       res.json({ results: [] })
+    } else {
+      res.json({ results })
     }
   })
 })

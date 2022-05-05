@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import axios from 'axios'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
@@ -32,10 +32,13 @@ export default function LoginPage() {
     }
   }
 
-  // const testSession = async () => {
-  //   const { data } = await axios.get('http://localhost:8080/username', { withCredentials: true })
-  //   console.log(data)
-  // }
+  useEffect(async () => {
+    const { data } = await axios.get('http://localhost:8080/username', { withCredentials: true })
+    console.log(data)
+    if (data) {
+      history.push('/me')
+    }
+  }, [])
 
   // <Button variant="contained" color="primary" onClick={testSession}>Test Session</Button>
 
