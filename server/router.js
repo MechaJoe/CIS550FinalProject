@@ -1,6 +1,5 @@
 const express = require('express')
 const mysql = require('mysql2')
-const config = require('./config.json')
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oidc')
 const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy
@@ -221,6 +220,7 @@ router.post('/like', async (req, res) => {
 
 router.delete('/unlike', async (req, res) => {
   const { username } = req.session
+  console.log(username)
   const { song_id } = req.body
   connection.query(`
     DELETE FROM LikesSong WHERE username = '${username}' AND song_id = '${song_id}';
