@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-// import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import {
   FormControl, TextField, Button, ButtonGroup, Typography, Slider, TableContainer,
   TableHead, TableRow, TableCell, TableBody, Table, Paper, Link, Box,
@@ -9,12 +9,13 @@ import NavBar from '../components/NavBar'
 import { getSearchBySong, getSearchByArtist } from '../fetcher'
 
 function SearchPage() {
-  // const history = useHistory()
+  const history = useHistory()
   const checkSession = async () => {
-    // const { data } =
-    await axios.get('http://localhost:8080/username', { withCredentials: true })
+    const { data } = await axios.get('http://localhost:8080/username', { withCredentials: true })
     // console.log(data)
-    // setSignedIn(data && data !== '')
+    if (!data || data === 'undefined' || data === '') {
+      history.push('/login')
+    }
   }
 
   useEffect(() => {
