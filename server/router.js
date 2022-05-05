@@ -17,43 +17,47 @@ connection.connect()
 // TEMP FIX FOR SESSION PROBLEM
 let session
 
-/* AUTH ROUTES */
-router.post('/login', async (req, res) => {
-  const { body } = req
-  const { username, password } = body
-  console.log(username)
-  console.log(password)
-  const sql = `SELECT password
-  FROM User u
-  WHERE u.username = '${username}'`
-  connection.query(sql, (error, results) => {
-    if (error) {
-      res.json({ error })
-    } else if (results) {
-      if (results.length !== 0 && results[0].password === password) {
-        req.session.username = username
-        req.session.save()
-        session = req.session
-        // console.log(req.session)
-        res.send('Successful login')
-      } else {
-        res.send('Unsuccessful login')
-      }
-    }
-  })
-})
 
-router.get('/username', (req, res) => {
-  console.log(req.session)
-  // res.json(req.session.username)
-  res.json(session.username)
-})
+// AUTH ROUTES
+// router.post('/login', async (req, res) => {
+//   const { body } = req
+//   const { username, password } = body
+//   console.log(username)
+//   console.log(password)
+//   const sql = `SELECT password
+//   FROM User u
+//   WHERE u.username = '${username}'`
+//   connection.query(sql, (error, results) => {
+//     if (error) {
+//       res.json({ error })
+//     } else if (results) {
+//       if (results.length !== 0 && results[0].password === password) {
+//         req.
 
-router.post('/logout', (req, res) => {
-  req.session.username = null
-  console.log(req.session.username)
-  res.send('Logged out')
-})
+
+.username = username
+//         req.session.save()
+//         session = req.session
+//         // console.log(req.session)
+//         res.send('Successful login')
+//       } else {
+//         res.send('Unsuccessful login')
+//       }
+//     }
+//   })
+// })
+
+// router.get('/username', (req, res) => {
+//   console.log(req.session)
+//   // res.json(req.session.username)
+//   res.json(req.session.username)
+// })
+
+// router.post('/logout', (req, res) => {
+//   req.session.username = null
+//   console.log(req.session.username)
+//   res.send('Logged out')
+// })
 
 /* USER ROUTES */
 // Determines the top artists for a user relative to the songs that they have liked

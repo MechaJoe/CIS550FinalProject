@@ -11,7 +11,7 @@ test('GET /heatmap', async () => {
     })
 })
 
-test('GET /song/song_info', async () => {
+test('GET /song/song-info', async () => {
   await supertest(app).get('/song/song_info?id=000jBcNljWTnyjB4YO7ojf')
     .expect(200)
     .then(response => {
@@ -20,7 +20,7 @@ test('GET /song/song_info', async () => {
     })
 })
 
-test('GET /artist/recommended_by_attrs', async () => {
+test('GET /artist/recommended-by-attrs', async () => {
   await supertest(app).get('/artist/recommended_by_attrs')
     .expect(200)
 })
