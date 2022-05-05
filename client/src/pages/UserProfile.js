@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
@@ -7,11 +8,13 @@ import Grid from '@mui/material/Grid'
 import SongCard from '../components/SongCard'
 import NavBar from '../components/NavBar'
 import {
-  getStats, getLikedSongs, getTopArtists, getCurrUser,
+  getStats, getLikedSongs, getTopArtists,
+  // getCurrUser,
 } from '../fetcher'
 
 export default function UserProfile() {
-  const [user, setUser] = useState('')
+  // const [user, setUser] = useState('')
+  const [name, setName] = useState('')
   const [stats, setStats] = useState({})
   const [likedSongs, setLikedSongs] = useState([])
   const [topArtists, setTopArtists] = useState([])
@@ -28,9 +31,17 @@ export default function UserProfile() {
     getTopArtists().then(setTopArtists)
   }, [])
 
-  useEffect(() => {
-    getCurrUser().then(setUser)
-  })
+  // useEffect(() => {
+  //   getCurrUser().then(setUser)
+  // })
+
+  useEffect(async () => {
+    const { data } = await axios.get('http://localhost:8080/name', { withCredentials: true })
+    console.log(data)
+    if (data) {
+      setName(data.first_name)
+    }
+  }, [])
 
   return (
     <Box
@@ -42,7 +53,10 @@ export default function UserProfile() {
     >
       <NavBar />
       <Typography variant="h1">
-        {user}
+        Hi,
+        {' '}
+        {name}
+        !
       </Typography>
 
       <Box
