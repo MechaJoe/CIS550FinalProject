@@ -1,5 +1,5 @@
 const express = require('express')
-const mysql = require('mysql')
+const mysql = require('mysql2')
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oidc')
 const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy
@@ -43,7 +43,7 @@ router.post('/signup', (req, res) => {
   const {
     username, password, first_name, last_name, pronouns, location,
   } = req.body
-  console.log(req.body)
+  // console.log(req.body)
   const sql = `INSERT INTO User (username, password, first_name, last_name, pronouns, location)
                VALUES ('${username}', '${password}', '${first_name}', '${last_name}', '${pronouns}', '${location}')`
   connection.query(sql, (error, results) => {
@@ -61,7 +61,7 @@ router.post('/federated-signup', (req, res) => {
     first_name, last_name, pronouns, location,
   } = req.body
   const { username } = req.session
-  console.log(req.session)
+  // console.log(req.session)
   const password = crypto.pbkdf2Sync(username, 'joeisunhackable', 100000, 64, 'sha512').toString('hex')
   const sql = `INSERT INTO User (username, password, first_name, last_name, pronouns, location)
                VALUES ('${username}', '${password}', '${first_name}', '${last_name}', '${pronouns}', '${location}')`
@@ -82,6 +82,20 @@ router.get('/username', (req, res) => {
   res.json(req.session.username)
 })
 
+router.get('/name', (req, res) => {
+  const { username } = req.session
+  const sql = `SELECT first_name, last_name FROM User WHERE username = '${username}'`
+  connection.query(sql, (error, results) => {
+    if (error) {
+      res.json({ error })
+    } else if (results) {
+      res.json(results[0])
+    } else {
+      res.json({ error: 'No results' })
+    }
+  })
+})
+
 router.post('/logout', (req, res) => {
   req.logout()
   req.session.username = null
@@ -95,7 +109,7 @@ const verify = async (issuer, profile, cb) => {
     (error, results) => {
       if (error || !results || results.length === 0) {
         const newProfile = profile
-        console.log(profile)
+        // console.log(profile)
         newProfile.create = true
         return cb(null, newProfile)
       }
@@ -115,14 +129,14 @@ passport.use(new LinkedInStrategy(
     state: true,
   },
   ((accessToken, refreshToken, profile, cb) => {
-    console.log(profile)
+    // console.log(profile)
     const username = profile.id
     connection.query(
       `SELECT * FROM User WHERE username = '${username}'`,
       (error, results) => {
         if (error || !results || results.length === 0) {
           const newProfile = profile
-          console.log(profile)
+          // console.log(profile)
           newProfile.create = true
           return cb(null, newProfile)
         }
