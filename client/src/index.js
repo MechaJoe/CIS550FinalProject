@@ -69,7 +69,10 @@ ReactDOM.render(
           path="/federated-signup"
           render={() => (
             <FederatedSignup />
-          )}
+          )} 
+        />
+        <Route
+          exact
           path="/edit"
           render={() => <EditUser />}
         />
