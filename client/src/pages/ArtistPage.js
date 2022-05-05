@@ -8,20 +8,46 @@ import Divider from '@mui/material/Divider'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 
+import { ComposableMap, Geographies, Geography } from 'react-simple-maps'
+import { scaleQuantize } from 'd3-scale'
+
 import NavBar from '../components/NavBar'
-import { getArtist } from '../fetcher'
+import { getArtist, getArtistLocationPopularity } from '../fetcher'
+
+const geoUrl = 'https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json'
+
+const colorScale = scaleQuantize()
+  .domain([1, 10])
+  .range([
+    '#ffedea',
+    '#ffcec5',
+    '#ffad9f',
+    '#ff8a75',
+    '#ff5533',
+    '#e2492d',
+    '#be3d26',
+    '#9a311f',
+    '#782618',
+  ])
 
 export default function ArtistPage() {
   const location = useLocation()
   const selectedArtistId = location.search.substring(4)
   const [selectedArtistDetails, setSelectedArtistDetails] = useState(null)
+  const [mapData, setMapData] = useState([])
+
+  useEffect(() => {
+    getArtistLocationPopularity(selectedArtistId).then((countries) => {
+      setMapData(countries)
+    })
+  }, [selectedArtistId])
 
   useEffect(() => {
     getArtist(selectedArtistId)
       .then((res) => {
         setSelectedArtistDetails(res.results[0])
       })
-  }, [location, selectedArtistId])
+  }, [selectedArtistId])
 
   return (
     <div>
@@ -75,6 +101,29 @@ export default function ArtistPage() {
             </CardContent>
           </Card>
 
+          <Card sx={{ margin: '2rem' }}>
+            <CardContent>
+              <Grid container direction="row" justifyContent="left" alignItems="center">
+                <Grid container direction="column">
+                  <Typography variant="h5">Popularity Among Listeners</Typography>
+                </Grid>
+              </Grid>
+              <ComposableMap projection="geoMercator">
+                <Geographies geography={geoUrl}>
+                  {({ geographies }) => geographies.map((geo) => {
+                    const cur = mapData.find((s) => s.location.includes(geo.properties.NAME_LONG))
+                    return (
+                      <Geography
+                        key={geo.rsmKey}
+                        geography={geo}
+                        fill={colorScale(cur ? cur.popularity : '#EEE')}
+                      />
+                    )
+                  })}
+                </Geographies>
+              </ComposableMap>
+            </CardContent>
+          </Card>
         </Box>
       ) : null}
 

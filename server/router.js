@@ -631,6 +631,8 @@ router.get('/artist/location-score', async (req, res) => {
       res.json({ error })
     } else if (results.length === 0) {
       res.json({ results: [] })
+    } else {
+      res.json({ results })
     }
   })
 })
