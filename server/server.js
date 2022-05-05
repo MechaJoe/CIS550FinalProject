@@ -5,9 +5,7 @@ const cors = require('cors')
 require('https').globalAgent.options.rejectUnauthorized = false
 const GoogleStrategy = require('passport-google-oidc')
 const Router = require('./router')
-
 const AuthRouter = require('./authRouter')
-
 const config = require('./config.json')
 
 const app = express()

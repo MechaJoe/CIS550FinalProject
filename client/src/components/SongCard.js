@@ -8,20 +8,20 @@ import axios from 'axios'
 import { setLikeSong } from '../fetcher'
 
 export default function SongCard({
-  songId, title, artists, alreadyLiked,
+  songId, title, artists,
 }) {
-  const [isLiked, setIsLiked] = useState(alreadyLiked)
+  const [isLiked, setIsLiked] = useState(false)
   // eslint-disable-next-line no-unused-vars
   const [realSongId, setSongId] = useState(songId)
-  const handleLike = (e) => {
+  const handleLike = async (e) => {
     e.preventDefault()
     setLikeSong(realSongId, !isLiked)
     setIsLiked(!isLiked)
   }
 
   useEffect(async () => {
-    const { data } = await axios.get('http://localhost:8080/username', { withCredentials: true })
-    console.log(data)
+    const { data: username } = await axios.get('http://localhost:8080/username', { withCredentials: true })
+    console.log(username)
 
     const { data: likedSongs } = await axios.get('http://localhost:8080/user/likes-list', { withCredentials: true })
     console.log(likedSongs.results)

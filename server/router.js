@@ -218,10 +218,12 @@ router.post('/like', async (req, res) => {
   })
 })
 
-router.delete('/unlike', async (req, res) => {
+router.post('/unlike', (req, res) => {
   const { username } = req.session
   console.log(username)
+  console.log('unlike')
   const { song_id } = req.body
+  console.log(song_id)
   connection.query(`
     DELETE FROM LikesSong WHERE username = '${username}' AND song_id = '${song_id}';
   `, (error, results) => {
