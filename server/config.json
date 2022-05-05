@@ -1,0 +1,13 @@
+{
+    "rds_host": "database-1.coxu8vvd8qav.us-east-1.rds.amazonaws.com",
+    "rds_port": "3306",
+    "rds_user": "amyzhou7",
+    "rds_password" : "Azyamaxun77!",
+    "rds_db": "CIS550_FINAL_PROJECT",
+    "server_host": "127.0.0.1",
+    "server_port":"8080",
+    "google_client_id": "628416004124-qmo6n9v38ip6sat09gjq92a7ctghfb2i.apps.googleusercontent.com",
+    "google_client_secret": "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",
+    "linkedin_client_id": "78jkcxuzw46d4v",
+    "linkedin_client_secret": "5Z9245UolcYPGuPX"
+}
