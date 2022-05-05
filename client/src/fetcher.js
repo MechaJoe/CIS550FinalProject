@@ -1,4 +1,3 @@
-/* eslint-disable */
 import axios from 'axios'
 import config from './config.json'
 
@@ -27,7 +26,11 @@ export const getSearchBySong = async (
   // map song_id to [list of artists, title]
   const idToSong = res.reduce((acc, obj) => {
     try {
-      acc[obj.song_id] = [[obj.artist].concat(acc[obj.song_id][0]), [obj.artist_id].concat(acc[obj.song_id][1]), obj.title]
+      acc[obj.song_id] = [
+        [obj.artist].concat(acc[obj.song_id][0]),
+        [obj.artist_id].concat(acc[obj.song_id][1]),
+        obj.title,
+      ]
     } catch (e) {
       acc[obj.song_id] = [[obj.artist], [obj.artist_id], obj.title]
     }
@@ -62,11 +65,15 @@ export const getSearchByArtist = async (
   // return res.json()
 
   const res = data?.results ?? []
-  console.log(`Results: ${res}`)
+  // console.log(`Results: ${res}`)
   // map song_id to [list of artists, title]
   const idToSong = res.reduce((acc, obj) => {
     try {
-      acc[obj.song_id] = [[obj.artist].concat(acc[obj.song_id][0]), [obj.artist_id].concat(acc[obj.song_id][1]), obj.title]
+      acc[obj.song_id] = [
+        [obj.artist].concat(acc[obj.song_id][0]),
+        [obj.artist_id].concat(acc[obj.song_id][1]),
+        obj.title,
+      ]
     } catch (e) {
       acc[obj.song_id] = [[obj.artist], [obj.artist_id], obj.title]
     }
@@ -80,6 +87,7 @@ export const getCurrUser = async () => {
     `http://${config.server_host}:${config.server_port}/username`,
     { withCredentials: true },
   )
+  console.log(data)
   return data
 }
 
@@ -106,7 +114,7 @@ export const getLikedSongs = async () => {
     }
     return acc
   }, {})
-  return Object.entries(idToSong) //[song_id, [list of artists, title]]
+  return Object.entries(idToSong) // [song_id, [list of artists, title]]
 }
 
 export const getTopArtists = async () => {
@@ -158,37 +166,21 @@ export const setLikeSong = async (songId, liked) => {
 }
 
 export const getArtistLocationCounts = async () => {
-  const res = await fetch(`http://${config.server_host}:${config.server_port}/artist/count-by-location`, {
-    method: 'GET',
-  })
-  const json = await res.json()
-  return json.results
+  const { data } = await axios.get(`http://${config.server_host}:${config.server_port}/artist/count-by-location`)
+  return data.results
+}
+
+export const getArtistLocationPopularity = async (id) => {
+  const { data } = await axios.get(`http://${config.server_host}:${config.server_port}/artist/location-score?artist_id=${id}`)
+  return data.results
 }
 
 export const getArtist = async (id) => {
-  var res = await fetch(`http://${config.server_host}:${config.server_port}/artist/info?id=${id}`, {
-    method: 'GET',
-  })
-  return res.json()
+  const { data } = await axios.get(`http://${config.server_host}:${config.server_port}/artist/info?id=${id}`)
+  return data
 }
 
 export const getSong = async (id) => {
-  var res = await fetch(`http://${config.server_host}:${config.server_port}/song/info?id=${id}`, {
-    method: 'GET',
-  })
-  return res.json()
-}
-
-export const getArtistSearch = async (name, location, scrobbles, listeners, tags, genre, page, pagesize) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/search/artists?name=${name}}&location=${location}&listeners=${listeners}&scrobbles=${scrobbles}&tags=${tags}&genre=${genre}&page=${page}&pagesize=${pagesize}`, {
-        method: 'GET',
-    })
-    return res.json()
-}
-
-export const getSongSearch = async (title, artist, acousticness, danceability, duration_ms, energy, explicit, instrumentalness, liveness, loudness, mode, popularity, speechiness, tempo, valence, year, page, pagesize) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/search/songs?title=${title}&artist=${artist}&acousticness=${acousticness}&danceability=${danceability}&duration_ms=${duration_ms}&energy=${energy}&explicit=${explicit}&instrumentalness=${instrumentalness}&liveness=${liveness}&loudness=${loudness}&mode=${mode}&popularity=${popularity}&speechiness=${speechiness}&tempo=${tempo}&valence=${valence}&year=${year}&page=${page}&pagesize=${pagesize}`, {
-        method: 'GET',
-    })
-    return res.json()
+  const { data } = await axios.get(`http://${config.server_host}:${config.server_port}/song/info?id=${id}`)
+  return data
 }

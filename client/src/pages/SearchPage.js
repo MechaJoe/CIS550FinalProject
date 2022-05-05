@@ -12,7 +12,7 @@ function SearchPage() {
   const history = useHistory()
   const checkSession = async () => {
     const { data } = await axios.get('http://localhost:8080/username', { withCredentials: true })
-    console.log(data)
+    // console.log(data)
     if (!data || data === 'undefined' || data === '') {
       history.push('/login')
     }
@@ -112,8 +112,8 @@ function SearchPage() {
   //   history.push(url)
   // }
 
-  console.log(searchResults)
-  console.log(searchResults.length)
+  // console.log(searchResults)
+  // console.log(searchResults.length)
 
   // Transforms data received from Axios into an object
   const createData = (arr) => {
@@ -150,17 +150,17 @@ function SearchPage() {
           <div id="hello" style={{ padding: '15px' }}>
             <TextField id="search-input" label="Search" variant="outlined" sx={{ padding: '15px' }} onChange={(e) => setInput(e.target.value)} />
             <Typography gutterBottom>Acousticness</Typography>
-            <Slider id="acousticness" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleAcousticnessChange(e.target.value)} />
+            <Slider id="acousticness" defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleAcousticnessChange(e.target.value)} />
             <Typography gutterBottom>Danceability</Typography>
-            <Slider id="danceability" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleDanceabilityChange(e.target.value)} />
+            <Slider id="danceability" defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleDanceabilityChange(e.target.value)} />
             <Typography gutterBottom>Energy</Typography>
-            <Slider id="energy" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleEnergyChange(e.target.value)} />
+            <Slider id="energy" defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleEnergyChange(e.target.value)} />
             <Typography gutterBottom>Valence</Typography>
-            <Slider id="valence" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleValenceChange(e.target.value)} />
+            <Slider id="valence" defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleValenceChange(e.target.value)} />
             <Typography gutterBottom>Liveness</Typography>
-            <Slider id="liveness" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleLivenessChange(e.target.value)} />
+            <Slider id="liveness" defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleLivenessChange(e.target.value)} />
             <Typography gutterBottom>Speechiness</Typography>
-            <Slider id="speechiness" range defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleSpeechinessChange(e.target.value)} />
+            <Slider id="speechiness" defaultValue={[0, 1]} min={0} max={1} step={0.1} marks valueLabelDisplay="auto" disableSwap onChange={(e) => handleSpeechinessChange(e.target.value)} />
             <ButtonGroup orientation="vertical" variant="contained" aria-label="outlined primary button group">
               <Button onClick={handleSearchBySong}> By Song </Button>
               <Button onClick={handleSearchByArtist}> By Artist </Button>
