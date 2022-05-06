@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Slider from '@mui/material/Slider'
@@ -31,16 +32,14 @@ export default function UserProfile() {
     getTopArtists().then(setTopArtists)
   }, [])
 
-  // useEffect(() => {
-  //   getCurrUser().then(setUser)
-  // })
-
-  useEffect(async () => {
+  const getFirstName = async () => {
     const { data } = await axios.get('http://localhost:8080/name', { withCredentials: true })
-    console.log(data)
-    if (data) {
-      setName(data.first_name)
-    }
+    return data
+  }
+
+  useEffect(() => {
+    getFirstName()
+      .then((data) => { setName(data.first_name) })
   }, [])
 
   return (
@@ -49,6 +48,7 @@ export default function UserProfile() {
         width: '99%',
         justify: 'center',
         alignItems: 'center',
+        padding: '1rem',
       }}
     >
       <NavBar />
@@ -64,6 +64,7 @@ export default function UserProfile() {
           width: '90%',
           justify: 'center',
           alignItems: 'center',
+          margin: '2rem 0.5rem',
         }}
       >
         <Typography variant="h3">
@@ -82,12 +83,13 @@ export default function UserProfile() {
         <Typography variant="overline">Average Speechiness</Typography>
         <Slider value={stats?.avg_speechiness ?? 0.5} min={0} max={1} disabled />
       </Box>
-
+      <Divider />
       <Box
         sx={{
           width: '90%',
           justify: 'center',
           alignItems: 'center',
+          margin: '2rem 0.5rem',
         }}
       >
         <Typography variant="h3">
@@ -102,8 +104,9 @@ export default function UserProfile() {
               direction="row"
               justify="flex-start"
               alignItems="flex-start"
+              sx={{ marginTop: '1rem' }}
             >
-              {likedSongs.map((elem) => (
+              {(likedSongs.slice(0, Math.min(5, likedSongs.length))).map((elem) => (
                 <SongCard
                   songId={elem[0]}
                   title={elem[1][1]}
@@ -115,12 +118,13 @@ export default function UserProfile() {
             </Grid>
           )}
       </Box>
-
+      <Divider />
       <Box
         sx={{
           width: '90%',
           justify: 'center',
           alignItems: 'center',
+          margin: '2rem 0.5rem',
         }}
       >
         <Typography variant="h3">
@@ -129,8 +133,8 @@ export default function UserProfile() {
         {topArtists.length === 0
           ? <Typography variant="overline">None yet!</Typography>
           : topArtists.map((elem) => (
-            <Container key={elem.name}>
-              <Typography variant="h5">{elem.name}</Typography>
+            <Container key={elem.name} sx={{ margin: '1.5rem 0' }}>
+              <Typography variant="h5">{elem.name.toUpperCase()}</Typography>
               <Typography variant="subtitle1">
                 {`Listening percentage: ${elem.listening_percentage}%`}
               </Typography>

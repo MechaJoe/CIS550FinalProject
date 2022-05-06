@@ -22,7 +22,7 @@ export const getSearchBySong = async (
   )
 
   const res = data?.results ?? []
-  console.log(`Results: ${res}`)
+  // console.log(`Results: ${res}`)
   // map song_id to [list of artists, title]
   const idToSong = res.reduce((acc, obj) => {
     try {
@@ -87,7 +87,7 @@ export const getCurrUser = async () => {
     `http://${config.server_host}:${config.server_port}/username`,
     { withCredentials: true },
   )
-  console.log(data)
+  // console.log(data)
   return data
 }
 
