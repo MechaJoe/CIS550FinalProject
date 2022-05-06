@@ -52,7 +52,7 @@ export default function SongPage() {
           </Card>
 
           <Card>
-            <CardContent>
+            <CardContent sx={{ width: '50%', margin: '0 auto', textAlign: 'center' }}>
               <Grid container direction="row" justifyContent="center" alignItems="center">
                 <Grid container direction="column">
                   <Typography>
@@ -63,7 +63,7 @@ export default function SongPage() {
               <Grid container direction="row" justifyContent="center" alignItems="center">
                 <Grid container direction="column">
                   <Typography>
-                    {`Duration (ms): ${selectedSongDetails.duration_ms}`}
+                    {`Duration: ${selectedSongDetails.duration_ms} ms`}
                   </Typography>
                 </Grid>
                 <Grid container direction="column">
@@ -74,17 +74,17 @@ export default function SongPage() {
               </Grid>
 
               <Grid container direction="row" justifyContent="center" alignItems="center">
-                <Grid container direction="column">
+                <Grid container direction="column" justifyContent="center">
                   <Typography>
                     {`Mode (Minor/Major): ${selectedSongDetails.mode}`}
                   </Typography>
                 </Grid>
-                <Grid container direction="column">
+                <Grid container direction="column" justifyContent="center">
                   <Typography>
-                    {`Explicit: ${selectedSongDetails.explicit}`}
+                    {`Is ${selectedSongDetails.explicit === 0 ? 'Not' : ''} Explicit`}
                   </Typography>
                 </Grid>
-                <Grid container direction="column">
+                <Grid container direction="column" justifyContent="center">
                   <Typography>
                     {`Popularity: ${selectedSongDetails.popularity}`}
                   </Typography>
@@ -122,7 +122,12 @@ export default function SongPage() {
                 </Grid>
                 <Grid container direction="column">
 
-                  <Box className="centered-and-flexed">
+                  <Box
+                    className="centered-and-flexed"
+                    sx={{
+                      display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '1rem',
+                    }}
+                  >
                     <RadarChart
                       animation
                       data={[selectedSongDetails]}

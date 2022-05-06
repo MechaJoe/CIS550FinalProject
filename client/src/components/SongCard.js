@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
-import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import Button from '@mui/material/Button'
@@ -11,39 +10,37 @@ export default function SongCard({
   songId, title, artists,
 }) {
   const [isLiked, setIsLiked] = useState(false)
-  // eslint-disable-next-line no-unused-vars
-  const [realSongId, setSongId] = useState(songId)
   const handleLike = async (e) => {
     e.preventDefault()
-    setLikeSong(realSongId, !isLiked)
+    setLikeSong(songId, !isLiked)
     setIsLiked(!isLiked)
   }
 
-  useEffect(async () => {
-    const { data: username } = await axios.get('http://localhost:8080/username', { withCredentials: true })
-    console.log(username)
-
+  const getIsLiked = async () => {
     const { data: likedSongs } = await axios.get('http://localhost:8080/user/likes-list', { withCredentials: true })
-    console.log(likedSongs.results)
-    likedSongs.results.forEach((song) => {
-      if (song.song_id === realSongId) {
-        setIsLiked(true)
-      }
-    })
-    console.log(isLiked)
-  }, [])
+    return likedSongs.results.reduce((acc, song) => acc || song.song_id === songId, false)
+  }
+
+  useEffect(() => {
+    getIsLiked()
+      .then((res) => setIsLiked(res))
+  }, [songId])
 
   return (
-    <Grid item xs={12} sm={6} md={3}>
-      <Card>
-        <CardHeader
-          title={title}
-          subheader={artists}
-        />
-        <Button variant="contained" color="primary" onClick={(e) => handleLike(e)}>
-          {isLiked ? 'Unlike' : 'Like'}
-        </Button>
-      </Card>
-    </Grid>
+    <Card sx={{ margin: '0.5rem', maxWidth: '45%' }}>
+      <CardHeader
+        sx={{ textAlign: 'center' }}
+        title={title}
+        subheader={artists.toUpperCase()}
+      />
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={(e) => handleLike(e)}
+        sx={{ display: 'flex', margin: '0.5rem auto' }}
+      >
+        {isLiked ? 'Unlike' : 'Like'}
+      </Button>
+    </Card>
   )
 }
