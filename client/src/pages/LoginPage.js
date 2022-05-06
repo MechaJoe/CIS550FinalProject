@@ -22,8 +22,8 @@ export default function LoginPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    console.log(username)
-    console.log(password)
+    // console.log(username)
+    // console.log(password)
     const { data } = await axios.post('http://localhost:8080/login', { username, password }, { withCredentials: true })
     if (data === 'Successful login') {
       history.push('/')
@@ -32,15 +32,17 @@ export default function LoginPage() {
     }
   }
 
-  useEffect(async () => {
+  const getUser = async () => {
     const { data } = await axios.get('http://localhost:8080/username', { withCredentials: true })
-    console.log(data)
     if (data) {
       history.push('/me')
     }
-  }, [])
+    return data
+  }
 
-  // <Button variant="contained" color="primary" onClick={testSession}>Test Session</Button>
+  useEffect(() => {
+    getUser()
+  }, [])
 
   return (
     <Box
