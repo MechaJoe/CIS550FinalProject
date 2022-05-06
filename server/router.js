@@ -392,21 +392,25 @@ router.get('/artist/recommended-by-attrs', async (req, res) => {
           AVG(speechiness) AS speechiness
         FROM ComposedBy c JOIN Song s ON c.song_id = s.song_id
         GROUP BY c.artist_id
+      ), artist_ids AS (
+        SELECT a.artist 
+        FROM user_agg_song_attrs u, artists_agg_song_attrs a
+        ORDER BY
+          ABS(u.acousticness - a.acousticness) +
+          ABS(u.danceability - a.danceability) +
+          ABS(u.energy - a.energy) +
+          ABS(u.valence - a.valence) +
+          ABS(u.liveness - a.liveness) +
+          ABS(u.speechiness - a.speechiness)
+          ASC
       )
-      SELECT a.artist
-      FROM user_agg_song_attrs u, artists_agg_song_attrs a
-      ORDER BY
-        ABS(u.acousticness - a.acousticness) +
-        ABS(u.danceability - a.danceability) +
-        ABS(u.energy - a.energy) +
-        ABS(u.valence - a.valence) +
-        ABS(u.liveness - a.liveness) +
-        ABS(u.speechiness - a.speechiness)
-        ASC
+      SELECT a.artist_id AS artist_id, name
+      FROM artist_ids JOIN Artist a ON artist_ids.artist = a.artist_id
   `, (error, results) => {
     if (error) {
       res.json({ error })
     } else if (results) {
+      console.log(results)
       res.json({ results })
     }
   })
@@ -533,7 +537,6 @@ router.get('/artist/songs-most-liked', async (req, res) => {
 // Artist: Recommend artists that were liked by other users in the same geographic location - COMPLEX
 router.get('/artist/recommended-by-location', async (req, res) => {
   const { location } = req.query
-  console.log(location)
   connection.query(`
     WITH song_location_likes AS (
       SELECT location, song_id, COUNT(*) AS num_likes
@@ -553,7 +556,6 @@ router.get('/artist/recommended-by-location', async (req, res) => {
     if (error) {
       res.json({ error })
     } else if (results) {
-      console.log(results)
       res.json({ results })
     }
   })
