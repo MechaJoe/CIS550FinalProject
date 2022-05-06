@@ -171,7 +171,7 @@ router.post('/user/set-location', async (req, res) => {
   })
 })
 
-router.post('/user/location', async (req, res) => {
+router.get('/user/location', async (req, res) => {
   const { username } = req.session
   connection.query(`
     SELECT location
