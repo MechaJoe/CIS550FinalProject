@@ -21,13 +21,13 @@ function SearchPage() {
       <NavBar />
       <Box sx={{ padding: '0.5rem 2rem' }}>
         {(recArtists?.length ?? 0) === 0 ? <Typography gutterBottom variant="overline">No Results :(</Typography> : (
-          <Paper>
-            <Typography gutterBottom variant="overline">Artists Users in Your Country Like</Typography>
+          <Paper sx={{ padding: '0.5rem' }}>
+            <Typography gutterBottom variant="h4">Artists Liked by Users in Your Country</Typography>
             <TableContainer component={Paper} sx={{ maxWidth: '100% !important' }}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableBody>
                   {recArtists.map((row) => (
-                    <TableRow>
+                    <TableRow key={row.artist_id}>
                       <TableCell component="th" scope="row">
                         <Link href={`/artist/?id=${row.artist_id}`}>
                           {row.name}

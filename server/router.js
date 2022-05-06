@@ -546,7 +546,7 @@ router.get('/artist/recommended-by-location', async (req, res) => {
     )
     SELECT a.artist_id AS artist_id, name 
     FROM artist_location_likes l JOIN Artist a ON a.artist_id = l.artist_id
-    WHERE l.location = '${location}'
+    WHERE l.location = '${location}' AND a.name <> ' '
     ORDER BY num_likes DESC
     LIMIT 10
   `, (error, results) => {
