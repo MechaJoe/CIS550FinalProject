@@ -19,6 +19,7 @@ import Heatmap from './pages/Heatmap'
 import UserProfile from './pages/UserProfile'
 import Signup from './pages/Signup'
 import FederatedSignup from './pages/FederatedSignup'
+import Recommended from './pages/Recommended'
 
 ReactDOM.render(
   <div>
@@ -72,6 +73,11 @@ ReactDOM.render(
           exact
           path="/edit"
           render={() => <EditUser />}
+        />
+        <Route
+          exact
+          path="/recs"
+          render={() => <Recommended />}
         />
       </Switch>
     </Router>

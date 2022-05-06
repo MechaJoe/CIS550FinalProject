@@ -135,7 +135,7 @@ export const setUserLocation = async (location) => {
 }
 
 export const getUserLocation = async () => {
-  const { data } = await axios.post(
+  const { data } = await axios.get(
     `http://${config.server_host}:${config.server_port}/user/location`,
     { withCredentials: true },
   )
@@ -183,4 +183,9 @@ export const getArtist = async (id) => {
 export const getSong = async (id) => {
   const { data } = await axios.get(`http://${config.server_host}:${config.server_port}/song/info?id=${id}`)
   return data
+}
+
+export const getArtistsByLocationLikes = async (country) => {
+  const { data } = await axios.get(`http://${config.server_host}:${config.server_port}/artist/recommended-by-location?location=${country}`)
+  return data?.results ?? []
 }

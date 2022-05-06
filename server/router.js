@@ -532,7 +532,8 @@ router.get('/artist/songs-most-liked', async (req, res) => {
 
 // Artist: Recommend artists that were liked by other users in the same geographic location - COMPLEX
 router.get('/artist/recommended-by-location', async (req, res) => {
-  const { location } = req.session
+  const { location } = req.query
+  console.log(location)
   connection.query(`
     WITH song_location_likes AS (
       SELECT location, song_id, COUNT(*) AS num_likes
@@ -543,14 +544,16 @@ router.get('/artist/recommended-by-location', async (req, res) => {
     FROM song_location_likes l JOIN ComposedBy c ON l.song_id = c.song_id
     GROUP BY artist_id, location
     )
-    SELECT artist_id
-    FROM artist_location_likes
-    WHERE p.location = ${location}
+    SELECT a.artist_id AS artist_id, name 
+    FROM artist_location_likes l JOIN Artist a ON a.artist_id = l.artist_id
+    WHERE l.location = '${location}'
     ORDER BY num_likes DESC
+    LIMIT 10
   `, (error, results) => {
     if (error) {
       res.json({ error })
     } else if (results) {
+      console.log(results)
       res.json({ results })
     }
   })
