@@ -107,14 +107,6 @@ function SearchPage() {
     })
   }
 
-  // const handleGoToSongLink = (e, url) => {
-  //   e.preventDefault()
-  //   history.push(url)
-  // }
-
-  // console.log(searchResults)
-  // console.log(searchResults.length)
-
   // Transforms data received from Axios into an object
   const createData = (arr) => {
     const songId = arr[0]
@@ -142,7 +134,7 @@ function SearchPage() {
   return (
     <>
       <NavBar />
-      <Box>
+      <Box sx={{ padding: '0.5rem 2rem' }}>
         <FormControl>
           <Typography variant="h1" component="h2">
             MusicBar
@@ -167,7 +159,7 @@ function SearchPage() {
             </ButtonGroup>
           </div>
           {searchResults.length === 0
-            ? <Typography gutterBottom variant="overline">None yet!</Typography>
+            ? <Typography gutterBottom variant="overline">No Results :(</Typography>
             : (
               <Paper>
                 <TableContainer component={Paper} sx={{ maxWidth: '100% !important' }}>
@@ -181,7 +173,6 @@ function SearchPage() {
                     <TableBody>
                       {rows.map((row) => (
                         <TableRow
-                          key={row.songId}
                           sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                           <TableCell component="th" scope="row">
@@ -208,50 +199,6 @@ function SearchPage() {
             )}
         </FormControl>
       </Box>
-      {/* {searchResults.length === 0
-        ? <Typography gutterBottom variant="overline">None yet!</Typography>
-        : (
-          <Paper>
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Title</TableCell>
-                    <TableCell align="right">Artist</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows.map((row) => (
-                    <TableRow
-                      key={row.songId}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    >
-                      <TableCell component="th" scope="row">
-                        {/* <Button onClick={(e) => handleGoToSongLink(e, row.url)}
-                        variant="contained">
-                          {row.title}
-                        </Button> }
-                        <Link href={row.url}>
-                          {row.title}
-                        </Link>
-                      </TableCell>
-                      <TableCell align="right">
-                        {row.artistTups.map((art) => (
-                          <>
-                            <Link href={art.artistUrl}>
-                              {art.artist.toUpperCase()}
-                            </Link>
-                            <br />
-                          </>
-                        ))}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
-        )} */}
     </>
   )
 }
