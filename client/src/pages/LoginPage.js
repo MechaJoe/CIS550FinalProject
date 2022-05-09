@@ -22,8 +22,6 @@ export default function LoginPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    // console.log(username)
-    // console.log(password)
     const { data } = await axios.post('http://localhost:8080/login', { username, password }, { withCredentials: true })
     if (data === 'Successful login') {
       history.push('/')
@@ -65,10 +63,10 @@ export default function LoginPage() {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <TextField label="username" id="username" onChange={handleUsernameChange} />
+            <TextField label="Username" id="username" required onChange={handleUsernameChange} />
           </Grid>
           <Grid item xs={12}>
-            <TextField label="password" id="password" onChange={handlePasswordChange} />
+            <TextField label="Password" id="password" type="password" required onChange={handlePasswordChange} />
           </Grid>
           <Grid item xs={12}>
             <Button variant="contained" color="primary" type="submit" sx={{ minWidth: 195 }}>Login</Button>
