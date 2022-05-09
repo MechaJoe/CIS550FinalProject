@@ -14,7 +14,6 @@ import {
 } from '../fetcher'
 
 export default function UserProfile() {
-  // const [user, setUser] = useState('')
   const [name, setName] = useState('')
   const [stats, setStats] = useState({})
   const [likedSongs, setLikedSongs] = useState([])
@@ -93,7 +92,7 @@ export default function UserProfile() {
         }}
       >
         <Typography variant="h3">
-          My Liked Songs
+          My Liked Songs (Top 10)
         </Typography>
         {likedSongs.length === 0
           ? <Typography variant="overline">None yet!</Typography>
@@ -106,7 +105,7 @@ export default function UserProfile() {
               alignItems="flex-start"
               sx={{ marginTop: '1rem' }}
             >
-              {(likedSongs.slice(0, Math.min(5, likedSongs.length))).map((elem) => (
+              {(likedSongs.slice(0, Math.min(10, likedSongs.length))).map((elem) => (
                 <SongCard
                   songId={elem[0]}
                   title={elem[1][1]}

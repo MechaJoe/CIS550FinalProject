@@ -191,6 +191,6 @@ export const getArtistsByLocationLikes = async (country) => {
 }
 
 export const getArtistsBySimilarAttributes = async () => {
-  const { data } = await axios.get(`http://${config.server_host}:${config.server_port}/artist/recommended-by-attrs`)
+  const { data } = await axios.get(`http://${config.server_host}:${config.server_port}/artist/recommended-by-attrs`, { withCredentials: true })
   return data?.results ?? []
 }
