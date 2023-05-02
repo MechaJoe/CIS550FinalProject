@@ -369,31 +369,33 @@ router.get('/artist/info', async (req, res) => {
 // Artist: Match user to artist based on average attribute values
 router.get('/artist/recommended-by-attrs', async (req, res) => {
   const { username } = req.session
+  console.log(username)
   connection.query(`
-      WITH user_agg_song_attrs AS (
-        SELECT 
-          AVG(acousticness) AS acousticness, 
-          AVG(danceability) AS danceability, 
-          AVG(energy) AS energy, 
-          AVG(valence) AS valence, 
-          AVG(liveness) AS liveness, 
-          AVG(speechiness) AS speechiness
-        FROM LikesSong l JOIN Song s ON l.song_id = s.song_id
-        WHERE l.username = '${username}'
-        GROUP BY s.song_id
-      ), artists_agg_song_attrs AS (
-        SELECT 
-          artist,
-          AVG(acousticness) AS acousticness, 
-          AVG(danceability) AS danceability, 
-          AVG(energy) AS energy, 
-          AVG(valence) AS valence, 
-          AVG(liveness) AS liveness, 
-          AVG(speechiness) AS speechiness
-        FROM ComposedBy c JOIN Song s ON c.song_id = s.song_id
-        GROUP BY c.artist_id
-      )
-      SELECT a.artist
+    WITH user_agg_song_attrs AS (
+      SELECT
+        s.song_id,
+        AVG(acousticness) AS acousticness,
+        AVG(danceability) AS danceability,
+        AVG(energy) AS energy,
+        AVG(valence) AS valence,
+        AVG(liveness) AS liveness,
+        AVG(speechiness) AS speechiness
+      FROM LikesSong l JOIN Song s ON l.song_id = s.song_id
+      WHERE l.username = '${username}'
+      GROUP BY s.song_id
+    ), artists_agg_song_attrs AS (
+      SELECT
+        artist_id,
+        AVG(acousticness) AS acousticness,
+        AVG(danceability) AS danceability,
+        AVG(energy) AS energy,
+        AVG(valence) AS valence,
+        AVG(liveness) AS liveness,
+        AVG(speechiness) AS speechiness
+      FROM ComposedBy c JOIN Song s ON c.song_id = s.song_id
+      GROUP BY c.artist_id
+    ), artist_ids AS (
+      SELECT a.artist_id
       FROM user_agg_song_attrs u, artists_agg_song_attrs a
       ORDER BY
         ABS(u.acousticness - a.acousticness) +
@@ -403,6 +405,11 @@ router.get('/artist/recommended-by-attrs', async (req, res) => {
         ABS(u.liveness - a.liveness) +
         ABS(u.speechiness - a.speechiness)
         ASC
+    )
+    SELECT DISTINCT a.artist_id AS artist_id, name
+    FROM artist_ids JOIN Artist a ON artist_ids.artist_id = a.artist_id
+    WHERE TRIM(name) <> ''
+    LIMIT 10;
   `, (error, results) => {
     if (error) {
       res.json({ error })
@@ -532,7 +539,7 @@ router.get('/artist/songs-most-liked', async (req, res) => {
 
 // Artist: Recommend artists that were liked by other users in the same geographic location - COMPLEX
 router.get('/artist/recommended-by-location', async (req, res) => {
-  const { location } = req.session
+  const { location } = req.query
   connection.query(`
     WITH song_location_likes AS (
       SELECT location, song_id, COUNT(*) AS num_likes
@@ -543,10 +550,11 @@ router.get('/artist/recommended-by-location', async (req, res) => {
     FROM song_location_likes l JOIN ComposedBy c ON l.song_id = c.song_id
     GROUP BY artist_id, location
     )
-    SELECT artist_id
-    FROM artist_location_likes
-    WHERE p.location = ${location}
+    SELECT a.artist_id AS artist_id, name 
+    FROM artist_location_likes l JOIN Artist a ON a.artist_id = l.artist_id
+    WHERE l.location = '${location}' AND a.name <> ' '
     ORDER BY num_likes DESC
+    LIMIT 10
   `, (error, results) => {
     if (error) {
       res.json({ error })

@@ -45,9 +45,8 @@ export default function NavBar() {
         padding: '1rem',
       }}
       >
-        <Link sx={linkStyle} href="/" underline="hover">
-          Search
-        </Link>
+        <Link sx={linkStyle} href="/" underline="hover">Search</Link>
+        <Link sx={linkStyle} href="/recs" underline="hover">Recommended</Link>
         <Link sx={linkStyle} href="/heatmap" underline="hover">Heatmap</Link>
         <Tooltip title="Me">
           <IconButton
